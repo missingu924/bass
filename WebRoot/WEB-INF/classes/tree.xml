@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="gb2312"?>
+<treeConfig version="1.0">
+
+	<tree name="可用系统菜单" showName="可用系统菜单">
+		<subtree name="第1级" table="system_menu" keyCol="menu_code"
+			valueCol="menu_name" filter="parent_code is null and be_stop='否'" excetpKeyValue=""
+			orderBy="menu_code" iconCol="menu_icon" urlCol="menu_url">
+			<subtree name="第2级" table="system_menu" keyCol="menu_code"
+				valueCol="menu_name" filter="be_stop='否'" toParentCol="parent_code"
+				orderBy="menu_code" iconCol="menu_icon" urlCol="menu_url">
+				<subtree name="第3级" table="system_menu"
+					keyCol="menu_code" valueCol="menu_name" filter="be_stop='否'"
+					toParentCol="parent_code" orderBy="menu_code" iconCol="menu_icon"
+					urlCol="menu_url">
+					<subtree name="第4级" table="system_menu"
+						keyCol="menu_code" valueCol="menu_name" filter="be_stop='否'"
+						toParentCol="parent_code" orderBy="menu_code" iconCol="menu_icon"
+						urlCol="menu_url">
+						<subtree name="第5级" table="system_menu"
+							keyCol="menu_code" valueCol="menu_name" filter="be_stop='否'"
+							toParentCol="parent_code" orderBy="menu_code" iconCol="menu_icon"
+							urlCol="menu_url">
+							<subtree name="第6级" table="system_menu"
+								keyCol="menu_code" valueCol="menu_name" filter="be_stop='否'"
+								toParentCol="parent_code" orderBy="menu_code"
+								iconCol="menu_icon" urlCol="menu_url">
+								<subtree name="第7级" table="system_menu"
+									keyCol="menu_code" valueCol="menu_name" filter="be_stop='否'"
+									toParentCol="parent_code" orderBy="menu_code"
+									iconCol="menu_icon" urlCol="menu_url">
+									<subtree name="第8级"
+										table="system_menu" keyCol="menu_code" valueCol="menu_name"
+										filter="be_stop='否'" toParentCol="parent_code"
+										orderBy="menu_code" iconCol="menu_icon" urlCol="menu_url">
+										<subtree name="第9级"
+											table="system_menu" keyCol="menu_code" valueCol="menu_name"
+											filter="be_stop='否'" toParentCol="parent_code"
+											orderBy="menu_code" iconCol="menu_icon" urlCol="menu_url">
+											<subtree name="第10级"
+												table="system_menu" keyCol="menu_code" valueCol="menu_name"
+												filter="be_stop='否'" toParentCol="parent_code"
+												orderBy="menu_code" iconCol="menu_icon" urlCol="menu_url">
+											</subtree>
+										</subtree>
+									</subtree>
+								</subtree>
+							</subtree>
+						</subtree>
+					</subtree>
+				</subtree>
+			</subtree>
+		</subtree>
+	</tree>
+
+	<tree name="系统菜单" showName="系统菜单">
+		<subtree name="第1级" table="system_menu" keyCol="menu_code"
+			valueCol="menu_name" filter="parent_code is null" excetpKeyValue=""
+			orderBy="menu_code" iconCol="menu_icon" urlCol="menu_url">
+			<subtree name="第2级" table="system_menu" keyCol="menu_code"
+				valueCol="menu_name" filter="" toParentCol="parent_code"
+				orderBy="menu_code" iconCol="menu_icon" urlCol="menu_url">
+				<subtree name="第3级" table="system_menu"
+					keyCol="menu_code" valueCol="menu_name" filter=""
+					toParentCol="parent_code" orderBy="menu_code" iconCol="menu_icon"
+					urlCol="menu_url">
+					<subtree name="第4级" table="system_menu"
+						keyCol="menu_code" valueCol="menu_name" filter=""
+						toParentCol="parent_code" orderBy="menu_code" iconCol="menu_icon"
+						urlCol="menu_url">
+						<subtree name="第5级" table="system_menu"
+							keyCol="menu_code" valueCol="menu_name" filter=""
+							toParentCol="parent_code" orderBy="menu_code" iconCol="menu_icon"
+							urlCol="menu_url">
+							<subtree name="第6级" table="system_menu"
+								keyCol="menu_code" valueCol="menu_name" filter=""
+								toParentCol="parent_code" orderBy="menu_code"
+								iconCol="menu_icon" urlCol="menu_url">
+								<subtree name="第7级" table="system_menu"
+									keyCol="menu_code" valueCol="menu_name" filter=""
+									toParentCol="parent_code" orderBy="menu_code"
+									iconCol="menu_icon" urlCol="menu_url">
+									<subtree name="第8级"
+										table="system_menu" keyCol="menu_code" valueCol="menu_name"
+										filter="" toParentCol="parent_code" orderBy="menu_code"
+										iconCol="menu_icon" urlCol="menu_url">
+										<subtree name="第9级"
+											table="system_menu" keyCol="menu_code" valueCol="menu_name"
+											filter="" toParentCol="parent_code" orderBy="menu_code"
+											iconCol="menu_icon" urlCol="menu_url">
+											<subtree name="第10级"
+												table="system_menu" keyCol="menu_code" valueCol="menu_name"
+												filter="" toParentCol="parent_code" orderBy="menu_code"
+												iconCol="menu_icon" urlCol="menu_url">
+											</subtree>
+										</subtree>
+									</subtree>
+								</subtree>
+							</subtree>
+						</subtree>
+					</subtree>
+				</subtree>
+			</subtree>
+		</subtree>
+	</tree>
+
+	<tree name="部门人员树" showName="部门人员树">
+		<subtree name="district" table="dict_district" keyCol="name"
+			valueCol="name" filter="" excetpKeyValue="" orderBy="id">
+			<subtree name="department" table="auth_department"
+				keyCol="departmentId" valueCol="departmentName" filter=""
+				toParentCol="districtName" orderBy="departmentId">
+				<subtree name="user" table="auth_user" keyCol="account"
+					valueCol="name" toParentCol="departmentId" filter=""
+					orderBy="name">
+				</subtree>
+			</subtree>
+		</subtree>
+	</tree>
+
+	<tree name="核算科室" showName="核算科室">
+		<subtree name="第1级" table="hcp_cost_dept" keyCol="cdeptcode"
+			valueCol="cdeptname" filter="cparentcode is null" excetpKeyValue=""
+			orderBy="cdeptcode">
+			<subtree name="第2级" table="hcp_cost_dept" keyCol="cdeptcode"
+				valueCol="cdeptname" filter="" toParentCol="cparentcode"
+				orderBy="cdeptcode">
+				<subtree name="第3级" table="hcp_cost_dept"
+					keyCol="cdeptcode" valueCol="cdeptname" filter=""
+					toParentCol="cparentcode" orderBy="cdeptcode">
+					<subtree name="第4级" table="hcp_cost_dept"
+						keyCol="cdeptcode" valueCol="cdeptname" filter=""
+						toParentCol="cparentcode" orderBy="cdeptcode">
+						<subtree name="第5级" table="hcp_cost_dept"
+							keyCol="cdeptcode" valueCol="cdeptname" filter=""
+							toParentCol="cparentcode" orderBy="cdeptcode">
+							<subtree name="第6级" table="hcp_cost_dept"
+								keyCol="cdeptcode" valueCol="cdeptname" filter=""
+								toParentCol="cparentcode" orderBy="cdeptcode">
+								<subtree name="第7级"
+									table="hcp_cost_dept" keyCol="cdeptcode" valueCol="cdeptname"
+									filter="" toParentCol="cparentcode" orderBy="cdeptcode">
+									<subtree name="第8级"
+										table="hcp_cost_dept" keyCol="cdeptcode" valueCol="cdeptname"
+										filter="" toParentCol="cparentcode" orderBy="cdeptcode">
+										<subtree name="第9级"
+											table="hcp_cost_dept" keyCol="cdeptcode" valueCol="cdeptname"
+											filter="" toParentCol="cparentcode" orderBy="cdeptcode">
+											<subtree name="第10级"
+												table="hcp_cost_dept" keyCol="cdeptcode"
+												valueCol="cdeptname" filter="" toParentCol="cparentcode"
+												orderBy="cdeptcode">
+											</subtree>
+										</subtree>
+									</subtree>
+								</subtree>
+							</subtree>
+						</subtree>
+					</subtree>
+				</subtree>
+			</subtree>
+		</subtree>
+	</tree>
+
+	<tree name="科室分摊关系统计" showName="科室(分摊关系数)">
+		<subtree name="第1级" table="v_hcp_cost_dept2dept_stat"
+			keyCol="cdeptcode"
+			valueCol="replace(cdeptname+'('+cast(todeptcount as varchar(10))+')','(0)','') as deptnamecount"
+			filter="cparentcode is null" excetpKeyValue="" orderBy="cdeptcode">
+			<subtree name="第2级" table="v_hcp_cost_dept2dept_stat"
+				keyCol="cdeptcode"
+				valueCol="replace(cdeptname+'('+cast(todeptcount as varchar(10))+')','(0)','') as deptnamecount"
+				filter="" toParentCol="cparentcode" orderBy="cdeptcode">
+				<subtree name="第3级" table="v_hcp_cost_dept2dept_stat"
+					keyCol="cdeptcode"
+					valueCol="replace(cdeptname+'('+cast(todeptcount as varchar(10))+')','(0)','') as deptnamecount"
+					filter="" toParentCol="cparentcode" orderBy="cdeptcode">
+					<subtree name="第4级"
+						table="v_hcp_cost_dept2dept_stat" keyCol="cdeptcode"
+						valueCol="replace(cdeptname+'('+cast(todeptcount as varchar(10))+')','(0)','') as deptnamecount"
+						filter="" toParentCol="cparentcode" orderBy="cdeptcode">
+						<subtree name="第5级"
+							table="v_hcp_cost_dept2dept_stat" keyCol="cdeptcode"
+							valueCol="replace(cdeptname+'('+cast(todeptcount as varchar(10))+')','(0)','') as deptnamecount"
+							filter="" toParentCol="cparentcode" orderBy="cdeptcode">
+							<subtree name="第6级"
+								table="v_hcp_cost_dept2dept_stat" keyCol="cdeptcode"
+								valueCol="replace(cdeptname+'('+cast(todeptcount as varchar(10))+')','(0)','') as deptnamecount"
+								filter="" toParentCol="cparentcode" orderBy="cdeptcode">
+								<subtree name="第7级"
+									table="v_hcp_cost_dept2dept_stat" keyCol="cdeptcode"
+									valueCol="replace(cdeptname+'('+cast(todeptcount as varchar(10))+')','(0)','') as deptnamecount"
+									filter="" toParentCol="cparentcode" orderBy="cdeptcode">
+									<subtree name="第8级"
+										table="v_hcp_cost_dept2dept_stat" keyCol="cdeptcode"
+										valueCol="replace(cdeptname+'('+cast(todeptcount as varchar(10))+')','(0)','') as deptnamecount"
+										filter="" toParentCol="cparentcode" orderBy="cdeptcode">
+										<subtree name="第9级"
+											table="v_hcp_cost_dept2dept_stat" keyCol="cdeptcode"
+											valueCol="replace(cdeptname+'('+cast(todeptcount as varchar(10))+')','(0)','') as deptnamecount"
+											filter="" toParentCol="cparentcode" orderBy="cdeptcode">
+											<subtree name="第10级"
+												table="v_hcp_cost_dept2dept_stat" keyCol="cdeptcode"
+												valueCol="replace(cdeptname+'('+cast(todeptcount as varchar(10))+')','(0)','') as deptnamecount"
+												filter="" toParentCol="cparentcode" orderBy="cdeptcode">
+											</subtree>
+										</subtree>
+									</subtree>
+								</subtree>
+							</subtree>
+						</subtree>
+					</subtree>
+				</subtree>
+			</subtree>
+		</subtree>
+	</tree>
+
+	<tree name="科室分摊关系树" showName="科室分摊关系树">
+		<subtree name="第1级" table="v_hcp_cost_dept2dept"
+			keyCol="ctodeptcode" valueCol="ctodeptname" filter=""
+			excetpKeyValue="" orderBy="ctodeptcode">
+			<subtree name="第2级" table="v_hcp_cost_dept2dept"
+				keyCol="ctodeptcode" valueCol="ctodeptname" filter=""
+				toParentCol="cfromdeptcode" orderBy="ctodeptcode">
+				<subtree name="第3级" table="v_hcp_cost_dept2dept"
+					keyCol="ctodeptcode" valueCol="ctodeptname" filter=""
+					toParentCol="cfromdeptcode" orderBy="ctodeptcode">
+					<subtree name="第4级" table="v_hcp_cost_dept2dept"
+						keyCol="ctodeptcode" valueCol="ctodeptname" filter=""
+						toParentCol="cfromdeptcode" orderBy="ctodeptcode">
+						<subtree name="第5级" table="v_hcp_cost_dept2dept"
+							keyCol="ctodeptcode" valueCol="ctodeptname" filter=""
+							toParentCol="cfromdeptcode" orderBy="ctodeptcode">
+							<subtree name="第6级"
+								table="v_hcp_cost_dept2dept" keyCol="ctodeptcode"
+								valueCol="ctodeptname" filter="" toParentCol="cfromdeptcode"
+								orderBy="ctodeptcode">
+								<subtree name="第7级"
+									table="v_hcp_cost_dept2dept" keyCol="ctodeptcode"
+									valueCol="ctodeptname" filter="" toParentCol="cfromdeptcode"
+									orderBy="ctodeptcode">
+									<subtree name="第8级"
+										table="v_hcp_cost_dept2dept" keyCol="ctodeptcode"
+										valueCol="ctodeptname" filter="" toParentCol="cfromdeptcode"
+										orderBy="ctodeptcode">
+										<subtree name="第9级"
+											table="v_hcp_cost_dept2dept" keyCol="ctodeptcode"
+											valueCol="ctodeptname" filter="" toParentCol="cfromdeptcode"
+											orderBy="ctodeptcode">
+											<subtree name="第10级"
+												table="v_hcp_cost_dept2dept" keyCol="ctodeptcode"
+												valueCol="ctodeptname" filter="" toParentCol="cfromdeptcode"
+												orderBy="ctodeptcode">
+											</subtree>
+										</subtree>
+									</subtree>
+								</subtree>
+							</subtree>
+						</subtree>
+					</subtree>
+				</subtree>
+			</subtree>
+		</subtree>
+	</tree>
+
+	<tree name="科室分摊方法" showName="科室(分摊方法)">
+		<subtree name="第1级" table="v_hcp_cost_sharefun"
+			keyCol="cdeptcode"
+			valueCol="case when csharefun is null then cdeptname else cdeptname+'('+csharefun+')' end as deptsharefun"
+			filter="cparentcode is null" excetpKeyValue="" orderBy="cdeptcode">
+			<subtree name="第2级" table="v_hcp_cost_sharefun"
+				keyCol="cdeptcode"
+				valueCol="case when csharefun is null then cdeptname else cdeptname+'('+csharefun+')' end as deptsharefun"
+				filter="" toParentCol="cparentcode" orderBy="cdeptcode">
+				<subtree name="第3级" table="v_hcp_cost_sharefun"
+					keyCol="cdeptcode"
+					valueCol="case when csharefun is null then cdeptname else cdeptname+'('+csharefun+')' end as deptsharefun"
+					filter="" toParentCol="cparentcode" orderBy="cdeptcode">
+					<subtree name="第4级" table="v_hcp_cost_sharefun"
+						keyCol="cdeptcode"
+						valueCol="case when csharefun is null then cdeptname else cdeptname+'('+csharefun+')' end as deptsharefun"
+						filter="" toParentCol="cparentcode" orderBy="cdeptcode">
+						<subtree name="第5级" table="v_hcp_cost_sharefun"
+							keyCol="cdeptcode"
+							valueCol="case when csharefun is null then cdeptname else cdeptname+'('+csharefun+')' end as deptsharefun"
+							filter="" toParentCol="cparentcode" orderBy="cdeptcode">
+							<subtree name="第6级"
+								table="v_hcp_cost_sharefun" keyCol="cdeptcode"
+								valueCol="case when csharefun is null then cdeptname else cdeptname+'('+csharefun+')' end as deptsharefun"
+								filter="" toParentCol="cparentcode" orderBy="cdeptcode">
+								<subtree name="第7级"
+									table="v_hcp_cost_sharefun" keyCol="cdeptcode"
+									valueCol="case when csharefun is null then cdeptname else cdeptname+'('+csharefun+')' end as deptsharefun"
+									filter="" toParentCol="cparentcode" orderBy="cdeptcode">
+									<subtree name="第8级"
+										table="v_hcp_cost_sharefun" keyCol="cdeptcode"
+										valueCol="case when csharefun is null then cdeptname else cdeptname+'('+csharefun+')' end as deptsharefun"
+										filter="" toParentCol="cparentcode" orderBy="cdeptcode">
+										<subtree name="第9级"
+											table="v_hcp_cost_sharefun" keyCol="cdeptcode"
+											valueCol="case when csharefun is null then cdeptname else cdeptname+'('+csharefun+')' end as deptsharefun"
+											filter="" toParentCol="cparentcode" orderBy="cdeptcode">
+											<subtree name="第10级"
+												table="v_hcp_cost_sharefun" keyCol="cdeptcode"
+												valueCol="case when csharefun is null then cdeptname else cdeptname+'('+csharefun+')' end as deptsharefun"
+												filter="" toParentCol="cparentcode" orderBy="cdeptcode">
+											</subtree>
+										</subtree>
+									</subtree>
+								</subtree>
+							</subtree>
+						</subtree>
+					</subtree>
+				</subtree>
+			</subtree>
+		</subtree>
+	</tree>
+
+</treeConfig>

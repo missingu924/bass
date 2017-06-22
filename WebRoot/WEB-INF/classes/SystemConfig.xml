@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="GB2312"?>
+<Config>
+  <db>
+    <ds_db_type>SqlServer</ds_db_type>
+    <ds_db_ip>127.0.0.1</ds_db_ip>
+    <ds_db_port>1433</ds_db_port>
+    <ds_db_schema>bass</ds_db_schema>
+    <ds_db_user>sa</ds_db_user>
+    <ds_db_password>577967323436313239302</ds_db_password>
+  </db>
+</Config>
+

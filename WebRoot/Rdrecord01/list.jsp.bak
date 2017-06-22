@@ -1,0 +1,745 @@
+<!DOCTYPE html> 
+<%@ page contentType="text/html; charset=utf-8" language="java" import="java.sql.*" errorPage=""%> 
+<!-- 引入类 --> 
+<%@page import="java.util.List"%> 
+<%@page import="java.util.ArrayList"%> 
+<%@page import="com.wuyg.common.util.StringUtil"%> 
+<%@page import="com.wuyg.common.util.TimeUtil"%> 
+<%@page import="com.wuyg.common.obj.PaginationObj"%> 
+<%@page import="com.wuyg.dictionary.DictionaryUtil"%> 
+<%@page import="com.u8.obj.Rdrecord01Obj"%> 
+<%@page import="com.u8.searchcondition.Rdrecord01SearchCondition"%> 
+<%@page import="com.wuyg.auth.obj.AuthUserObj"%> 
+<%@page import="com.wuyg.common.util.SystemConstant"%>  
+<!-- 基本信息 --> 
+<% 
+	// 当前上下文路径 
+	String contextPath = request.getContextPath(); 
+ 
+	// 该功能对象实例 
+	Rdrecord01Obj domainInstance = (Rdrecord01Obj) request.getAttribute("domainInstance"); 
+	// 该功能对象查询条件实例 
+	Rdrecord01SearchCondition domainSearchCondition = (Rdrecord01SearchCondition) request.getAttribute("domainSearchCondition"); 
+	// 用户信息 
+	AuthUserObj user = (AuthUserObj) request.getSession().getAttribute(SystemConstant.AUTH_USER_INFO); 
+	// 该功能路径 
+	String basePath = domainInstance.getBasePath(); 
+ 
+	// 查询结果 
+	PaginationObj pagination = null; 
+	List list = new ArrayList(); 
+ 
+	Object paginationObj = request.getAttribute("domainPagination"); 
+	if (paginationObj != null) 
+	{ 
+		pagination = (PaginationObj) paginationObj; 
+		list = (List) pagination.getDataList(); 
+	} 
+%> 
+<html> 
+	<head> 
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+		<meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no" /> 
+		<title><%=domainInstance.getCnName() %>列表</title> 
+		<link href="../css/global.css" rel="stylesheet" type="text/css"> 
+		<script type="text/javascript" src="../js/jquery-2.0.3.min.js"></script> 
+		<script type="text/javascript" src="../js/utils.js"></script> 
+		<script type="text/javascript" src="../My97DatePicker/WdatePicker.js"></script> 
+		<script type="text/javascript" src="../js/jquery.freezeheader.js"></script> 
+		<script type="text/javascript">$(document).ready(function () {$("#data_table").freezeHeader();})</script> 
+	</head> 
+	<body> 
+		<form name="pageForm" id="pageForm" method="post" action="<%=request.getContextPath()%>/Proxy/Servlet?servlet=<%=basePath%>&method=list4this"> 
+			<input type="hidden" id="showSearchConditionTable" name="showSearchConditionTable" value="<%=domainSearchCondition.isShowSearchConditionTable()%>"> 
+			<input type="hidden" id="showHelpInfoTable" name="showHelpInfoTable" value="<%=domainSearchCondition.isShowHelpInfoTable()%>"> 
+			<input type="hidden" id="showSearchConditionTable" name="showSearchConditionTable" value="<%=domainSearchCondition.isShowSearchConditionTable()%>"> 
+			<input type="hidden" id="orderBy" name="orderBy" value="<%=StringUtil.getNotEmptyStr(domainSearchCondition.getOrderBy(), "")%>"> 
+			 
+			<!-- 工具栏 --> 
+			<table class="search_table" align="center" width="98%"> 
+				<tr> 
+					<td><%=domainInstance.getCnName() %></td>  
+					<td></td> 
+					<td> 
+						<input name="searchButton" type="button" class="button button_set" value="条件" onClick="$('#search_condition_table').toggle();$('#showSearchConditionTable').val(!$('#search_condition_table').is(':hidden'));">
+						<input name="searchButton" type="button" class="button button_search" value="查询" onClick="toPage(1)"> 
+						<input name="addButton" type="button" class="button button_add" value="增加" onClick="winOpen('<%=contextPath%>/Proxy/Servlet?servlet=<%=basePath%>&method=preModify4this')"> 
+						<input name="uploadButton" type="button" class="button button_upload" value="导入" onClick="openBigModalDialog('<%=contextPath%>/ExcelParser/uploadFile.jsp?basedbobj_class=<%=domainInstance.getClass().getCanonicalName()%>')">
+						<%if(list.size()>0){ %> 
+						<input name="deleteAllButton" type="button" class="button button_delete" value="删除" onClick="batchDelete('<%=request.getContextPath()%>/Proxy/Servlet?servlet=<%=basePath%>&method=batchDelete4this','<%=domainInstance.findKeyColumnName()%>')"> 
+						<%} %> 
+						&nbsp;&nbsp; 
+						<input name="helpButton" type="button" class="button button_comment" title="提示" onClick="$('#help_info_table').toggle();$('#showHelpInfoTable').val(!$('#help_info_table').is(':hidden'));"> 
+					</td> 
+				</tr> 
+			</table> 
+			<!-- 提示信息 -->  
+			<table id="help_info_table" class="help_info_table" align="center" width="98%" style='display: <%=domainSearchCondition.isShowHelpInfoTable() ? "" : "none"%>'> 
+				<tr> 
+					<td> 
+						<b>【提示】</b> 
+						<ul> 
+							<li><%=domainInstance.getCnName() %></li> 
+						</ul> 
+					</td> 
+				</tr> 
+			</table> 
+			<!-- 查询条件 -->  
+			<table id="search_condition_table" class="search_condition_table" align="center" width="98%" style='display: <%=domainSearchCondition.isShowSearchConditionTable() ? "" : "none"%>'> 
+				<tr> 
+						<td><%=domainInstance.getPropertyCnName("brdflag") %></td> 
+						<td>
+						<input name="brdflag" type="text" id="brdflag" value="<%=StringUtil.getNotEmptyStr(domainInstance.getBrdflag(),"")%>" size="20" > 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("cvouchtype") %></td> 
+						<td>
+						<input name="cvouchtype" type="text" id="cvouchtype" value="<%=StringUtil.getNotEmptyStr(domainInstance.getCvouchtype(),"")%>" size="20" > 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("cbustype") %></td> 
+						<td>
+						<input name="cbustype" type="text" id="cbustype" value="<%=StringUtil.getNotEmptyStr(domainInstance.getCbustype(),"")%>" size="20" > 
+						</td> 
+				</tr> 
+				<tr> 
+						<td><%=domainInstance.getPropertyCnName("csource") %></td> 
+						<td>
+						<input name="csource" type="text" id="csource" value="<%=StringUtil.getNotEmptyStr(domainInstance.getCsource(),"")%>" size="20" > 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("cbuscode") %></td> 
+						<td>
+						<input name="cbuscode" type="text" id="cbuscode" value="<%=StringUtil.getNotEmptyStr(domainInstance.getCbuscode(),"")%>" size="20" > 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("cwhcode") %></td> 
+						<td>
+						<input name="cwhcode" type="text" id="cwhcode" value="<%=StringUtil.getNotEmptyStr(domainInstance.getCwhcode(),"")%>" size="20" > 
+						</td> 
+				</tr> 
+				<tr> 
+						<td><%=domainInstance.getPropertyCnName("ddate") %></td> 
+						<td>
+						<input name="ddate_min" type="text" id="ddate_min" value="<%=TimeUtil.date2str(domainSearchCondition.getDdate_min(),"yyyy-MM-dd")%>" size="9" onFocus="WdatePicker({isShowClear:false,readOnly:false,highLineWeekDay:true,dateFmt:'yyyy-MM-dd'})">- 
+						<input name="ddate_max" type="text" id="ddate_max" value="<%=TimeUtil.date2str(domainSearchCondition.getDdate_max(),"yyyy-MM-dd")%>" size="9" onFocus="WdatePicker({isShowClear:false,readOnly:false,highLineWeekDay:true,dateFmt:'yyyy-MM-dd'})"> 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("ccode") %></td> 
+						<td>
+						<input name="ccode" type="text" id="ccode" value="<%=StringUtil.getNotEmptyStr(domainInstance.getCcode(),"")%>" size="20" > 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("crdcode") %></td> 
+						<td>
+						<input name="crdcode" type="text" id="crdcode" value="<%=StringUtil.getNotEmptyStr(domainInstance.getCrdcode(),"")%>" size="20" > 
+						</td> 
+				</tr> 
+				<tr> 
+						<td><%=domainInstance.getPropertyCnName("cdepcode") %></td> 
+						<td>
+						<input name="cdepcode" type="text" id="cdepcode" value="<%=StringUtil.getNotEmptyStr(domainInstance.getCdepcode(),"")%>" size="20" > 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("cpersoncode") %></td> 
+						<td>
+						<input name="cpersoncode" type="text" id="cpersoncode" value="<%=StringUtil.getNotEmptyStr(domainInstance.getCpersoncode(),"")%>" size="20" > 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("cptcode") %></td> 
+						<td>
+						<input name="cptcode" type="text" id="cptcode" value="<%=StringUtil.getNotEmptyStr(domainInstance.getCptcode(),"")%>" size="20" > 
+						</td> 
+				</tr> 
+				<tr> 
+						<td><%=domainInstance.getPropertyCnName("cstcode") %></td> 
+						<td>
+						<input name="cstcode" type="text" id="cstcode" value="<%=StringUtil.getNotEmptyStr(domainInstance.getCstcode(),"")%>" size="20" > 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("ccuscode") %></td> 
+						<td>
+						<input name="ccuscode" type="text" id="ccuscode" value="<%=StringUtil.getNotEmptyStr(domainInstance.getCcuscode(),"")%>" size="20" > 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("cvencode") %></td> 
+						<td>
+						<input name="cvencode" type="text" id="cvencode" value="<%=StringUtil.getNotEmptyStr(domainInstance.getCvencode(),"")%>" size="20" > 
+						</td> 
+				</tr> 
+				<tr> 
+						<td><%=domainInstance.getPropertyCnName("cordercode") %></td> 
+						<td>
+						<input name="cordercode" type="text" id="cordercode" value="<%=StringUtil.getNotEmptyStr(domainInstance.getCordercode(),"")%>" size="20" > 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("carvcode") %></td> 
+						<td>
+						<input name="carvcode" type="text" id="carvcode" value="<%=StringUtil.getNotEmptyStr(domainInstance.getCarvcode(),"")%>" size="20" > 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("cbillcode") %></td> 
+						<td>
+						<input name="cbillcode_min" type="text" id="cbillcode_min" value="<%=StringUtil.getNotEmptyStr(domainSearchCondition.getCbillcode_min(),"")%>" size="9" >- 
+						<input name="cbillcode_max" type="text" id="cbillcode_max" value="<%=StringUtil.getNotEmptyStr(domainSearchCondition.getCbillcode_max(),"")%>" size="9" > 
+						</td> 
+				</tr> 
+				<tr> 
+						<td><%=domainInstance.getPropertyCnName("cdlcode") %></td> 
+						<td>
+						<input name="cdlcode_min" type="text" id="cdlcode_min" value="<%=StringUtil.getNotEmptyStr(domainSearchCondition.getCdlcode_min(),"")%>" size="9" >- 
+						<input name="cdlcode_max" type="text" id="cdlcode_max" value="<%=StringUtil.getNotEmptyStr(domainSearchCondition.getCdlcode_max(),"")%>" size="9" > 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("cprobatch") %></td> 
+						<td>
+						<input name="cprobatch" type="text" id="cprobatch" value="<%=StringUtil.getNotEmptyStr(domainInstance.getCprobatch(),"")%>" size="20" > 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("chandler") %></td> 
+						<td>
+						<input name="chandler" type="text" id="chandler" value="<%=StringUtil.getNotEmptyStr(domainInstance.getChandler(),"")%>" size="20" > 
+						</td> 
+				</tr> 
+				<tr> 
+						<td><%=domainInstance.getPropertyCnName("cmemo") %></td> 
+						<td>
+						<input name="cmemo" type="text" id="cmemo" value="<%=StringUtil.getNotEmptyStr(domainInstance.getCmemo(),"")%>" size="20" > 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("btransflag") %></td> 
+						<td>
+						<input name="btransflag" type="text" id="btransflag" value="<%=StringUtil.getNotEmptyStr(domainInstance.getBtransflag(),"")%>" size="20" > 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("caccounter") %></td> 
+						<td>
+						<input name="caccounter" type="text" id="caccounter" value="<%=StringUtil.getNotEmptyStr(domainInstance.getCaccounter(),"")%>" size="20" > 
+						</td> 
+				</tr> 
+				<tr> 
+						<td><%=domainInstance.getPropertyCnName("cmaker") %></td> 
+						<td>
+						<input name="cmaker" type="text" id="cmaker" value="<%=StringUtil.getNotEmptyStr(domainInstance.getCmaker(),"")%>" size="20" > 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("cdefine1") %></td> 
+						<td>
+						<input name="cdefine1" type="text" id="cdefine1" value="<%=StringUtil.getNotEmptyStr(domainInstance.getCdefine1(),"")%>" size="20" > 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("cdefine2") %></td> 
+						<td>
+						<input name="cdefine2" type="text" id="cdefine2" value="<%=StringUtil.getNotEmptyStr(domainInstance.getCdefine2(),"")%>" size="20" > 
+						</td> 
+				</tr> 
+				<tr> 
+						<td><%=domainInstance.getPropertyCnName("cdefine3") %></td> 
+						<td>
+						<input name="cdefine3" type="text" id="cdefine3" value="<%=StringUtil.getNotEmptyStr(domainInstance.getCdefine3(),"")%>" size="20" > 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("cdefine4") %></td> 
+						<td>
+						<input name="cdefine4_min" type="text" id="cdefine4_min" value="<%=TimeUtil.date2str(domainSearchCondition.getCdefine4_min(),"yyyy-MM-dd")%>" size="9" onFocus="WdatePicker({isShowClear:false,readOnly:false,highLineWeekDay:true,dateFmt:'yyyy-MM-dd'})">- 
+						<input name="cdefine4_max" type="text" id="cdefine4_max" value="<%=TimeUtil.date2str(domainSearchCondition.getCdefine4_max(),"yyyy-MM-dd")%>" size="9" onFocus="WdatePicker({isShowClear:false,readOnly:false,highLineWeekDay:true,dateFmt:'yyyy-MM-dd'})"> 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("cdefine5") %></td> 
+						<td>
+						<input name="cdefine5_min" type="text" id="cdefine5_min" value="<%=StringUtil.getNotEmptyStr(domainSearchCondition.getCdefine5_min(),"")%>" size="9" >- 
+						<input name="cdefine5_max" type="text" id="cdefine5_max" value="<%=StringUtil.getNotEmptyStr(domainSearchCondition.getCdefine5_max(),"")%>" size="9" > 
+						</td> 
+				</tr> 
+				<tr> 
+						<td><%=domainInstance.getPropertyCnName("cdefine6") %></td> 
+						<td>
+						<input name="cdefine6_min" type="text" id="cdefine6_min" value="<%=TimeUtil.date2str(domainSearchCondition.getCdefine6_min(),"yyyy-MM-dd")%>" size="9" onFocus="WdatePicker({isShowClear:false,readOnly:false,highLineWeekDay:true,dateFmt:'yyyy-MM-dd'})">- 
+						<input name="cdefine6_max" type="text" id="cdefine6_max" value="<%=TimeUtil.date2str(domainSearchCondition.getCdefine6_max(),"yyyy-MM-dd")%>" size="9" onFocus="WdatePicker({isShowClear:false,readOnly:false,highLineWeekDay:true,dateFmt:'yyyy-MM-dd'})"> 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("cdefine7") %></td> 
+						<td>
+						<input name="cdefine7_min" type="text" id="cdefine7_min" value="<%=StringUtil.formatDouble(domainSearchCondition.getCdefine7_min(),2)%>" size="9" >- 
+						<input name="cdefine7_max" type="text" id="cdefine7_max" value="<%=StringUtil.formatDouble(domainSearchCondition.getCdefine7_max(),2)%>" size="9" > 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("cdefine8") %></td> 
+						<td>
+						<input name="cdefine8" type="text" id="cdefine8" value="<%=StringUtil.getNotEmptyStr(domainInstance.getCdefine8(),"")%>" size="20" > 
+						</td> 
+				</tr> 
+				<tr> 
+						<td><%=domainInstance.getPropertyCnName("cdefine9") %></td> 
+						<td>
+						<input name="cdefine9" type="text" id="cdefine9" value="<%=StringUtil.getNotEmptyStr(domainInstance.getCdefine9(),"")%>" size="20" > 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("cdefine10") %></td> 
+						<td>
+						<input name="cdefine10" type="text" id="cdefine10" value="<%=StringUtil.getNotEmptyStr(domainInstance.getCdefine10(),"")%>" size="20" > 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("dkeepdate") %></td> 
+						<td>
+						<input name="dkeepdate" type="text" id="dkeepdate" value="<%=StringUtil.getNotEmptyStr(domainInstance.getDkeepdate(),"")%>" size="20" > 
+						</td> 
+				</tr> 
+				<tr> 
+						<td><%=domainInstance.getPropertyCnName("dveridate") %></td> 
+						<td>
+						<input name="dveridate_min" type="text" id="dveridate_min" value="<%=TimeUtil.date2str(domainSearchCondition.getDveridate_min(),"yyyy-MM-dd")%>" size="9" onFocus="WdatePicker({isShowClear:false,readOnly:false,highLineWeekDay:true,dateFmt:'yyyy-MM-dd'})">- 
+						<input name="dveridate_max" type="text" id="dveridate_max" value="<%=TimeUtil.date2str(domainSearchCondition.getDveridate_max(),"yyyy-MM-dd")%>" size="9" onFocus="WdatePicker({isShowClear:false,readOnly:false,highLineWeekDay:true,dateFmt:'yyyy-MM-dd'})"> 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("bpufirst") %></td> 
+						<td>
+						<input name="bpufirst" type="text" id="bpufirst" value="<%=StringUtil.getNotEmptyStr(domainInstance.getBpufirst(),"")%>" size="20" > 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("biafirst") %></td> 
+						<td>
+						<input name="biafirst" type="text" id="biafirst" value="<%=StringUtil.getNotEmptyStr(domainInstance.getBiafirst(),"")%>" size="20" > 
+						</td> 
+				</tr> 
+				<tr> 
+						<td><%=domainInstance.getPropertyCnName("imquantity") %></td> 
+						<td>
+						<input name="imquantity_min" type="text" id="imquantity_min" value="<%=StringUtil.formatDouble(domainSearchCondition.getImquantity_min(),2)%>" size="9" >- 
+						<input name="imquantity_max" type="text" id="imquantity_max" value="<%=StringUtil.formatDouble(domainSearchCondition.getImquantity_max(),2)%>" size="9" > 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("darvdate") %></td> 
+						<td>
+						<input name="darvdate_min" type="text" id="darvdate_min" value="<%=TimeUtil.date2str(domainSearchCondition.getDarvdate_min(),"yyyy-MM-dd")%>" size="9" onFocus="WdatePicker({isShowClear:false,readOnly:false,highLineWeekDay:true,dateFmt:'yyyy-MM-dd'})">- 
+						<input name="darvdate_max" type="text" id="darvdate_max" value="<%=TimeUtil.date2str(domainSearchCondition.getDarvdate_max(),"yyyy-MM-dd")%>" size="9" onFocus="WdatePicker({isShowClear:false,readOnly:false,highLineWeekDay:true,dateFmt:'yyyy-MM-dd'})"> 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("cchkcode") %></td> 
+						<td>
+						<input name="cchkcode" type="text" id="cchkcode" value="<%=StringUtil.getNotEmptyStr(domainInstance.getCchkcode(),"")%>" size="20" > 
+						</td> 
+				</tr> 
+				<tr> 
+						<td><%=domainInstance.getPropertyCnName("dchkdate") %></td> 
+						<td>
+						<input name="dchkdate_min" type="text" id="dchkdate_min" value="<%=TimeUtil.date2str(domainSearchCondition.getDchkdate_min(),"yyyy-MM-dd")%>" size="9" onFocus="WdatePicker({isShowClear:false,readOnly:false,highLineWeekDay:true,dateFmt:'yyyy-MM-dd'})">- 
+						<input name="dchkdate_max" type="text" id="dchkdate_max" value="<%=TimeUtil.date2str(domainSearchCondition.getDchkdate_max(),"yyyy-MM-dd")%>" size="9" onFocus="WdatePicker({isShowClear:false,readOnly:false,highLineWeekDay:true,dateFmt:'yyyy-MM-dd'})"> 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("cchkperson") %></td> 
+						<td>
+						<input name="cchkperson" type="text" id="cchkperson" value="<%=StringUtil.getNotEmptyStr(domainInstance.getCchkperson(),"")%>" size="20" > 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("vt_id") %></td> 
+						<td>
+						<input name="vt_id_min" type="text" id="vt_id_min" value="<%=StringUtil.getNotEmptyStr(domainSearchCondition.getVt_id_min(),"")%>" size="9" >- 
+						<input name="vt_id_max" type="text" id="vt_id_max" value="<%=StringUtil.getNotEmptyStr(domainSearchCondition.getVt_id_max(),"")%>" size="9" > 
+						</td> 
+				</tr> 
+				<tr> 
+						<td><%=domainInstance.getPropertyCnName("bisstqc") %></td> 
+						<td>
+						<input name="bisstqc" type="text" id="bisstqc" value="<%=StringUtil.getNotEmptyStr(domainInstance.getBisstqc(),"")%>" size="20" > 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("cdefine11") %></td> 
+						<td>
+						<input name="cdefine11" type="text" id="cdefine11" value="<%=StringUtil.getNotEmptyStr(domainInstance.getCdefine11(),"")%>" size="20" > 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("cdefine12") %></td> 
+						<td>
+						<input name="cdefine12" type="text" id="cdefine12" value="<%=StringUtil.getNotEmptyStr(domainInstance.getCdefine12(),"")%>" size="20" > 
+						</td> 
+				</tr> 
+				<tr> 
+						<td><%=domainInstance.getPropertyCnName("cdefine13") %></td> 
+						<td>
+						<input name="cdefine13" type="text" id="cdefine13" value="<%=StringUtil.getNotEmptyStr(domainInstance.getCdefine13(),"")%>" size="20" > 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("cdefine14") %></td> 
+						<td>
+						<input name="cdefine14" type="text" id="cdefine14" value="<%=StringUtil.getNotEmptyStr(domainInstance.getCdefine14(),"")%>" size="20" > 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("cdefine15") %></td> 
+						<td>
+						<input name="cdefine15_min" type="text" id="cdefine15_min" value="<%=StringUtil.getNotEmptyStr(domainSearchCondition.getCdefine15_min(),"")%>" size="9" >- 
+						<input name="cdefine15_max" type="text" id="cdefine15_max" value="<%=StringUtil.getNotEmptyStr(domainSearchCondition.getCdefine15_max(),"")%>" size="9" > 
+						</td> 
+				</tr> 
+				<tr> 
+						<td><%=domainInstance.getPropertyCnName("cdefine16") %></td> 
+						<td>
+						<input name="cdefine16_min" type="text" id="cdefine16_min" value="<%=StringUtil.formatDouble(domainSearchCondition.getCdefine16_min(),2)%>" size="9" >- 
+						<input name="cdefine16_max" type="text" id="cdefine16_max" value="<%=StringUtil.formatDouble(domainSearchCondition.getCdefine16_max(),2)%>" size="9" > 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("gspcheck") %></td> 
+						<td>
+						<input name="gspcheck" type="text" id="gspcheck" value="<%=StringUtil.getNotEmptyStr(domainInstance.getGspcheck(),"")%>" size="20" > 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("ipurorderid") %></td> 
+						<td>
+						<input name="ipurorderid_min" type="text" id="ipurorderid_min" value="<%=StringUtil.getNotEmptyStr(domainSearchCondition.getIpurorderid_min(),"")%>" size="9" >- 
+						<input name="ipurorderid_max" type="text" id="ipurorderid_max" value="<%=StringUtil.getNotEmptyStr(domainSearchCondition.getIpurorderid_max(),"")%>" size="9" > 
+						</td> 
+				</tr> 
+				<tr> 
+						<td><%=domainInstance.getPropertyCnName("ipurarriveid") %></td> 
+						<td>
+						<input name="ipurarriveid_min" type="text" id="ipurarriveid_min" value="<%=StringUtil.getNotEmptyStr(domainSearchCondition.getIpurarriveid_min(),"")%>" size="9" >- 
+						<input name="ipurarriveid_max" type="text" id="ipurarriveid_max" value="<%=StringUtil.getNotEmptyStr(domainSearchCondition.getIpurarriveid_max(),"")%>" size="9" > 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("iarriveid") %></td> 
+						<td>
+						<input name="iarriveid" type="text" id="iarriveid" value="<%=StringUtil.getNotEmptyStr(domainInstance.getIarriveid(),"")%>" size="20" > 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("isalebillid") %></td> 
+						<td>
+						<input name="isalebillid" type="text" id="isalebillid" value="<%=StringUtil.getNotEmptyStr(domainInstance.getIsalebillid(),"")%>" size="20" > 
+						</td> 
+				</tr> 
+				<tr> 
+						<td><%=domainInstance.getPropertyCnName("ufts") %></td> 
+						<td>
+						<input name="ufts" type="text" id="ufts" value="" size="20" > 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("itaxrate") %></td> 
+						<td>
+						<input name="itaxrate_min" type="text" id="itaxrate_min" value="<%=StringUtil.formatDouble(domainSearchCondition.getItaxrate_min(),2)%>" size="9" >- 
+						<input name="itaxrate_max" type="text" id="itaxrate_max" value="<%=StringUtil.formatDouble(domainSearchCondition.getItaxrate_max(),2)%>" size="9" > 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("iexchrate") %></td> 
+						<td>
+						<input name="iexchrate_min" type="text" id="iexchrate_min" value="<%=StringUtil.formatDouble(domainSearchCondition.getIexchrate_min(),2)%>" size="9" >- 
+						<input name="iexchrate_max" type="text" id="iexchrate_max" value="<%=StringUtil.formatDouble(domainSearchCondition.getIexchrate_max(),2)%>" size="9" > 
+						</td> 
+				</tr> 
+				<tr> 
+						<td><%=domainInstance.getPropertyCnName("cexch_name") %></td> 
+						<td>
+						<input name="cexch_name" type="text" id="cexch_name" value="<%=StringUtil.getNotEmptyStr(domainInstance.getCexch_name(),"")%>" size="20" > 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("bomfirst") %></td> 
+						<td>
+						<input name="bomfirst" type="text" id="bomfirst" value="<%=StringUtil.getNotEmptyStr(domainInstance.getBomfirst(),"")%>" size="20" > 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("bfrompreyear") %></td> 
+						<td>
+						<input name="bfrompreyear" type="text" id="bfrompreyear" value="<%=StringUtil.getNotEmptyStr(domainInstance.getBfrompreyear(),"")%>" size="20" > 
+						</td> 
+				</tr> 
+				<tr> 
+						<td><%=domainInstance.getPropertyCnName("bislsquery") %></td> 
+						<td>
+						<input name="bislsquery" type="text" id="bislsquery" value="<%=StringUtil.getNotEmptyStr(domainInstance.getBislsquery(),"")%>" size="20" > 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("biscomplement") %></td> 
+						<td>
+						<input name="biscomplement_min" type="text" id="biscomplement_min" value="<%=StringUtil.getNotEmptyStr(domainSearchCondition.getBiscomplement_min(),"")%>" size="9" >- 
+						<input name="biscomplement_max" type="text" id="biscomplement_max" value="<%=StringUtil.getNotEmptyStr(domainSearchCondition.getBiscomplement_max(),"")%>" size="9" > 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("idiscounttaxtype") %></td> 
+						<td>
+						<input name="idiscounttaxtype" type="text" id="idiscounttaxtype" value="<%=StringUtil.getNotEmptyStr(domainInstance.getIdiscounttaxtype(),"")%>" size="20" > 
+						</td> 
+				</tr> 
+				<tr> 
+						<td><%=domainInstance.getPropertyCnName("ireturncount") %></td> 
+						<td>
+						<input name="ireturncount_min" type="text" id="ireturncount_min" value="<%=StringUtil.getNotEmptyStr(domainSearchCondition.getIreturncount_min(),"")%>" size="9" >- 
+						<input name="ireturncount_max" type="text" id="ireturncount_max" value="<%=StringUtil.getNotEmptyStr(domainSearchCondition.getIreturncount_max(),"")%>" size="9" > 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("iverifystate") %></td> 
+						<td>
+						<input name="iverifystate_min" type="text" id="iverifystate_min" value="<%=StringUtil.getNotEmptyStr(domainSearchCondition.getIverifystate_min(),"")%>" size="9" >- 
+						<input name="iverifystate_max" type="text" id="iverifystate_max" value="<%=StringUtil.getNotEmptyStr(domainSearchCondition.getIverifystate_max(),"")%>" size="9" > 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("iswfcontrolled") %></td> 
+						<td>
+						<input name="iswfcontrolled_min" type="text" id="iswfcontrolled_min" value="<%=StringUtil.getNotEmptyStr(domainSearchCondition.getIswfcontrolled_min(),"")%>" size="9" >- 
+						<input name="iswfcontrolled_max" type="text" id="iswfcontrolled_max" value="<%=StringUtil.getNotEmptyStr(domainSearchCondition.getIswfcontrolled_max(),"")%>" size="9" > 
+						</td> 
+				</tr> 
+				<tr> 
+						<td><%=domainInstance.getPropertyCnName("cmodifyperson") %></td> 
+						<td>
+						<input name="cmodifyperson" type="text" id="cmodifyperson" value="<%=StringUtil.getNotEmptyStr(domainInstance.getCmodifyperson(),"")%>" size="20" > 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("dmodifydate") %></td> 
+						<td>
+						<input name="dmodifydate_min" type="text" id="dmodifydate_min" value="<%=TimeUtil.date2str(domainSearchCondition.getDmodifydate_min(),"yyyy-MM-dd")%>" size="9" onFocus="WdatePicker({isShowClear:false,readOnly:false,highLineWeekDay:true,dateFmt:'yyyy-MM-dd'})">- 
+						<input name="dmodifydate_max" type="text" id="dmodifydate_max" value="<%=TimeUtil.date2str(domainSearchCondition.getDmodifydate_max(),"yyyy-MM-dd")%>" size="9" onFocus="WdatePicker({isShowClear:false,readOnly:false,highLineWeekDay:true,dateFmt:'yyyy-MM-dd'})"> 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("dnmaketime") %></td> 
+						<td>
+						<input name="dnmaketime_min" type="text" id="dnmaketime_min" value="<%=TimeUtil.date2str(domainSearchCondition.getDnmaketime_min(),"yyyy-MM-dd")%>" size="9" onFocus="WdatePicker({isShowClear:false,readOnly:false,highLineWeekDay:true,dateFmt:'yyyy-MM-dd'})">- 
+						<input name="dnmaketime_max" type="text" id="dnmaketime_max" value="<%=TimeUtil.date2str(domainSearchCondition.getDnmaketime_max(),"yyyy-MM-dd")%>" size="9" onFocus="WdatePicker({isShowClear:false,readOnly:false,highLineWeekDay:true,dateFmt:'yyyy-MM-dd'})"> 
+						</td> 
+				</tr> 
+				<tr> 
+						<td><%=domainInstance.getPropertyCnName("dnmodifytime") %></td> 
+						<td>
+						<input name="dnmodifytime_min" type="text" id="dnmodifytime_min" value="<%=TimeUtil.date2str(domainSearchCondition.getDnmodifytime_min(),"yyyy-MM-dd")%>" size="9" onFocus="WdatePicker({isShowClear:false,readOnly:false,highLineWeekDay:true,dateFmt:'yyyy-MM-dd'})">- 
+						<input name="dnmodifytime_max" type="text" id="dnmodifytime_max" value="<%=TimeUtil.date2str(domainSearchCondition.getDnmodifytime_max(),"yyyy-MM-dd")%>" size="9" onFocus="WdatePicker({isShowClear:false,readOnly:false,highLineWeekDay:true,dateFmt:'yyyy-MM-dd'})"> 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("dnverifytime") %></td> 
+						<td>
+						<input name="dnverifytime_min" type="text" id="dnverifytime_min" value="<%=TimeUtil.date2str(domainSearchCondition.getDnverifytime_min(),"yyyy-MM-dd")%>" size="9" onFocus="WdatePicker({isShowClear:false,readOnly:false,highLineWeekDay:true,dateFmt:'yyyy-MM-dd'})">- 
+						<input name="dnverifytime_max" type="text" id="dnverifytime_max" value="<%=TimeUtil.date2str(domainSearchCondition.getDnverifytime_max(),"yyyy-MM-dd")%>" size="9" onFocus="WdatePicker({isShowClear:false,readOnly:false,highLineWeekDay:true,dateFmt:'yyyy-MM-dd'})"> 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("bredvouch") %></td> 
+						<td>
+						<input name="bredvouch_min" type="text" id="bredvouch_min" value="<%=StringUtil.getNotEmptyStr(domainSearchCondition.getBredvouch_min(),"")%>" size="9" >- 
+						<input name="bredvouch_max" type="text" id="bredvouch_max" value="<%=StringUtil.getNotEmptyStr(domainSearchCondition.getBredvouch_max(),"")%>" size="9" > 
+						</td> 
+				</tr> 
+				<tr> 
+						<td><%=domainInstance.getPropertyCnName("cvenpuomprotocol") %></td> 
+						<td>
+						<input name="cvenpuomprotocol" type="text" id="cvenpuomprotocol" value="<%=StringUtil.getNotEmptyStr(domainInstance.getCvenpuomprotocol(),"")%>" size="20" > 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("dcreditstart") %></td> 
+						<td>
+						<input name="dcreditstart_min" type="text" id="dcreditstart_min" value="<%=TimeUtil.date2str(domainSearchCondition.getDcreditstart_min(),"yyyy-MM-dd")%>" size="9" onFocus="WdatePicker({isShowClear:false,readOnly:false,highLineWeekDay:true,dateFmt:'yyyy-MM-dd'})">- 
+						<input name="dcreditstart_max" type="text" id="dcreditstart_max" value="<%=TimeUtil.date2str(domainSearchCondition.getDcreditstart_max(),"yyyy-MM-dd")%>" size="9" onFocus="WdatePicker({isShowClear:false,readOnly:false,highLineWeekDay:true,dateFmt:'yyyy-MM-dd'})"> 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("icreditperiod") %></td> 
+						<td>
+						<input name="icreditperiod_min" type="text" id="icreditperiod_min" value="<%=StringUtil.getNotEmptyStr(domainSearchCondition.getIcreditperiod_min(),"")%>" size="9" >- 
+						<input name="icreditperiod_max" type="text" id="icreditperiod_max" value="<%=StringUtil.getNotEmptyStr(domainSearchCondition.getIcreditperiod_max(),"")%>" size="9" > 
+						</td> 
+				</tr> 
+				<tr> 
+						<td><%=domainInstance.getPropertyCnName("dgatheringdate") %></td> 
+						<td>
+						<input name="dgatheringdate_min" type="text" id="dgatheringdate_min" value="<%=TimeUtil.date2str(domainSearchCondition.getDgatheringdate_min(),"yyyy-MM-dd")%>" size="9" onFocus="WdatePicker({isShowClear:false,readOnly:false,highLineWeekDay:true,dateFmt:'yyyy-MM-dd'})">- 
+						<input name="dgatheringdate_max" type="text" id="dgatheringdate_max" value="<%=TimeUtil.date2str(domainSearchCondition.getDgatheringdate_max(),"yyyy-MM-dd")%>" size="9" onFocus="WdatePicker({isShowClear:false,readOnly:false,highLineWeekDay:true,dateFmt:'yyyy-MM-dd'})"> 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("bcredit") %></td> 
+						<td>
+						<input name="bcredit" type="text" id="bcredit" value="<%=StringUtil.getNotEmptyStr(domainInstance.getBcredit(),"")%>" size="20" > 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("iflowid") %></td> 
+						<td>
+						<input name="iflowid_min" type="text" id="iflowid_min" value="<%=StringUtil.getNotEmptyStr(domainSearchCondition.getIflowid_min(),"")%>" size="9" >- 
+						<input name="iflowid_max" type="text" id="iflowid_max" value="<%=StringUtil.getNotEmptyStr(domainSearchCondition.getIflowid_max(),"")%>" size="9" > 
+						</td> 
+				</tr> 
+				<tr> 
+						<td><%=domainInstance.getPropertyCnName("cpzid") %></td> 
+						<td>
+						<input name="cpzid" type="text" id="cpzid" value="<%=StringUtil.getNotEmptyStr(domainInstance.getCpzid(),"")%>" size="20" > 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("csourcels") %></td> 
+						<td>
+						<input name="csourcels" type="text" id="csourcels" value="<%=StringUtil.getNotEmptyStr(domainInstance.getCsourcels(),"")%>" size="20" > 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("csourcecodels") %></td> 
+						<td>
+						<input name="csourcecodels" type="text" id="csourcecodels" value="<%=StringUtil.getNotEmptyStr(domainInstance.getCsourcecodels(),"")%>" size="20" > 
+						</td> 
+				</tr> 
+				<tr> 
+						<td><%=domainInstance.getPropertyCnName("iprintcount") %></td> 
+						<td>
+						<input name="iprintcount_min" type="text" id="iprintcount_min" value="<%=StringUtil.getNotEmptyStr(domainSearchCondition.getIprintcount_min(),"")%>" size="9" >- 
+						<input name="iprintcount_max" type="text" id="iprintcount_max" value="<%=StringUtil.getNotEmptyStr(domainSearchCondition.getIprintcount_max(),"")%>" size="9" > 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("csysbarcode") %></td> 
+						<td>
+						<input name="csysbarcode" type="text" id="csysbarcode" value="<%=StringUtil.getNotEmptyStr(domainInstance.getCsysbarcode(),"")%>" size="20" > 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("ccurrentauditor") %></td> 
+						<td>
+						<input name="ccurrentauditor" type="text" id="ccurrentauditor" value="<%=StringUtil.getNotEmptyStr(domainInstance.getCcurrentauditor(),"")%>" size="20" > 
+						</td> 
+				</tr> 
+			</table> 
+ 
+			<!-- 数据信息 -->  
+			<table id="data_table" class="table table-bordered" align="center" width="98%"> 
+				<thead> 
+					<tr> 
+						<th><input type="checkbox" name="checkAllBox" id="checkAllBox"></th> 
+						<th>序号</th> 
+						<th onClick="sortBy(this)" db_col="brdflag" class="<%=domainSearchCondition.getSortClassByDbColumn("brdflag")%>"><%=domainInstance.getPropertyCnName("brdflag") %></th> 
+						<th onClick="sortBy(this)" db_col="cvouchtype" class="<%=domainSearchCondition.getSortClassByDbColumn("cvouchtype")%>"><%=domainInstance.getPropertyCnName("cvouchtype") %></th> 
+						<th onClick="sortBy(this)" db_col="cbustype" class="<%=domainSearchCondition.getSortClassByDbColumn("cbustype")%>"><%=domainInstance.getPropertyCnName("cbustype") %></th> 
+						<th onClick="sortBy(this)" db_col="csource" class="<%=domainSearchCondition.getSortClassByDbColumn("csource")%>"><%=domainInstance.getPropertyCnName("csource") %></th> 
+						<th onClick="sortBy(this)" db_col="cbuscode" class="<%=domainSearchCondition.getSortClassByDbColumn("cbuscode")%>"><%=domainInstance.getPropertyCnName("cbuscode") %></th> 
+						<th onClick="sortBy(this)" db_col="cwhcode" class="<%=domainSearchCondition.getSortClassByDbColumn("cwhcode")%>"><%=domainInstance.getPropertyCnName("cwhcode") %></th> 
+						<th onClick="sortBy(this)" db_col="ddate" class="<%=domainSearchCondition.getSortClassByDbColumn("ddate")%>"><%=domainInstance.getPropertyCnName("ddate") %></th> 
+						<th onClick="sortBy(this)" db_col="ccode" class="<%=domainSearchCondition.getSortClassByDbColumn("ccode")%>"><%=domainInstance.getPropertyCnName("ccode") %></th> 
+						<th onClick="sortBy(this)" db_col="crdcode" class="<%=domainSearchCondition.getSortClassByDbColumn("crdcode")%>"><%=domainInstance.getPropertyCnName("crdcode") %></th> 
+						<th onClick="sortBy(this)" db_col="cdepcode" class="<%=domainSearchCondition.getSortClassByDbColumn("cdepcode")%>"><%=domainInstance.getPropertyCnName("cdepcode") %></th> 
+						<th onClick="sortBy(this)" db_col="cpersoncode" class="<%=domainSearchCondition.getSortClassByDbColumn("cpersoncode")%>"><%=domainInstance.getPropertyCnName("cpersoncode") %></th> 
+						<th onClick="sortBy(this)" db_col="cptcode" class="<%=domainSearchCondition.getSortClassByDbColumn("cptcode")%>"><%=domainInstance.getPropertyCnName("cptcode") %></th> 
+						<th onClick="sortBy(this)" db_col="cstcode" class="<%=domainSearchCondition.getSortClassByDbColumn("cstcode")%>"><%=domainInstance.getPropertyCnName("cstcode") %></th> 
+						<th onClick="sortBy(this)" db_col="ccuscode" class="<%=domainSearchCondition.getSortClassByDbColumn("ccuscode")%>"><%=domainInstance.getPropertyCnName("ccuscode") %></th> 
+						<th onClick="sortBy(this)" db_col="cvencode" class="<%=domainSearchCondition.getSortClassByDbColumn("cvencode")%>"><%=domainInstance.getPropertyCnName("cvencode") %></th> 
+						<th onClick="sortBy(this)" db_col="cordercode" class="<%=domainSearchCondition.getSortClassByDbColumn("cordercode")%>"><%=domainInstance.getPropertyCnName("cordercode") %></th> 
+						<th onClick="sortBy(this)" db_col="carvcode" class="<%=domainSearchCondition.getSortClassByDbColumn("carvcode")%>"><%=domainInstance.getPropertyCnName("carvcode") %></th> 
+						<th onClick="sortBy(this)" db_col="cbillcode" class="<%=domainSearchCondition.getSortClassByDbColumn("cbillcode")%>"><%=domainInstance.getPropertyCnName("cbillcode") %></th> 
+						<th onClick="sortBy(this)" db_col="cdlcode" class="<%=domainSearchCondition.getSortClassByDbColumn("cdlcode")%>"><%=domainInstance.getPropertyCnName("cdlcode") %></th> 
+						<th onClick="sortBy(this)" db_col="cprobatch" class="<%=domainSearchCondition.getSortClassByDbColumn("cprobatch")%>"><%=domainInstance.getPropertyCnName("cprobatch") %></th> 
+						<th onClick="sortBy(this)" db_col="chandler" class="<%=domainSearchCondition.getSortClassByDbColumn("chandler")%>"><%=domainInstance.getPropertyCnName("chandler") %></th> 
+						<th onClick="sortBy(this)" db_col="cmemo" class="<%=domainSearchCondition.getSortClassByDbColumn("cmemo")%>"><%=domainInstance.getPropertyCnName("cmemo") %></th> 
+						<th onClick="sortBy(this)" db_col="btransflag" class="<%=domainSearchCondition.getSortClassByDbColumn("btransflag")%>"><%=domainInstance.getPropertyCnName("btransflag") %></th> 
+						<th onClick="sortBy(this)" db_col="caccounter" class="<%=domainSearchCondition.getSortClassByDbColumn("caccounter")%>"><%=domainInstance.getPropertyCnName("caccounter") %></th> 
+						<th onClick="sortBy(this)" db_col="cmaker" class="<%=domainSearchCondition.getSortClassByDbColumn("cmaker")%>"><%=domainInstance.getPropertyCnName("cmaker") %></th> 
+						<th onClick="sortBy(this)" db_col="cdefine1" class="<%=domainSearchCondition.getSortClassByDbColumn("cdefine1")%>"><%=domainInstance.getPropertyCnName("cdefine1") %></th> 
+						<th onClick="sortBy(this)" db_col="cdefine2" class="<%=domainSearchCondition.getSortClassByDbColumn("cdefine2")%>"><%=domainInstance.getPropertyCnName("cdefine2") %></th> 
+						<th onClick="sortBy(this)" db_col="cdefine3" class="<%=domainSearchCondition.getSortClassByDbColumn("cdefine3")%>"><%=domainInstance.getPropertyCnName("cdefine3") %></th> 
+						<th onClick="sortBy(this)" db_col="cdefine4" class="<%=domainSearchCondition.getSortClassByDbColumn("cdefine4")%>"><%=domainInstance.getPropertyCnName("cdefine4") %></th> 
+						<th onClick="sortBy(this)" db_col="cdefine5" class="<%=domainSearchCondition.getSortClassByDbColumn("cdefine5")%>"><%=domainInstance.getPropertyCnName("cdefine5") %></th> 
+						<th onClick="sortBy(this)" db_col="cdefine6" class="<%=domainSearchCondition.getSortClassByDbColumn("cdefine6")%>"><%=domainInstance.getPropertyCnName("cdefine6") %></th> 
+						<th onClick="sortBy(this)" db_col="cdefine7" class="<%=domainSearchCondition.getSortClassByDbColumn("cdefine7")%>"><%=domainInstance.getPropertyCnName("cdefine7") %></th> 
+						<th onClick="sortBy(this)" db_col="cdefine8" class="<%=domainSearchCondition.getSortClassByDbColumn("cdefine8")%>"><%=domainInstance.getPropertyCnName("cdefine8") %></th> 
+						<th onClick="sortBy(this)" db_col="cdefine9" class="<%=domainSearchCondition.getSortClassByDbColumn("cdefine9")%>"><%=domainInstance.getPropertyCnName("cdefine9") %></th> 
+						<th onClick="sortBy(this)" db_col="cdefine10" class="<%=domainSearchCondition.getSortClassByDbColumn("cdefine10")%>"><%=domainInstance.getPropertyCnName("cdefine10") %></th> 
+						<th onClick="sortBy(this)" db_col="dkeepdate" class="<%=domainSearchCondition.getSortClassByDbColumn("dkeepdate")%>"><%=domainInstance.getPropertyCnName("dkeepdate") %></th> 
+						<th onClick="sortBy(this)" db_col="dveridate" class="<%=domainSearchCondition.getSortClassByDbColumn("dveridate")%>"><%=domainInstance.getPropertyCnName("dveridate") %></th> 
+						<th onClick="sortBy(this)" db_col="bpufirst" class="<%=domainSearchCondition.getSortClassByDbColumn("bpufirst")%>"><%=domainInstance.getPropertyCnName("bpufirst") %></th> 
+						<th onClick="sortBy(this)" db_col="biafirst" class="<%=domainSearchCondition.getSortClassByDbColumn("biafirst")%>"><%=domainInstance.getPropertyCnName("biafirst") %></th> 
+						<th onClick="sortBy(this)" db_col="imquantity" class="<%=domainSearchCondition.getSortClassByDbColumn("imquantity")%>"><%=domainInstance.getPropertyCnName("imquantity") %></th> 
+						<th onClick="sortBy(this)" db_col="darvdate" class="<%=domainSearchCondition.getSortClassByDbColumn("darvdate")%>"><%=domainInstance.getPropertyCnName("darvdate") %></th> 
+						<th onClick="sortBy(this)" db_col="cchkcode" class="<%=domainSearchCondition.getSortClassByDbColumn("cchkcode")%>"><%=domainInstance.getPropertyCnName("cchkcode") %></th> 
+						<th onClick="sortBy(this)" db_col="dchkdate" class="<%=domainSearchCondition.getSortClassByDbColumn("dchkdate")%>"><%=domainInstance.getPropertyCnName("dchkdate") %></th> 
+						<th onClick="sortBy(this)" db_col="cchkperson" class="<%=domainSearchCondition.getSortClassByDbColumn("cchkperson")%>"><%=domainInstance.getPropertyCnName("cchkperson") %></th> 
+						<th onClick="sortBy(this)" db_col="vt_id" class="<%=domainSearchCondition.getSortClassByDbColumn("vt_id")%>"><%=domainInstance.getPropertyCnName("vt_id") %></th> 
+						<th onClick="sortBy(this)" db_col="bisstqc" class="<%=domainSearchCondition.getSortClassByDbColumn("bisstqc")%>"><%=domainInstance.getPropertyCnName("bisstqc") %></th> 
+						<th onClick="sortBy(this)" db_col="cdefine11" class="<%=domainSearchCondition.getSortClassByDbColumn("cdefine11")%>"><%=domainInstance.getPropertyCnName("cdefine11") %></th> 
+						<th onClick="sortBy(this)" db_col="cdefine12" class="<%=domainSearchCondition.getSortClassByDbColumn("cdefine12")%>"><%=domainInstance.getPropertyCnName("cdefine12") %></th> 
+						<th onClick="sortBy(this)" db_col="cdefine13" class="<%=domainSearchCondition.getSortClassByDbColumn("cdefine13")%>"><%=domainInstance.getPropertyCnName("cdefine13") %></th> 
+						<th onClick="sortBy(this)" db_col="cdefine14" class="<%=domainSearchCondition.getSortClassByDbColumn("cdefine14")%>"><%=domainInstance.getPropertyCnName("cdefine14") %></th> 
+						<th onClick="sortBy(this)" db_col="cdefine15" class="<%=domainSearchCondition.getSortClassByDbColumn("cdefine15")%>"><%=domainInstance.getPropertyCnName("cdefine15") %></th> 
+						<th onClick="sortBy(this)" db_col="cdefine16" class="<%=domainSearchCondition.getSortClassByDbColumn("cdefine16")%>"><%=domainInstance.getPropertyCnName("cdefine16") %></th> 
+						<th onClick="sortBy(this)" db_col="gspcheck" class="<%=domainSearchCondition.getSortClassByDbColumn("gspcheck")%>"><%=domainInstance.getPropertyCnName("gspcheck") %></th> 
+						<th onClick="sortBy(this)" db_col="ipurorderid" class="<%=domainSearchCondition.getSortClassByDbColumn("ipurorderid")%>"><%=domainInstance.getPropertyCnName("ipurorderid") %></th> 
+						<th onClick="sortBy(this)" db_col="ipurarriveid" class="<%=domainSearchCondition.getSortClassByDbColumn("ipurarriveid")%>"><%=domainInstance.getPropertyCnName("ipurarriveid") %></th> 
+						<th onClick="sortBy(this)" db_col="iarriveid" class="<%=domainSearchCondition.getSortClassByDbColumn("iarriveid")%>"><%=domainInstance.getPropertyCnName("iarriveid") %></th> 
+						<th onClick="sortBy(this)" db_col="isalebillid" class="<%=domainSearchCondition.getSortClassByDbColumn("isalebillid")%>"><%=domainInstance.getPropertyCnName("isalebillid") %></th> 
+						<th onClick="sortBy(this)" db_col="ufts" class="<%=domainSearchCondition.getSortClassByDbColumn("ufts")%>"><%=domainInstance.getPropertyCnName("ufts") %></th> 
+						<th onClick="sortBy(this)" db_col="itaxrate" class="<%=domainSearchCondition.getSortClassByDbColumn("itaxrate")%>"><%=domainInstance.getPropertyCnName("itaxrate") %></th> 
+						<th onClick="sortBy(this)" db_col="iexchrate" class="<%=domainSearchCondition.getSortClassByDbColumn("iexchrate")%>"><%=domainInstance.getPropertyCnName("iexchrate") %></th> 
+						<th onClick="sortBy(this)" db_col="cexch_name" class="<%=domainSearchCondition.getSortClassByDbColumn("cexch_name")%>"><%=domainInstance.getPropertyCnName("cexch_name") %></th> 
+						<th onClick="sortBy(this)" db_col="bomfirst" class="<%=domainSearchCondition.getSortClassByDbColumn("bomfirst")%>"><%=domainInstance.getPropertyCnName("bomfirst") %></th> 
+						<th onClick="sortBy(this)" db_col="bfrompreyear" class="<%=domainSearchCondition.getSortClassByDbColumn("bfrompreyear")%>"><%=domainInstance.getPropertyCnName("bfrompreyear") %></th> 
+						<th onClick="sortBy(this)" db_col="bislsquery" class="<%=domainSearchCondition.getSortClassByDbColumn("bislsquery")%>"><%=domainInstance.getPropertyCnName("bislsquery") %></th> 
+						<th onClick="sortBy(this)" db_col="biscomplement" class="<%=domainSearchCondition.getSortClassByDbColumn("biscomplement")%>"><%=domainInstance.getPropertyCnName("biscomplement") %></th> 
+						<th onClick="sortBy(this)" db_col="idiscounttaxtype" class="<%=domainSearchCondition.getSortClassByDbColumn("idiscounttaxtype")%>"><%=domainInstance.getPropertyCnName("idiscounttaxtype") %></th> 
+						<th onClick="sortBy(this)" db_col="ireturncount" class="<%=domainSearchCondition.getSortClassByDbColumn("ireturncount")%>"><%=domainInstance.getPropertyCnName("ireturncount") %></th> 
+						<th onClick="sortBy(this)" db_col="iverifystate" class="<%=domainSearchCondition.getSortClassByDbColumn("iverifystate")%>"><%=domainInstance.getPropertyCnName("iverifystate") %></th> 
+						<th onClick="sortBy(this)" db_col="iswfcontrolled" class="<%=domainSearchCondition.getSortClassByDbColumn("iswfcontrolled")%>"><%=domainInstance.getPropertyCnName("iswfcontrolled") %></th> 
+						<th onClick="sortBy(this)" db_col="cmodifyperson" class="<%=domainSearchCondition.getSortClassByDbColumn("cmodifyperson")%>"><%=domainInstance.getPropertyCnName("cmodifyperson") %></th> 
+						<th onClick="sortBy(this)" db_col="dmodifydate" class="<%=domainSearchCondition.getSortClassByDbColumn("dmodifydate")%>"><%=domainInstance.getPropertyCnName("dmodifydate") %></th> 
+						<th onClick="sortBy(this)" db_col="dnmaketime" class="<%=domainSearchCondition.getSortClassByDbColumn("dnmaketime")%>"><%=domainInstance.getPropertyCnName("dnmaketime") %></th> 
+						<th onClick="sortBy(this)" db_col="dnmodifytime" class="<%=domainSearchCondition.getSortClassByDbColumn("dnmodifytime")%>"><%=domainInstance.getPropertyCnName("dnmodifytime") %></th> 
+						<th onClick="sortBy(this)" db_col="dnverifytime" class="<%=domainSearchCondition.getSortClassByDbColumn("dnverifytime")%>"><%=domainInstance.getPropertyCnName("dnverifytime") %></th> 
+						<th onClick="sortBy(this)" db_col="bredvouch" class="<%=domainSearchCondition.getSortClassByDbColumn("bredvouch")%>"><%=domainInstance.getPropertyCnName("bredvouch") %></th> 
+						<th onClick="sortBy(this)" db_col="cvenpuomprotocol" class="<%=domainSearchCondition.getSortClassByDbColumn("cvenpuomprotocol")%>"><%=domainInstance.getPropertyCnName("cvenpuomprotocol") %></th> 
+						<th onClick="sortBy(this)" db_col="dcreditstart" class="<%=domainSearchCondition.getSortClassByDbColumn("dcreditstart")%>"><%=domainInstance.getPropertyCnName("dcreditstart") %></th> 
+						<th onClick="sortBy(this)" db_col="icreditperiod" class="<%=domainSearchCondition.getSortClassByDbColumn("icreditperiod")%>"><%=domainInstance.getPropertyCnName("icreditperiod") %></th> 
+						<th onClick="sortBy(this)" db_col="dgatheringdate" class="<%=domainSearchCondition.getSortClassByDbColumn("dgatheringdate")%>"><%=domainInstance.getPropertyCnName("dgatheringdate") %></th> 
+						<th onClick="sortBy(this)" db_col="bcredit" class="<%=domainSearchCondition.getSortClassByDbColumn("bcredit")%>"><%=domainInstance.getPropertyCnName("bcredit") %></th> 
+						<th onClick="sortBy(this)" db_col="iflowid" class="<%=domainSearchCondition.getSortClassByDbColumn("iflowid")%>"><%=domainInstance.getPropertyCnName("iflowid") %></th> 
+						<th onClick="sortBy(this)" db_col="cpzid" class="<%=domainSearchCondition.getSortClassByDbColumn("cpzid")%>"><%=domainInstance.getPropertyCnName("cpzid") %></th> 
+						<th onClick="sortBy(this)" db_col="csourcels" class="<%=domainSearchCondition.getSortClassByDbColumn("csourcels")%>"><%=domainInstance.getPropertyCnName("csourcels") %></th> 
+						<th onClick="sortBy(this)" db_col="csourcecodels" class="<%=domainSearchCondition.getSortClassByDbColumn("csourcecodels")%>"><%=domainInstance.getPropertyCnName("csourcecodels") %></th> 
+						<th onClick="sortBy(this)" db_col="iprintcount" class="<%=domainSearchCondition.getSortClassByDbColumn("iprintcount")%>"><%=domainInstance.getPropertyCnName("iprintcount") %></th> 
+						<th onClick="sortBy(this)" db_col="csysbarcode" class="<%=domainSearchCondition.getSortClassByDbColumn("csysbarcode")%>"><%=domainInstance.getPropertyCnName("csysbarcode") %></th> 
+						<th onClick="sortBy(this)" db_col="ccurrentauditor" class="<%=domainSearchCondition.getSortClassByDbColumn("ccurrentauditor")%>"><%=domainInstance.getPropertyCnName("ccurrentauditor") %></th> 
+						<th>操作</th> 
+					</tr> 
+				</thead> 
+				<% 
+					for (int i = 0; i < list.size(); i++) 
+						{ 
+							Rdrecord01Obj o = (Rdrecord01Obj) list.get(i); 
+				%> 
+				<tr> 
+					<td style="width:10px;text-align:center"><input type="checkbox" name="<%=o.findKeyColumnName() %>" id="<%=o.findKeyColumnName() %>" value="<%=o.findKeyValue() %>"></td> 
+					<td style="width:30px;text-align:right"><%=i+1 %></td> 
+					<td><%=StringUtil.getNotEmptyStr(o.getBrdflag())%></td> 
+					<td><%=StringUtil.getNotEmptyStr(o.getCvouchtype())%></td> 
+					<td><%=StringUtil.getNotEmptyStr(o.getCbustype())%></td> 
+					<td><%=StringUtil.getNotEmptyStr(o.getCsource())%></td> 
+					<td><%=StringUtil.getNotEmptyStr(o.getCbuscode())%></td> 
+					<td><%=StringUtil.getNotEmptyStr(o.getCwhcode())%></td> 
+					<td><%=TimeUtil.date2str(o.getDdate(),"yyyy-MM-dd")%></td> 
+					<td><%=StringUtil.getNotEmptyStr(o.getCcode())%></td> 
+					<td><%=StringUtil.getNotEmptyStr(o.getCrdcode())%></td> 
+					<td><%=StringUtil.getNotEmptyStr(o.getCdepcode())%></td> 
+					<td><%=StringUtil.getNotEmptyStr(o.getCpersoncode())%></td> 
+					<td><%=StringUtil.getNotEmptyStr(o.getCptcode())%></td> 
+					<td><%=StringUtil.getNotEmptyStr(o.getCstcode())%></td> 
+					<td><%=StringUtil.getNotEmptyStr(o.getCcuscode())%></td> 
+					<td><%=StringUtil.getNotEmptyStr(o.getCvencode())%></td> 
+					<td><%=StringUtil.getNotEmptyStr(o.getCordercode())%></td> 
+					<td><%=StringUtil.getNotEmptyStr(o.getCarvcode())%></td> 
+					<td style="text-align:right"><%=StringUtil.getNotEmptyStr(o.getCbillcode())%></td> 
+					<td style="text-align:right"><%=StringUtil.getNotEmptyStr(o.getCdlcode())%></td> 
+					<td><%=StringUtil.getNotEmptyStr(o.getCprobatch())%></td> 
+					<td><%=StringUtil.getNotEmptyStr(o.getChandler())%></td> 
+					<td><%=StringUtil.getNotEmptyStr(o.getCmemo())%></td> 
+					<td><%="true".equalsIgnoreCase(o.getBtransflag()+"")?"是":"否"%></td> 
+					<td><%=StringUtil.getNotEmptyStr(o.getCaccounter())%></td> 
+					<td><%=StringUtil.getNotEmptyStr(o.getCmaker())%></td> 
+					<td><%=StringUtil.getNotEmptyStr(o.getCdefine1())%></td> 
+					<td><%=StringUtil.getNotEmptyStr(o.getCdefine2())%></td> 
+					<td><%=StringUtil.getNotEmptyStr(o.getCdefine3())%></td> 
+					<td><%=TimeUtil.date2str(o.getCdefine4(),"yyyy-MM-dd")%></td> 
+					<td style="text-align:right"><%=StringUtil.getNotEmptyStr(o.getCdefine5())%></td> 
+					<td><%=TimeUtil.date2str(o.getCdefine6(),"yyyy-MM-dd")%></td> 
+					<td style="text-align:right"><%=StringUtil.formatDouble(o.getCdefine7(),2)%></td> 
+					<td><%=StringUtil.getNotEmptyStr(o.getCdefine8())%></td> 
+					<td><%=StringUtil.getNotEmptyStr(o.getCdefine9())%></td> 
+					<td><%=StringUtil.getNotEmptyStr(o.getCdefine10())%></td> 
+					<td><%=StringUtil.getNotEmptyStr(o.getDkeepdate())%></td> 
+					<td><%=TimeUtil.date2str(o.getDveridate(),"yyyy-MM-dd")%></td> 
+					<td><%="true".equalsIgnoreCase(o.getBpufirst()+"")?"是":"否"%></td> 
+					<td><%="true".equalsIgnoreCase(o.getBiafirst()+"")?"是":"否"%></td> 
+					<td style="text-align:right"><%=StringUtil.formatDouble(o.getImquantity(),2)%></td> 
+					<td><%=TimeUtil.date2str(o.getDarvdate(),"yyyy-MM-dd")%></td> 
+					<td><%=StringUtil.getNotEmptyStr(o.getCchkcode())%></td> 
+					<td><%=TimeUtil.date2str(o.getDchkdate(),"yyyy-MM-dd")%></td> 
+					<td><%=StringUtil.getNotEmptyStr(o.getCchkperson())%></td> 
+					<td style="text-align:right"><%=StringUtil.getNotEmptyStr(o.getVt_id())%></td> 
+					<td><%="true".equalsIgnoreCase(o.getBisstqc()+"")?"是":"否"%></td> 
+					<td><%=StringUtil.getNotEmptyStr(o.getCdefine11())%></td> 
+					<td><%=StringUtil.getNotEmptyStr(o.getCdefine12())%></td> 
+					<td><%=StringUtil.getNotEmptyStr(o.getCdefine13())%></td> 
+					<td><%=StringUtil.getNotEmptyStr(o.getCdefine14())%></td> 
+					<td style="text-align:right"><%=StringUtil.getNotEmptyStr(o.getCdefine15())%></td> 
+					<td style="text-align:right"><%=StringUtil.formatDouble(o.getCdefine16(),2)%></td> 
+					<td><%=StringUtil.getNotEmptyStr(o.getGspcheck())%></td> 
+					<td style="text-align:right"><%=StringUtil.getNotEmptyStr(o.getIpurorderid())%></td> 
+					<td style="text-align:right"><%=StringUtil.getNotEmptyStr(o.getIpurarriveid())%></td> 
+					<td><%=StringUtil.getNotEmptyStr(o.getIarriveid())%></td> 
+					<td><%=StringUtil.getNotEmptyStr(o.getIsalebillid())%></td> 
+					<td><%=StringUtil.getNotEmptyStr("")%></td> 
+					<td style="text-align:right"><%=StringUtil.formatDouble(o.getItaxrate(),2)%></td> 
+					<td style="text-align:right"><%=StringUtil.formatDouble(o.getIexchrate(),2)%></td> 
+					<td><%=StringUtil.getNotEmptyStr(o.getCexch_name())%></td> 
+					<td><%="true".equalsIgnoreCase(o.getBomfirst()+"")?"是":"否"%></td> 
+					<td><%="true".equalsIgnoreCase(o.getBfrompreyear()+"")?"是":"否"%></td> 
+					<td><%="true".equalsIgnoreCase(o.getBislsquery()+"")?"是":"否"%></td> 
+					<td style="text-align:right"><%=StringUtil.getNotEmptyStr(o.getBiscomplement())%></td> 
+					<td><%=StringUtil.getNotEmptyStr(o.getIdiscounttaxtype())%></td> 
+					<td style="text-align:right"><%=StringUtil.getNotEmptyStr(o.getIreturncount())%></td> 
+					<td style="text-align:right"><%=StringUtil.getNotEmptyStr(o.getIverifystate())%></td> 
+					<td style="text-align:right"><%=StringUtil.getNotEmptyStr(o.getIswfcontrolled())%></td> 
+					<td><%=StringUtil.getNotEmptyStr(o.getCmodifyperson())%></td> 
+					<td><%=TimeUtil.date2str(o.getDmodifydate(),"yyyy-MM-dd")%></td> 
+					<td><%=TimeUtil.date2str(o.getDnmaketime(),"yyyy-MM-dd")%></td> 
+					<td><%=TimeUtil.date2str(o.getDnmodifytime(),"yyyy-MM-dd")%></td> 
+					<td><%=TimeUtil.date2str(o.getDnverifytime(),"yyyy-MM-dd")%></td> 
+					<td style="text-align:right"><%=StringUtil.getNotEmptyStr(o.getBredvouch())%></td> 
+					<td><%=StringUtil.getNotEmptyStr(o.getCvenpuomprotocol())%></td> 
+					<td><%=TimeUtil.date2str(o.getDcreditstart(),"yyyy-MM-dd")%></td> 
+					<td style="text-align:right"><%=StringUtil.getNotEmptyStr(o.getIcreditperiod())%></td> 
+					<td><%=TimeUtil.date2str(o.getDgatheringdate(),"yyyy-MM-dd")%></td> 
+					<td><%=StringUtil.getNotEmptyStr(o.getBcredit())%></td> 
+					<td style="text-align:right"><%=StringUtil.getNotEmptyStr(o.getIflowid())%></td> 
+					<td><%=StringUtil.getNotEmptyStr(o.getCpzid())%></td> 
+					<td><%=StringUtil.getNotEmptyStr(o.getCsourcels())%></td> 
+					<td><%=StringUtil.getNotEmptyStr(o.getCsourcecodels())%></td> 
+					<td style="text-align:right"><%=StringUtil.getNotEmptyStr(o.getIprintcount())%></td> 
+					<td><%=StringUtil.getNotEmptyStr(o.getCsysbarcode())%></td> 
+					<td><%=StringUtil.getNotEmptyStr(o.getCcurrentauditor())%></td> 
+					<td width="100" style="text-align:center"> 
+						<input type="button" class="button button_detail" title="详情" onClick="winOpen('<%=contextPath%>/Proxy/Servlet?servlet=<%=basePath%>&method=detail4this&<%=o.findKeyColumnName()%>=<%=o.findKeyValue()%>')" /> 
+						&nbsp; 
+						<input type="button" class="button button_modify" title="修改" onClick="winOpen('<%=contextPath%>/Proxy/Servlet?servlet=<%=basePath%>&method=preModify4this&<%=o.findKeyColumnName()%>=<%=o.findKeyValue()%>')" /> 
+						&nbsp; 
+						<input type="button" class="button button_delete" title="删除" onClick="javascript:if(confirm('确定要删除吗?')){$('#pageForm').attr('action','<%=contextPath%>/Proxy/Servlet?servlet=<%=basePath%>&method=delete4this&<%=o.findKeyColumnName()%>_4del=<%=o.findKeyValue()%>');$('#pageForm').submit();} " /> 
+					</td> 
+				</tr> 
+				<% 
+					} 
+				%> 
+			</table> 
+ 
+			<!-- 翻页操作栏 --> 
+			<jsp:include page="../ToolBar/pagination_toolbar.jsp"> 
+				<jsp:param name="basePath" value="<%=basePath%>"/> 
+			</jsp:include> 
+ 
+		</form>  
+		<script type="text/javascript">  
+			// 全选绑定
+			bindCheckAllBox("checkAllBox","<%=domainInstance.findKeyColumnName()%>");  
+		</script>  
+ 
+	</body> 
+</html> 

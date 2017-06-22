@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ExcelParserConfigList version="V1.0" name="Excel解析配置文件">
+	<ExcelParserConfig name="user">
+		<!-- 对应的javabean -->
+		<javaBean>com.wuyg.test.obj.UserObj</javaBean>
+		<!-- 需解析的sheet名，默认为空，即解第1个sheet -->
+		<sheetName/>
+		<!-- 表头位于第几行，默认第1行 -->
+		<headRowNum>1</headRowNum>
+		<!-- 数据从第几行开始，默认第2行 -->
+		<dataStartRowNum>2</dataStartRowNum>
+		<!-- 解析开始前执行的动作，默认为空 -->
+		<beforeParser/>
+		<!-- 解析结束后执行的动作，默认为空 -->
+		<afterParser/>
+		<!-- 是否使用excel的列名进行映射取值，默认为否 -->
+		<parseByExcelColumnName>true</parseByExcelColumnName>
+		<ExcelColumnList>
+			<ExcelColumn excelColumnName="姓名" javaBeanProperty="name"/>
+			<ExcelColumn excelColumnName="性别" javaBeanProperty="sex"/>
+			<ExcelColumn excelColumnName="年龄" javaBeanProperty="age"/>
+			<ExcelColumn excelColumnName="生日" javaBeanProperty="birthday"/>
+		</ExcelColumnList>
+	</ExcelParserConfig>
+	<ExcelParserConfig name="CustOx">
+		<!-- 对应的javabean -->
+		<javaBean>com.cust.obj.CustOxObj</javaBean>
+		<!-- 需解析的sheet名，默认为空，即解第1个sheet -->
+		<sheetName/>
+		<!-- 表头位于第几行，默认第1行 -->
+		<headRowNum>1</headRowNum>
+		<!-- 数据从第几行开始，默认第2行 -->
+		<dataStartRowNum>2</dataStartRowNum>
+		<!-- 解析开始前执行的动作，默认为空 -->
+		<beforeParser/>
+		<!-- 解析结束后执行的动作，默认为空 -->
+		<afterParser/>
+		<!-- 是否使用excel的列名进行映射取值，默认为否 -->
+		<parseByExcelColumnName>true</parseByExcelColumnName>
+		<ExcelColumnList>
+			<ExcelColumn excelColumnName="合同号" javaBeanProperty="u8custdef_0003_e001_f011"/>
+			<ExcelColumn excelColumnName="耳号" javaBeanProperty="u8custdef_0003_e001_f012"/>
+			<ExcelColumn excelColumnName="性别" javaBeanProperty="u8custdef_0003_e001_f013"/>
+			<ExcelColumn excelColumnName="批次" javaBeanProperty="u8custdef_0003_e001_f014"/>
+			<ExcelColumn excelColumnName="牛源类别" javaBeanProperty="u8custdef_0003_e001_f015"/>
+			<ExcelColumn excelColumnName="入栏日期" javaBeanProperty="u8custdef_0003_e001_f016"/>
+			<ExcelColumn excelColumnName="入栏体重" javaBeanProperty="u8custdef_0003_e001_f017"/>
+			<ExcelColumn excelColumnName="出栏日期" javaBeanProperty="u8custdef_0003_e001_f018"/>
+			<ExcelColumn excelColumnName="出栏体重" javaBeanProperty="u8custdef_0003_e001_f019"/>
+			<ExcelColumn excelColumnName="养殖场" javaBeanProperty="u8custdef_0003_e001_f020"/>
+			<ExcelColumn excelColumnName="舍" javaBeanProperty="u8custdef_0003_e001_f021"/>
+			<ExcelColumn excelColumnName="栏" javaBeanProperty="u8custdef_0003_e001_f022"/>
+			<ExcelColumn excelColumnName="月" javaBeanProperty="u8custdef_0003_e001_f023"/>
+			<ExcelColumn excelColumnName="检疫日期" javaBeanProperty="u8custdef_0003_e001_f024"/>
+			<ExcelColumn excelColumnName="防疫号" javaBeanProperty="u8custdef_0003_e001_f025"/>
+			<ExcelColumn excelColumnName="收购方式" javaBeanProperty="u8custdef_0003_e001_f026"/>
+			<ExcelColumn excelColumnName="一次收购场" javaBeanProperty="u8custdef_0003_e001_f027"/>
+			<ExcelColumn excelColumnName="一次收购日期" javaBeanProperty="u8custdef_0003_e001_f028"/>
+			<ExcelColumn excelColumnName="二次收购场" javaBeanProperty="u8custdef_0003_e001_f029"/>
+			<ExcelColumn excelColumnName="二次收购日期" javaBeanProperty="u8custdef_0003_e001_f030"/>
+		</ExcelColumnList>
+	</ExcelParserConfig>
+</ExcelParserConfigList>

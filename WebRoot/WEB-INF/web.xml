@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee   http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+	<!-- 定时任务 -->
+	<servlet>
+		<display-name>Quartz Initializer Servlet</display-name>
+		<servlet-name>QuartzInitializer</servlet-name>
+		<servlet-class>
+			org.quartz.ee.servlet.QuartzInitializerServlet
+		</servlet-class>
+		<init-param>
+			<param-name>config-file</param-name>
+			<param-value>quartz.properties</param-value>
+		</init-param>
+		<init-param>
+			<param-name>shutdown-on-unload</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<init-param>
+			<param-name>start-scheduler-on-load</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	
+	<!-- 权限过滤器 -->
+	<filter>
+		<filter-name>AuthFilter</filter-name>
+		<filter-class>com.wuyg.auth.AuthFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>AuthFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	 
+	 <!-- 跨域 -->
+	 <filter>
+	  <filter-name>CorsFilter</filter-name>
+	  <filter-class>com.wuyg.cros.CrosFilter</filter-class>
+	</filter>
+	<filter-mapping>
+	  <filter-name>CorsFilter</filter-name>
+	  <url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<!-- 代理servlet -->
+	<servlet>
+		<servlet-name>ProxyServlet</servlet-name>
+		<servlet-class>com.wuyg.common.servlet.ProxyServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ProxyServlet</servlet-name>
+		<url-pattern>/Proxy/Servlet</url-pattern>
+	</servlet-mapping>
+
+	<!-- 权限servlet -->
+	<servlet>
+		<servlet-name>AuthDepartmentServlet</servlet-name>
+		<servlet-class>com.wuyg.auth.AuthDepartmentServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AuthDepartmentServlet</servlet-name>
+		<url-pattern>/AuthDepartment/Servlet</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>AuthRoleServlet</servlet-name>
+		<servlet-class>com.wuyg.auth.AuthRoleServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AuthRoleServlet</servlet-name>
+		<url-pattern>/AuthRole/Servlet</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>AuthUserServlet</servlet-name>
+		<servlet-class>com.wuyg.auth.AuthUserServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AuthUserServlet</servlet-name>
+		<url-pattern>/AuthUser/Servlet</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>AuthFunctionServlet</servlet-name>
+		<servlet-class>com.wuyg.auth.AuthFunctionServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AuthFunctionServlet</servlet-name>
+		<url-pattern>/AuthFunction/Servlet</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>AuthLogLoginServlet</servlet-name>
+		<servlet-class>com.wuyg.auth.AuthLogLoginServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>AuthOfficeServlet</servlet-name>
+		<servlet-class>com.wuyg.auth.AuthOfficeServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AuthOfficeServlet</servlet-name>
+		<url-pattern>/AuthOffice/Servlet</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>AuthUserRoleServlet</servlet-name>
+		<servlet-class>com.wuyg.auth.AuthUserRoleServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AuthUserRoleServlet</servlet-name>
+		<url-pattern>/AuthUserRole/Servlet</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>AuthLogLoginServlet</servlet-name>
+		<url-pattern>/AuthLogLogin/Servlet</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>AuthLogOperationServlet</servlet-name>
+		<servlet-class>com.wuyg.auth.AuthLogOperationServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AuthLogOperationServlet</servlet-name>
+		<url-pattern>/AuthLogOperation/Servlet</url-pattern>
+	</servlet-mapping>
+	
+	<!-- 字典servlet -->
+	<servlet>
+		<servlet-name>DictionaryServlet</servlet-name>
+		<servlet-class>com.wuyg.dictionary.DictionaryServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>DictionaryServlet</servlet-name>
+		<url-pattern>/Dictionary/Servlet</url-pattern>
+	</servlet-mapping>
+	
+	<!-- 树servlet -->
+	<servlet>
+		<servlet-name>TreeServlet</servlet-name>
+		<servlet-class>com.wuyg.tree.TreeServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>TreeServlet</servlet-name>
+		<url-pattern>/Tree/Servlet</url-pattern>
+	</servlet-mapping>
+	
+	<!-- Excel导入servlet -->
+	<servlet>
+		<servlet-name>ExcelParserServlet</servlet-name>
+		<servlet-class>
+			com.excelparser.ExcelParserServlet
+		</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ExcelParserServlet</servlet-name>
+		<url-pattern>/ExcelParser/Servlet</url-pattern>
+	</servlet-mapping>
+	
+	<!-- 系统servlet -->
+	<servlet>
+		<servlet-name>SystemServlet</servlet-name>
+		<servlet-class>com.wuyg.system.SystemServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>SystemServlet</servlet-name>
+		<url-pattern>/System/Servlet</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>SystemMenuServlet</servlet-name>
+		<servlet-class>com.wuyg.system.SystemMenuServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>SystemMenuServlet</servlet-name>
+		<url-pattern>/SystemMenu/Servlet</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>SystemConfigServlet</servlet-name>
+		<servlet-class>com.wuyg.system.SystemConfigServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>SystemConfigServlet</servlet-name>
+		<url-pattern>/SystemConfig/Servlet</url-pattern>
+	</servlet-mapping>
+
+	<!-- ==以下为具体应用的servlet== -->
+	<servlet>
+		<servlet-name>HcpDataSourceServlet</servlet-name>
+		<servlet-class>com.hcp.HcpDataSourceServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>HcpDataSourceServlet</servlet-name>
+		<url-pattern>/HcpDataSource/Servlet</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>HcpDataSourceBaseInfoServlet</servlet-name>
+		<servlet-class>com.hcp.HcpDataSourceBaseInfoServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>HcpDataSourceBaseInfoServlet</servlet-name>
+		<url-pattern>/HcpDataSourceBaseInfo/Servlet</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>HcpDataSourceBaseInfoMapServlet</servlet-name>
+		<servlet-class>com.hcp.HcpDataSourceBaseInfoMapServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>HcpDataSourceBaseInfoMapServlet</servlet-name>
+		<url-pattern>/HcpDataSourceBaseInfoMap/Servlet</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>DictBaseInfoTypeServlet</servlet-name>
+		<servlet-class>com.hcp.DictBaseInfoTypeServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>DictBaseInfoTypeServlet</servlet-name>
+		<url-pattern>/DictBaseInfoType/Servlet</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>HcpDataSourceBaseInfoMapDetailServlet</servlet-name>
+		<servlet-class>com.hcp.HcpDataSourceBaseInfoMapDetailServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>HcpDataSourceBaseInfoMapDetailServlet</servlet-name>
+		<url-pattern>/HcpDataSourceBaseInfoMapDetail/Servlet</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>InventoryServlet</servlet-name>
+		<servlet-class>com.u8.InventoryServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>InventoryServlet</servlet-name>
+		<url-pattern>/Inventory/Servlet</url-pattern>
+	</servlet-mapping>
+	
+	<!-- ==session超时时间，单位秒== -->
+	<session-config>
+		<session-timeout>3600</session-timeout>
+	</session-config>
+	<!-- ==该应用的首页面== -->
+	<welcome-file-list>
+		<welcome-file>login.jsp</welcome-file>
+	</welcome-file-list>
+	<login-config>
+		<auth-method>BASIC</auth-method>
+	</login-config>
+</web-app>
