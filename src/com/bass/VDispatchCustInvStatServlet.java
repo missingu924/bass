@@ -134,8 +134,8 @@ public class VDispatchCustInvStatServlet extends AbstractBaseServletTemplate
 		}
 		
 		sql.append(" 	COUNT(*) iCount, \n");
-		sql.append(" 	sum(dls.iQuantity) iQuantity, \n");
-		sql.append(" 	sum(dls.iSum) iSum \n");
+		sql.append(" 	isnull(sum(dls.iQuantity),0) iQuantity, \n");
+		sql.append(" 	isnull(sum(dls.iSum),0) iSum \n");
 		sql.append(" 	from  \n");
 		sql.append(" 	DispatchList dl \n");
 		sql.append(" 	left join \n");

@@ -177,6 +177,30 @@ a:visited { text-decoration: none;}
 .button_shuffle:hover  {
   background-image: url(../images/svg/light/orange/16/shuffle.png);
 }
+.button_left {
+  background-image: url(../images/svg/light/gray/16/chevron_left_circle.png);
+}
+.button_left:hover  {
+  background-image: url(../images/svg/light/orange/16/chevron_left_circle.png);
+}
+.button_right {
+  background-image: url(../images/svg/light/gray/16/chevron_right_circle.png);
+}
+.button_right:hover  {
+  background-image: url(../images/svg/light/orange/16/chevron_right_circle.png);
+}
+.button_grid {
+  background-image: url(../images/svg/light/gray/16/grid.png);
+}
+.button_grid:hover  {
+  background-image: url(../images/svg/light/orange/16/grid.png);
+}
+.button_zoom {
+  background-image: url(../images/svg/light/gray/16/zoomsvg.png);
+}
+.button_zoom:hover  {
+  background-image: url(../images/svg/light/orange/16/zoomsvg.png);
+}
 .green_button {
   background: #38B162;
   height:36px;

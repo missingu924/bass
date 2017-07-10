@@ -8,19 +8,21 @@ import com.wuyg.common.dao.DefaultBaseDAO;
 import com.wuyg.common.dao.IBaseDAO;
 import com.wuyg.common.obj.PaginationObj;
 import com.wuyg.common.util.StringUtil;
+import com.wuyg.common.util.SystemConstant;
 import com.wuyg.echarts.obj.InvObj;
 
 public class EchartsUtil
 {
 	// 图表类型
-	public static final String BAR = "bar";
+	public static final String BAR = "bar";// 横柱图
+	public static final String BAR_V = "bar_v";// 竖柱图
 	public static final String PIE = "pie";
 	public static final String LINE = "line";
 
 	// 图表颜色
 	public static final String COLOR_GREEN = "#2EC7C9";
 	public static final String COLOR_PURPLE = "#B6A2DE";
-	public static final String COLOR_BLUE = "#5AB1EF";
+	public static final String COLOR_BLUE = "#0099cc";//"#5AB1EF";
 	public static final String COLOR_ORANGE = "#FFB980";
 	public static final String COLOR_RED = "#D87A80";
 	public static final String COLOR_CYAN = "#8D98B3";
@@ -46,11 +48,15 @@ public class EchartsUtil
 	 */
 	public static String createEchartByInv(InvObj knvObj, String echartType, String echartTheme, String color, int height, int width)
 	{
-		IBaseDAO dao = new DefaultBaseDAO(knvObj);
+		IBaseDAO dao = new DefaultBaseDAO(knvObj, SystemConstant.U8_DB);
 
 		PaginationObj pagination = dao.searchPaginationByDomainInstance(knvObj, knvObj.findDefaultOrderBy(), 0, Integer.MAX_VALUE);
 
-		return createEchartByDatalist(knvObj.getCnName(), pagination.getDataList(), "name", knvObj.getPropertyCnName("name"), "value", knvObj.getPropertyCnName("value"), echartType, echartTheme, color, width, height);
+		return createEchartByDatalist(knvObj.getCnName(), pagination.getDataList(), new String[]
+		{ "name", "name1" }, new String[]
+		{ knvObj.getPropertyCnName("name"), knvObj.getPropertyCnName("name1") }, new String[]
+		{ "value", "value1" }, new String[]
+		{ knvObj.getPropertyCnName("value"), knvObj.getPropertyCnName("value1") }, echartType, echartTheme, color, width, height);
 	}
 
 	/**
@@ -80,6 +86,18 @@ public class EchartsUtil
 		return createEchartByInv(knvObj, echartType, echartTheme, color, width, height);
 	}
 
+	public static String createEchartByInvSql(String invSql, String orderBy, String title, String[] xAxisCnNames, String seriesCnNames[], String echartType, String echartTheme, String color, int width, int height)
+	{
+		InvObj knvObj = new InvObj(invSql, orderBy, title, xAxisCnNames, seriesCnNames);
+		return createEchartByInv(knvObj, echartType, echartTheme, color, width, height);
+	}
+
+	public static String createEchartByInvSql(String invSql, String orderBy, String title, String xAxisCnName, String seriesCnName, String echartType, String echartTheme, String color)
+	{
+		InvObj knvObj = new InvObj(invSql, orderBy, title, xAxisCnName, seriesCnName);
+		return createEchartByInv(knvObj, echartType, echartTheme, color, 300, -1);
+	}
+
 	/**
 	 * 根据查询出的基于BaseDbObj的数据列表形成图表
 	 * 
@@ -106,7 +124,11 @@ public class EchartsUtil
 			return "";
 		}
 		BaseDbObj dbObj = dataList.get(0);
-		return createEchartByDatalist(title, dataList, xAxisProperty, dbObj.getPropertyCnName(xAxisProperty), seriesProperty, dbObj.getPropertyCnName(seriesProperty), echartType, echartTheme, color, width, height);
+		return createEchartByDatalist(title, dataList, new String[]
+		{ xAxisProperty }, new String[]
+		{ dbObj.getPropertyCnName(xAxisProperty) }, new String[]
+		{ seriesProperty }, new String[]
+		{ dbObj.getPropertyCnName(seriesProperty) }, echartType, echartTheme, color, width, height);
 	}
 
 	/**
@@ -132,7 +154,7 @@ public class EchartsUtil
 	 *            图表颜色
 	 * @return
 	 */
-	public static String createEchartByDatalist(String title, List<BaseDbObj> dataList, String xAxisProperty, String xAxisCnName, String seriesProperty, String seriesCnName, String echartType, String echartTheme, String color, int width, int height)
+	public static String createEchartByDatalist(String title, List<BaseDbObj> dataList, String[] xAxisPropertys, String[] xAxisCnNames, String[] seriesPropertys, String[] seriesCnNames, String echartType, String echartTheme, String color, int width, int height)
 	{
 		if (dataList == null || dataList.size() == 0)
 		{
@@ -154,13 +176,13 @@ public class EchartsUtil
 		s.append("    <script src=\"echarts/echarts.common.min.js\"></script> \n");
 		s.append("    <script src=\"echarts/theme/" + echartTheme + ".js\"></script> \n");
 		s.append("    <!-- 为ECharts准备一个具备大小（宽高）的Dom --> \n");
-		s.append("    <div id=\"" + divId + "\" style=\"align:center;width:" + width + "px;height:" + height + "px;\"></div> \n");
+		s.append("    <div id=\"" + divId + "\" style=\"align:center;margin:0 auto;" + (width > 0 ? "width:" + width + "px;" : "") + (height > 0 ? "height:" + height + "px;" : "") + "\"></div> \n");
 		s.append("    <script type=\"text/javascript\"> \n");
 		s.append("        var " + divId + " = echarts.init(document.getElementById('" + divId + "'),'" + echartTheme + "'); \n");
 		s.append(" \n");
 		s.append("        // 指定图表的配置项和数据 \n");
 		s.append("        var " + divId + "_option = { \n");
-		if (BAR.equalsIgnoreCase(echartType) || LINE.equalsIgnoreCase(echartType))
+		if (BAR.equalsIgnoreCase(echartType) || BAR_V.equalsIgnoreCase(echartType) || LINE.equalsIgnoreCase(echartType))
 		{
 			if (!StringUtil.isEmpty(color))
 			{
@@ -168,22 +190,39 @@ public class EchartsUtil
 			}
 		}
 		s.append("            title: { \n");
-		s.append("                text: '" + title + "' \n");
+		s.append("                text: '" + title + "', \n");
 		s.append("            }, \n");
 		s.append("            tooltip: {}, \n");
 		s.append("            legend: { \n");
-		s.append("                data:['" + seriesCnName + "'] \n");
+		s.append("                data:[ \n");
+		for (int i = 0; i < seriesCnNames.length; i++)
+		{
+			s.append("'" + seriesCnNames[i] + "' \n");
+			if (i < seriesCnNames.length - 1)
+			{
+				s.append(",");
+			}
+		}
+		s.append("                ], \n");
+		s.append("                top:'20', \n");
 		s.append("            }, \n");
+		s.append("            grid: {\n");
+		s.append("            	 left: '3%',\n");
+		s.append("           	 right: '3%',\n");
+		s.append("            	 bottom: '3%',\n");
+		s.append("             	 containLabel: true\n");
+		s.append("             },\n");
 
-		String xAxis = "";
-		String series = "";
-		String nameValues = "";
+		String xAxis = "", xAxis1 = "", xAxis2 = "", xAxis3 = "", xAxis4 = "";
+		String series = "", series1 = "", series2 = "", series3 = "", series4 = "";
+		String nameValues = "", nameValues1 = "", nameValues2 = "", nameValues3 = "", nameValues4 = "";
+
 		for (int i = 0; i < dataList.size(); i++)
 		{
 			BaseDbObj o = dataList.get(i);
-			xAxis += "\"" + o.getPropertyValue(xAxisProperty) + "\"";
-			series += o.getPropertyValue(seriesProperty);
-			nameValues += "{name:'" + o.getPropertyValue(xAxisProperty) + "',value:" + o.getPropertyValue(seriesProperty) + "}";
+			xAxis += "\"" + o.getPropertyValue(xAxisPropertys[0]) + "\"";
+			series += o.getPropertyValue(seriesPropertys[0]);
+			nameValues += "{name:'" + o.getPropertyValue(xAxisPropertys[0]) + "',value:" + o.getPropertyValue(seriesPropertys[0]) + "}";
 			if (i < dataList.size() - 1)
 			{
 				xAxis += ",";
@@ -191,25 +230,74 @@ public class EchartsUtil
 				nameValues += ",";
 			}
 		}
+		if (seriesPropertys.length > 1)
+		{
+			for (int i = 0; i < dataList.size(); i++)
+			{
+				BaseDbObj o = dataList.get(i);
+				xAxis1 += "\"" + o.getPropertyValue(xAxisPropertys[1]) + "\"";
+				series1 += o.getPropertyValue(seriesPropertys[1]);
+				nameValues1 += "{name:'" + o.getPropertyValue(xAxisPropertys[1]) + "',value:" + o.getPropertyValue(seriesPropertys[1]) + "}";
+				if (i < dataList.size() - 1)
+				{
+					xAxis1 += ",";
+					series1 += ",";
+					nameValues1 += ",";
+				}
+			}
+		}
+
 		if (BAR.equalsIgnoreCase(echartType) || LINE.equalsIgnoreCase(echartType))
 		{
 			s.append("            xAxis: { \n");
-			s.append("                data: [" + xAxis + "] \n");
+			s.append("                data: [" + xAxis + "], \n");
+			s.append("            	  splitLine: {show: false}, \n");
+			// s.append(" splitArea: {show: false}, \n");
 			s.append("            }, \n");
-			s.append("            yAxis: {}, \n");
-		}
-		if (PIE.equalsIgnoreCase(echartType))
+			s.append("            yAxis: { \n");
+			s.append("            	  splitLine: {show: false}, \n");
+			// s.append(" splitArea: {show: false}, \n");
+			s.append("            }, \n");
+		} else if (BAR_V.equalsIgnoreCase(echartType))
+		{
+			s.append("            xAxis: { \n");
+			s.append("                type: 'value', \n");
+			s.append("                position: 'top', \n");
+			s.append("            	  splitLine: {show: false}, \n");
+			// s.append(" splitArea: {show: false}, \n");
+			s.append("            }, \n");
+			s.append("            yAxis: {  \n");
+			s.append("                type: 'category', \n");
+			s.append("            	  splitLine: {show: false}, \n");
+			// s.append(" splitArea: {show: false}, \n");
+			// s.append(" position: 'right', \n");
+			s.append("                data:[" + xAxis + "] \n");
+			s.append("            }, \n");
+		} else if (PIE.equalsIgnoreCase(echartType))
 		{
 			s.append("            tooltip : { \n");
 			s.append("                    trigger: 'item', \n");
 			s.append("                    formatter: \"{a} <br/>{b} : {c} ({d}%)\" \n");
 			s.append("            },\n");
 		}
-		s.append("            series: [{ \n");
-		s.append("                name: '" + seriesCnName + "', \n");
-		s.append("                type: '" + echartType + "', \n");
+
+		s.append("            series: [ \n");
+		s.append("            	{ \n");
+		s.append("                name: '" + seriesCnNames[0] + "', \n");
+		s.append("                label: { normal: { show: true,position: '"+(echartType.equalsIgnoreCase(BAR)?"top":"right")+"'}}, \n");
+		s.append("                type: '" + echartType.replaceAll("_v", "") + "', \n");
 		s.append("                data: [" + nameValues + "] \n");
-		s.append("            }] \n");
+		s.append("            	} \n");
+		if (seriesPropertys.length > 1)
+		{
+			s.append("            	,{ \n");
+			s.append("                name: '" + seriesCnNames[1] + "', \n");
+			s.append("                label: { normal: { show: true,position: 'top'}}, \n");
+			s.append("                type: '"+LINE+"', \n");
+			s.append("                data: [" + nameValues1 + "] \n");
+			s.append("            	} \n");
+		}
+		s.append("            ] \n");
 		s.append("        }; \n");
 		s.append(" \n");
 		s.append("        " + divId + ".setOption(" + divId + "_option); \n");
@@ -227,9 +315,9 @@ public class EchartsUtil
 	 */
 	public static Double getValueByInvSql(String invSql)
 	{
-		InvObj inv = new InvObj(invSql, null, null, null, null);
+		InvObj inv = new InvObj(invSql, "", "", "", "");
 
-		IBaseDAO dao = new DefaultBaseDAO(inv);
+		IBaseDAO dao = new DefaultBaseDAO(inv, SystemConstant.U8_DB);
 		List<InvObj> list = dao.searchAll(inv.getClass());
 		if (list.size() > 0)
 		{

@@ -255,5 +255,104 @@ on inv.cComUnitCode=cu.cComunitCode
 
 order by dl.cCusCode,dl.cInvCode,dl.iSum
 
+--销售发货单明细
+create view v_dispatch_lists
+as
+select 
+dls.AutoID,
+dl.dDate,
+dl.DLID,
+dl.cDLCode,
+custclass.cCCCode,
+custclass.cCCName,
+cust.cCusCode,
+cust.cCusName,
+cust.cCusAbbName,
+invc.cInvCCode,
+invc.cInvCName,
+inv.cInvCode,
+inv.cInvName,
+inv.cInvStd,
+inv.cComUnitCode,
+cu.cComUnitName,
+dls.iQuantity,
+dls.iSum  
+from 
+DispatchList dl
+left join
+DispatchLists dls
+on dl.DLID=dls.DLID
+left join
+Customer cust
+on dl.cCusCode=cust.cCusCode
+left join CustomerClass custclass
+on cust.cCCCode=custclass.cCCCode
+left join inventory inv
+on inv.cInvCode=dls.cInvCode
+left join InventoryClass invc
+on inv.cInvCCode=invc.cInvCCode
+left join ComputationUnit cu
+on inv.cComUnitCode=cu.cComunitCode
 
-select * from CustomerClass
+
+select * from DispatchList
+
+--产品最近发货时间
+select
+invc.cInvCCode,
+invc.cInvCName,
+inv.cInvCode,
+inv.cInvName,
+inv.cInvStd,
+inv.cComUnitCode,
+cu.cComUnitName,
+dls.dRecentDate,
+dls.iDays
+from
+(
+	select 
+	cInvCode,
+	MAX(dDate) dRecentDate,
+	DATEDIFF(day,max(dDate),getdate()) iDays
+	from 
+	DispatchList dl
+	left join
+	DispatchLists dls
+	on dl.DLID=dls.DLID
+	group by
+	cInvCode
+) dls
+left join inventory inv
+on inv.cInvCode=dls.cInvCode
+left join InventoryClass invc
+on inv.cInvCCode=invc.cInvCCode
+left join ComputationUnit cu
+on inv.cComUnitCode=cu.cComunitCode
+order by dls.iDays
+
+--客户最近发货时间
+select
+custclass.cCCCode,
+custclass.cCCName,
+cust.cCusCode,
+cust.cCusName,
+cust.cCusAbbName,
+dl.dRecentDate,
+dl.iDays
+from
+(
+	select 
+	cCusCode,
+	MAX(dDate) dRecentDate,
+	DATEDIFF(day,max(dDate),getdate()) iDays
+	from 
+	DispatchList dl
+	group by
+	cCusCode
+) dl
+left join
+Customer cust
+on dl.cCusCode=cust.cCusCode
+left join CustomerClass custclass
+on cust.cCCCode=custclass.cCCCode
+order by dl.iDays

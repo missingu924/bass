@@ -2,15 +2,19 @@ package com.bass.obj;
 
 import java.sql.Timestamp;
 import com.wuyg.common.dao.BaseDbObj;
+import com.wuyg.common.util.TimeUtil;
+
 import java.util.LinkedHashMap;
 import java.util.Arrays;
 import java.util.List;
 import com.alibaba.fastjson.JSON;
-import com.bass.searchcondition.VDispatchCustInvStatSearchCondition;
 
-public class VDispatchCustInvStatObj extends BaseDbObj
+public class VDispatchListsObj extends BaseDbObj
 {
-	private Long id;
+	private Long autoid;
+	private Timestamp ddate;
+	private Long dlid;
+	private String cdlcode;
 	private String ccccode;
 	private String cccname;
 	private String ccuscode;
@@ -23,14 +27,13 @@ public class VDispatchCustInvStatObj extends BaseDbObj
 	private String cinvstd;
 	private String ccomunitcode;
 	private String ccomunitname;
-	private Long icount;
 	private Double iquantity;
 	private Double isum;
 
 	@Override
 	public String findKeyColumnName()
 	{
-		return "id";
+		return "autoid";
 	}
 
 	@Override
@@ -45,57 +48,43 @@ public class VDispatchCustInvStatObj extends BaseDbObj
 	{
 		StringBuffer sql = new StringBuffer();
 
-//		sql.append(" ( \n");
-//		sql.append(" select \n");
-//		sql.append(" 1 as id, \n");
-//		sql.append(" custclass.cCCCode, \n");
-//		sql.append(" custclass.cCCName, \n");
-//		sql.append(" cust.cCusCode, \n");
-//		sql.append(" cust.cCusName, \n");
-//		sql.append(" cust.cCusAbbName, \n");
-//		sql.append(" invc.cInvCCode, \n");
-//		sql.append(" invc.cInvCName, \n");
-//		sql.append(" inv.cInvCode, \n");
-//		sql.append(" inv.cInvName, \n");
-//		sql.append(" inv.cInvStd, \n");
-//		sql.append(" inv.cComUnitCode, \n");
-//		sql.append(" cu.cComUnitName, \n");
-//		sql.append(" dl.iCount, \n");
-//		sql.append(" dl.iQuantity, \n");
-//		sql.append(" dl.iSum \n");
-//		sql.append(" from \n");
-//		sql.append(" ( \n");
-//		sql.append(" 	select  \n");
-//		sql.append(" 	dl.cCusCode, \n");
-//		sql.append(" 	dls.cInvCode, \n");
-//		sql.append(" 	COUNT(*) iCount, \n");
-//		sql.append(" 	sum(dls.iQuantity) iQuantity, \n");
-//		sql.append(" 	sum(dls.iSum) iSum \n");
-//		sql.append(" 	from  \n");
-//		sql.append(" 	DispatchList dl \n");
-//		sql.append(" 	left join \n");
-//		sql.append(" 	DispatchLists dls \n");
-//		sql.append(" 	on dl.DLID=dls.DLID \n");
-//		sql.append(" 	where \n");
-//		sql.append(" 	dls.cInvCode is not null \n");
-//		sql.append(" 	and dDate>='2010' and dDate<='2018' \n");
-//		sql.append(" 	--and cCusCode='' \n");
-//		sql.append(" 	group by \n");
-//		sql.append(" 	dl.cCusCode, \n");
-//		sql.append(" 	dls.cInvCode \n");
-//		sql.append(" ) dl \n");
-//		sql.append(" left join \n");
-//		sql.append(" Customer cust \n");
-//		sql.append(" on dl.cCusCode=cust.cCusCode \n");
-//		sql.append(" left join CustomerClass custclass \n");
-//		sql.append(" on cust.cCCCode=custclass.cCCCode \n");
-//		sql.append(" left join inventory inv \n");
-//		sql.append(" on inv.cInvCode=dl.cInvCode \n");
-//		sql.append(" left join InventoryClass invc \n");
-//		sql.append(" on inv.cInvCCode=invc.cInvCCode \n");
-//		sql.append(" left join ComputationUnit cu \n");
-//		sql.append(" on inv.cComUnitCode=cu.cComunitCode \n");
-//		sql.append(" ) t \n");
+		sql.append(" ( \n");
+		sql.append(" select  \n");
+		sql.append(" dls.AutoID, \n");
+		sql.append(" dl.dDate, \n");
+		sql.append(" dl.DLID, \n");
+		sql.append(" dl.cDLCode, \n");
+		sql.append(" custclass.cCCCode, \n");
+		sql.append(" custclass.cCCName, \n");
+		sql.append(" cust.cCusCode, \n");
+		sql.append(" cust.cCusName, \n");
+		sql.append(" cust.cCusAbbName, \n");
+		sql.append(" invc.cInvCCode, \n");
+		sql.append(" invc.cInvCName, \n");
+		sql.append(" inv.cInvCode, \n");
+		sql.append(" inv.cInvName, \n");
+		sql.append(" inv.cInvStd, \n");
+		sql.append(" inv.cComUnitCode, \n");
+		sql.append(" cu.cComUnitName, \n");
+		sql.append(" isnull(dls.iQuantity,0) iQuantity, \n");
+		sql.append(" isnull(dls.iSum,0) iSum   \n");
+		sql.append(" from  \n");
+		sql.append(" DispatchList dl \n");
+		sql.append(" left join \n");
+		sql.append(" DispatchLists dls \n");
+		sql.append(" on dl.DLID=dls.DLID \n");
+		sql.append(" left join \n");
+		sql.append(" Customer cust \n");
+		sql.append(" on dl.cCusCode=cust.cCusCode \n");
+		sql.append(" left join CustomerClass custclass \n");
+		sql.append(" on cust.cCCCode=custclass.cCCCode \n");
+		sql.append(" left join inventory inv \n");
+		sql.append(" on inv.cInvCode=dls.cInvCode \n");
+		sql.append(" left join InventoryClass invc \n");
+		sql.append(" on inv.cInvCCode=invc.cInvCCode \n");
+		sql.append(" left join ComputationUnit cu \n");
+		sql.append(" on inv.cComUnitCode=cu.cComunitCode \n");
+		sql.append(" ) t \n");
 
 		return sql.toString();
 	}
@@ -103,35 +92,19 @@ public class VDispatchCustInvStatObj extends BaseDbObj
 	@Override
 	public String findDefaultOrderBy()
 	{
-		return "iSum desc,cCusCode,cInvCode";
+		return "ddate,cdlcode desc,ccuscode,cinvcode";
 	}
 
 	@Override
 	public String getBasePath()
 	{
-		return "VDispatchCustInvStat";
+		return "VDispatchLists";
 	}
 
 	@Override
 	public String getCnName()
 	{
-		return "客户产品销售统计";
-	}
-	
-	public String getCnName(String groupBy)
-	{
-		if (VDispatchCustInvStatSearchCondition.GROUP_BY_CUST.equalsIgnoreCase(groupBy))
-		{
-			return "客户销售统计";
-		}
-		if (VDispatchCustInvStatSearchCondition.GROUP_BY_INV.equalsIgnoreCase(groupBy))
-		{
-			return "产品销售统计";
-		}if (VDispatchCustInvStatSearchCondition.GROUP_BY_CUST_INV.equalsIgnoreCase(groupBy))
-		{
-			return "客户产品销售统计";
-		}
-		return "";
+		return "发货单明细";
 	}
 
 	@Override
@@ -145,33 +118,65 @@ public class VDispatchCustInvStatObj extends BaseDbObj
 	{
 		LinkedHashMap<String, String> pros = new LinkedHashMap<String, String>();
 
-		// pros.put("id", "id");
+		// pros.put("autoid", "autoid");
+		pros.put("ddate", "日期");
+		// pros.put("dlid", "dlid");
+		pros.put("cdlcode", "单据编号");
 		// pros.put("ccccode", "客户类别编码");
 		// pros.put("cccname", "客户类别名称");
 		pros.put("ccuscode", "客户编码");
 		pros.put("ccusname", "客户名称");
 		// pros.put("ccusabbname", "客户简称");
-		pros.put("cinvccode", "存货分类编码");
-		pros.put("cinvcname", "存货分类名称");
+		// pros.put("cinvccode", "存货分类编码");
+		// pros.put("cinvcname", "存货分类名称");
 		pros.put("cinvcode", "存货编码");
 		pros.put("cinvname", "存货名称");
 		pros.put("cinvstd", "规格型号");
-		// pros.put("ccomunitcode", "主计量编码");
+		pros.put("ccomunitcode", "主计量编码");
 		pros.put("ccomunitname", "主计量");
-		pros.put("icount", "发货次数");
-		pros.put("iquantity", "发货数量");
-		pros.put("isum", "发货金额");
+		pros.put("iquantity", "数量");
+		pros.put("isum", "金额");
 		return pros;
 	}
 
-	public Long getId()
+	public Long getAutoid()
 	{
-		return id;
+		return autoid;
 	}
 
-	public void setId(Long id)
+	public void setAutoid(Long autoid)
 	{
-		this.id = id;
+		this.autoid = autoid;
+	}
+
+	public Timestamp getDdate()
+	{
+		return ddate;
+	}
+
+	public void setDdate(Timestamp ddate)
+	{
+		this.ddate = ddate;
+	}
+
+	public Long getDlid()
+	{
+		return dlid;
+	}
+
+	public void setDlid(Long dlid)
+	{
+		this.dlid = dlid;
+	}
+
+	public String getCdlcode()
+	{
+		return cdlcode;
+	}
+
+	public void setCdlcode(String cdlcode)
+	{
+		this.cdlcode = cdlcode;
 	}
 
 	public String getCcccode()
@@ -294,16 +299,6 @@ public class VDispatchCustInvStatObj extends BaseDbObj
 		this.ccomunitname = ccomunitname;
 	}
 
-	public Long getIcount()
-	{
-		return icount;
-	}
-
-	public void setIcount(Long icount)
-	{
-		this.icount = icount;
-	}
-
 	public Double getIquantity()
 	{
 		return iquantity;
@@ -322,6 +317,11 @@ public class VDispatchCustInvStatObj extends BaseDbObj
 	public void setIsum(Double isum)
 	{
 		this.isum = isum;
+	}
+	
+	public String getDdate4show()
+	{
+		return TimeUtil.date2str(ddate,"M月d日");
 	}
 
 	@Override

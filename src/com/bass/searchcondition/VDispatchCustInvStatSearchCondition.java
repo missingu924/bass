@@ -10,6 +10,9 @@ public class VDispatchCustInvStatSearchCondition extends BaseSearchCondition
 	public static final String GROUP_BY_CUST_INV = "GROUP_BY_CUST_INV";// 按客户+产品统计
 
 	private String groupBy;// 统计类型
+	
+	private boolean showChart;// 显示图表
+	
 	private Timestamp ddate_min;
 	private Timestamp ddate_max;
 
@@ -41,6 +44,16 @@ public class VDispatchCustInvStatSearchCondition extends BaseSearchCondition
 	public void setDdate_max(Timestamp ddate_max)
 	{
 		this.ddate_max = ddate_max;
+	}
+
+	public boolean isShowChart()
+	{
+		return showChart;
+	}
+
+	public void setShowChart(boolean showChart)
+	{
+		this.showChart = showChart;
 	}
 
 }
