@@ -11,7 +11,8 @@
 <%@page import="com.bass.searchcondition.VDispatchCustInvStatSearchCondition"%> 
 <%@page import="com.wuyg.auth.obj.AuthUserObj"%> 
 <%@page import="com.wuyg.common.util.SystemConstant"%>
-<%@page import="com.wuyg.echarts.EchartsUtil"%>  
+<%@page import="com.wuyg.echarts.EchartsUtil"%>
+<%@page import="java.net.URLEncoder"%>  
 <!-- 基本信息 --> 
 <% 
 	// 当前上下文路径 
@@ -99,26 +100,30 @@
 			</table> 
 			<!-- 查询条件 -->  
 			<table id="search_condition_table" class="search_condition_table" align="center" width="98%" style='display: <%=domainSearchCondition.isShowSearchConditionTable() ? "" : "none"%>'> 
+				<%if(domainSearchCondition.GROUP_BY_CUST.equalsIgnoreCase(domainSearchCondition.getGroupBy()) || domainSearchCondition.GROUP_BY_CUST_INV.equalsIgnoreCase(domainSearchCondition.getGroupBy())){ %>
 				<tr> 
 						<td><%=domainInstance.getPropertyCnName("ccuscode") %></td> 
 						<td>
-						<%=DictionaryUtil.getInputHtml("U8客户字典", "ccuscode", StringUtil.getNotEmptyStr(domainInstance.getCcuscode(), ""),20)%> 
+						<input name="ccuscode" type="text" id="ccuscode" value="<%=StringUtil.getNotEmptyStr(domainInstance.getCcuscode(),"")%>" size="20" > 
 						</td> 
 						<td><%=domainInstance.getPropertyCnName("ccusname") %></td> 
 						<td>
 						<input name="ccusname" type="text" id="ccusname" value="<%=StringUtil.getNotEmptyStr(domainInstance.getCcusname(),"")%>" size="20" > 
 						</td> 
 				</tr> 
+				
+				<%} if(domainSearchCondition.GROUP_BY_INV.equalsIgnoreCase(domainSearchCondition.getGroupBy()) || domainSearchCondition.GROUP_BY_CUST_INV.equalsIgnoreCase(domainSearchCondition.getGroupBy())){ %>
 				<tr> 
 						<td><%=domainInstance.getPropertyCnName("cinvcode") %></td> 
 						<td>
-						<%=DictionaryUtil.getInputHtml("U8存货字典", "cinvcode", StringUtil.getNotEmptyStr(domainInstance.getCinvcode(), ""),20)%> 
+						<input name="cinvcode" type="text" id="cinvcode" value="<%=StringUtil.getNotEmptyStr(domainInstance.getCinvcode(),"")%>" size="20" > 
 						</td> 
 						<td><%=domainInstance.getPropertyCnName("cinvname") %></td> 
 						<td>
 						<input name="cinvname" type="text" id="cinvname" value="<%=StringUtil.getNotEmptyStr(domainInstance.getCinvname(),"")%>" size="20" > 
 						</td> 
 				</tr> 
+				<%} %>
 			</table> 
 			
 			<!-- 统计图表 -->  
@@ -126,11 +131,11 @@
 				{
 					if(domainInstance.getCcuscode()!=null)
 					{
-						out.print(EchartsUtil.createEchartByDatalist("",list,"cinvname","isum",EchartsUtil.PIE,EchartsUtil.THEME_MACARONS,null,0,400));
+						out.print(EchartsUtil.createEchartByDatalist("",list,"cinvname","isum",EchartsUtil.PIE,EchartsUtil.THEME_ROMA,null,0,400,null));
 					}
 					else if(domainInstance.getCinvcode()!=null)
 					{
-						out.print(EchartsUtil.createEchartByDatalist("",list,"ccusname","isum",EchartsUtil.PIE,EchartsUtil.THEME_MACARONS,null,0,400));
+						out.print(EchartsUtil.createEchartByDatalist("",list,"ccusname","isum",EchartsUtil.PIE,EchartsUtil.THEME_ROMA,null,0,400,null));
 					}
 				}
 			%>
@@ -164,14 +169,17 @@
 				%> 
 				<tr> 
 					<td style="width:30px;text-align:right"><%=i+1 %></td> 
+					
 					<%if(domainSearchCondition.GROUP_BY_CUST.equalsIgnoreCase(domainSearchCondition.getGroupBy()) || domainSearchCondition.GROUP_BY_CUST_INV.equalsIgnoreCase(domainSearchCondition.getGroupBy())){ %>
 					<td><%=StringUtil.getNotEmptyStr(o.getCcuscode())%></td>  
 					<td><%=StringUtil.getNotEmptyStr(o.getCcusname())%></td> 
+					
 					<%} if(domainSearchCondition.GROUP_BY_INV.equalsIgnoreCase(domainSearchCondition.getGroupBy()) || domainSearchCondition.GROUP_BY_CUST_INV.equalsIgnoreCase(domainSearchCondition.getGroupBy())){ %>
 					<td><%=StringUtil.getNotEmptyStr(o.getCinvcode())%></td>  
 					<td><%=StringUtil.getNotEmptyStr(o.getCinvname())%></td> 
 					<td><%=StringUtil.getNotEmptyStr(o.getCcomunitname())%></td> 
 					<%} %>
+					
 					<td style="text-align:right;"><%=StringUtil.getNotEmptyStr(o.getIcount())%></td> 
 					<td style="text-align:right;"><%=StringUtil.formatDouble(o.getIcount()/iCountTotal*100,2) %>%</td> 
 					

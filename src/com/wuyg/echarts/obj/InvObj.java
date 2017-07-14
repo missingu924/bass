@@ -8,6 +8,7 @@ import com.wuyg.common.util.StringUtil;
 public class InvObj extends BaseDbObj
 {
 	private String id;// key
+	private String code;// code
 	private String name;// name
 	private Double value;// value
 	private String name1;// name
@@ -231,6 +232,17 @@ public class InvObj extends BaseDbObj
 	public void setValue4(Double value4)
 	{
 		this.value4 = value4;
+	}
+
+
+	public String getCode()
+	{
+		return code;
+	}
+
+	public void setCode(String code)
+	{
+		this.code = code;
 	}
 
 	public LinkedHashMap<String, String> getProperties()

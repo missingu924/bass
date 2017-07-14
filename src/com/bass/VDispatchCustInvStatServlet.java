@@ -1,6 +1,8 @@
 package com.bass;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -50,6 +52,17 @@ public class VDispatchCustInvStatServlet extends AbstractBaseServletTemplate
 	// 查询
 	public void list4this(HttpServletRequest request, HttpServletResponse response) throws Exception
 	{
+		VDispatchCustInvStatSearchCondition condition = (VDispatchCustInvStatSearchCondition) domainSearchCondition;
+		Calendar cal = Calendar.getInstance();
+		if (condition.getDdate_min() == null)
+		{
+			condition.setDdate_min(new Timestamp(TimeUtil.getTheFirstDayOfTheMonth(cal.get(cal.YEAR), cal.get(cal.MONTH) + 1).getTime()));
+		}
+		if (condition.getDdate_max() == null)
+		{
+			condition.setDdate_max(new Timestamp(TimeUtil.getTheLastDayOfTheMonth(cal.get(cal.YEAR), cal.get(cal.MONTH) + 1).getTime()));
+		}
+
 		String sql = getSql();
 
 		List dataList = getDomainDao().searchBySql(getDomainInstanceClz(), sql);
@@ -116,7 +129,7 @@ public class VDispatchCustInvStatServlet extends AbstractBaseServletTemplate
 		sql.append(" from \n");
 		sql.append(" ( \n");
 		sql.append(" 	select  \n");
-		
+
 		if (condition.GROUP_BY_CUST.equalsIgnoreCase(condition.getGroupBy()))
 		{
 			sql.append(" 	dl.cCusCode, \n");
@@ -132,7 +145,7 @@ public class VDispatchCustInvStatServlet extends AbstractBaseServletTemplate
 			sql.append(" 	dl.cCusCode, \n");
 			sql.append(" 	dls.cInvCode, \n");
 		}
-		
+
 		sql.append(" 	COUNT(*) iCount, \n");
 		sql.append(" 	isnull(sum(dls.iQuantity),0) iQuantity, \n");
 		sql.append(" 	isnull(sum(dls.iSum),0) iSum \n");

@@ -90,11 +90,13 @@
 						<td>
 						<input name="ccusname" type="text" id="ccusname" value="<%=StringUtil.getNotEmptyStr(domainInstance.getCcusname(),"")%>" size="20" > 
 						</td> 
+						<!-- 
 						<td><%=domainInstance.getPropertyCnName("drecentdate") %></td> 
 						<td>
 						<input name="drecentdate_min" type="text" id="drecentdate_min" value="<%=TimeUtil.date2str(domainSearchCondition.getDrecentdate_min(),"yyyy-MM-dd")%>" size="9" onFocus="WdatePicker({isShowClear:false,readOnly:false,highLineWeekDay:true,dateFmt:'yyyy-MM-dd'})">- 
 						<input name="drecentdate_max" type="text" id="drecentdate_max" value="<%=TimeUtil.date2str(domainSearchCondition.getDrecentdate_max(),"yyyy-MM-dd")%>" size="9" onFocus="WdatePicker({isShowClear:false,readOnly:false,highLineWeekDay:true,dateFmt:'yyyy-MM-dd'})"> 
 						</td> 
+						 -->
 						<td><%=domainInstance.getPropertyCnName("idays") %></td> 
 						<td>
 						<input name="idays_min" type="text" id="idays_min" value="<%=StringUtil.getNotEmptyStr(domainSearchCondition.getIdays_min(),"")%>" size="9" >- 
@@ -112,7 +114,6 @@
 						<th onClick="sortBy(this)" db_col="ccusname" class="<%=domainSearchCondition.getSortClassByDbColumn("ccusname")%>"><%=domainInstance.getPropertyCnName("ccusname") %></th> 
 						<th onClick="sortBy(this)" db_col="drecentdate" class="<%=domainSearchCondition.getSortClassByDbColumn("drecentdate")%>"><%=domainInstance.getPropertyCnName("drecentdate") %></th> 
 						<th onClick="sortBy(this)" db_col="idays" class="<%=domainSearchCondition.getSortClassByDbColumn("idays")%>"><%=domainInstance.getPropertyCnName("idays") %></th> 
-						<th>操作</th> 
 					</tr> 
 				</thead> 
 				<% 
@@ -145,9 +146,6 @@
 					<td style="color: <%=color %>"><%=StringUtil.getNotEmptyStr(o.getCcusname())%></td> 
 					<td><%=TimeUtil.date2str(o.getDrecentdate(),"yyyy-MM-dd")%></td> 
 					<td style="text-align:right;color: <%=color %>"><%=StringUtil.getNotEmptyStr(o.getIdays())%></td> 
-					<td width="40" style="text-align:center"> 
-						<input type="button" class="button button_detail" title="详情" onClick="winOpen('<%=contextPath%>/Proxy/Servlet?servlet=<%=basePath%>&method=detail4this&<%=o.findKeyColumnName()%>=<%=o.findKeyValue()%>')" /> 
-					</td> 
 				</tr> 
 				<% 
 					} 

@@ -115,8 +115,6 @@
 				</tr> 
 			</table> 
 			
-			<%=EchartsUtil.createEchartByDatalist("",list,"ddate4show","isum",EchartsUtil.LINE,EchartsUtil.THEME_MACARONS,null,0,300) %>
- 
 			<!-- 数据信息 -->  
 			<table id="data_table" class="table table-bordered" align="center" width="98%"> 
 				<thead> 

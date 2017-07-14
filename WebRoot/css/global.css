@@ -808,4 +808,74 @@ table style
   text-align: right;
   width: 160px;
 }
+
+/*lcd font style*/
+.lcd_red_big {
+	color: #ff6600;
+	font-family: lcd;
+	font-size: 42px;
+	cursor: pointer;
+}
+
+.lcd_organe_big {
+	color: #FF9900;
+	font-family: lcd;
+	font-size: 42px;
+	cursor: pointer;
+}
+
+.lcd_organe_small {
+	color: #FF9900;
+	font-family: lcd;
+	font-size: 28px;
+	cursor: pointer;
+}
+
+.lcd_green_big {
+	color: #2EC7C9;
+	font-family: lcd;
+	font-size: 42px;
+	cursor: pointer;
+}
+
+.lcd_green_small {
+	color: #2EC7C9;
+	font-family: lcd;
+	font-size: 28px;
+	cursor: pointer;
+}
+
+.lcd_blue_big {
+	color: #3399cc;
+	font-family: lcd;
+	font-size: 42px;
+	cursor: pointer;
+}
+
+.lcd_blue_small {
+	color: #3399cc;
+	font-family: lcd;
+	font-size: 28px;
+	cursor: pointer;
+}
+
+.lcd_purple_big {
+	color: #9966cc;
+	font-family: lcd;
+	font-size: 42px;
+	cursor: pointer;
+}
+
+.lcd_purple_small {
+	color: #9966cc;
+	font-family: lcd;
+	font-size: 28px;
+	cursor: pointer;
+}
+
+.lcd_gray_small {
+	color: #cccccc;
+	font-family: lcd;
+	font-size: 28px;
+}
 	

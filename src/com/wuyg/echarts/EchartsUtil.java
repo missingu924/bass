@@ -22,10 +22,10 @@ public class EchartsUtil
 	// 图表颜色
 	public static final String COLOR_GREEN = "#2EC7C9";
 	public static final String COLOR_PURPLE = "#B6A2DE";
-	public static final String COLOR_BLUE = "#0099cc";//"#5AB1EF";
-	public static final String COLOR_ORANGE = "#FFB980";
+	public static final String COLOR_BLUE = "#6699ff";// "#5AB1EF";
+	public static final String COLOR_ORANGE = "#FF6600";
 	public static final String COLOR_RED = "#D87A80";
-	public static final String COLOR_CYAN = "#8D98B3";
+	public static final String COLOR_CYAN = "#cc9933";
 
 	// 图表主题
 	public static final String THEME_INFOGRAPHIC = "infographic";
@@ -45,8 +45,9 @@ public class EchartsUtil
 	 * @param color
 	 *            图表颜色
 	 * @return
+	 * @throws Exception
 	 */
-	public static String createEchartByInv(InvObj knvObj, String echartType, String echartTheme, String color, int height, int width)
+	public static String createEchartByInv(InvObj knvObj, String echartType, String echartTheme, String color, int height, int width, String clickJs) throws Exception
 	{
 		IBaseDAO dao = new DefaultBaseDAO(knvObj, SystemConstant.U8_DB);
 
@@ -56,7 +57,7 @@ public class EchartsUtil
 		{ "name", "name1" }, new String[]
 		{ knvObj.getPropertyCnName("name"), knvObj.getPropertyCnName("name1") }, new String[]
 		{ "value", "value1" }, new String[]
-		{ knvObj.getPropertyCnName("value"), knvObj.getPropertyCnName("value1") }, echartType, echartTheme, color, width, height);
+		{ knvObj.getPropertyCnName("value"), knvObj.getPropertyCnName("value1") }, echartType, echartTheme, color, width, height, clickJs);
 	}
 
 	/**
@@ -79,23 +80,24 @@ public class EchartsUtil
 	 * @param color
 	 *            图表颜色
 	 * @return
+	 * @throws Exception
 	 */
-	public static String createEchartByInvSql(String invSql, String orderBy, String title, String xAxisCnName, String seriesCnName, String echartType, String echartTheme, String color, int width, int height)
+	public static String createEchartByInvSql(String invSql, String orderBy, String title, String xAxisCnName, String seriesCnName, String echartType, String echartTheme, String color, int width, int height, String clickJs) throws Exception
 	{
 		InvObj knvObj = new InvObj(invSql, orderBy, title, xAxisCnName, seriesCnName);
-		return createEchartByInv(knvObj, echartType, echartTheme, color, width, height);
+		return createEchartByInv(knvObj, echartType, echartTheme, color, width, height, clickJs);
 	}
 
-	public static String createEchartByInvSql(String invSql, String orderBy, String title, String[] xAxisCnNames, String seriesCnNames[], String echartType, String echartTheme, String color, int width, int height)
+	public static String createEchartByInvSql(String invSql, String orderBy, String title, String[] xAxisCnNames, String seriesCnNames[], String echartType, String echartTheme, String color, int width, int height, String clickJs) throws Exception
 	{
 		InvObj knvObj = new InvObj(invSql, orderBy, title, xAxisCnNames, seriesCnNames);
-		return createEchartByInv(knvObj, echartType, echartTheme, color, width, height);
+		return createEchartByInv(knvObj, echartType, echartTheme, color, width, height, clickJs);
 	}
 
-	public static String createEchartByInvSql(String invSql, String orderBy, String title, String xAxisCnName, String seriesCnName, String echartType, String echartTheme, String color)
+	public static String createEchartByInvSql(String invSql, String orderBy, String title, String xAxisCnName, String seriesCnName, String echartType, String echartTheme, String color, String clickJs) throws Exception
 	{
 		InvObj knvObj = new InvObj(invSql, orderBy, title, xAxisCnName, seriesCnName);
-		return createEchartByInv(knvObj, echartType, echartTheme, color, 300, -1);
+		return createEchartByInv(knvObj, echartType, echartTheme, color, 300, -1, clickJs);
 	}
 
 	/**
@@ -116,19 +118,85 @@ public class EchartsUtil
 	 * @param color
 	 *            图表颜色
 	 * @return
+	 * @throws Exception
 	 */
-	public static String createEchartByDatalist(String title, List<BaseDbObj> dataList, String xAxisProperty, String seriesProperty, String echartType, String echartTheme, String color, int width, int height)
+	public static String createEchartByDatalist(String title, List<BaseDbObj> dataList, String xAxisProperty, String seriesProperty, String echartType, String echartTheme, String color, int width, int height, String clickJs) throws Exception
 	{
 		if (dataList == null || dataList.size() == 0)
 		{
 			return "";
 		}
+
 		BaseDbObj dbObj = dataList.get(0);
+
 		return createEchartByDatalist(title, dataList, new String[]
 		{ xAxisProperty }, new String[]
 		{ dbObj.getPropertyCnName(xAxisProperty) }, new String[]
 		{ seriesProperty }, new String[]
-		{ dbObj.getPropertyCnName(seriesProperty) }, echartType, echartTheme, color, width, height);
+		{ dbObj.getPropertyCnName(seriesProperty) }, echartType, echartTheme, color, width, height, clickJs);
+	}
+
+	public static String createEchartByInvDatalist(List dataList, String echartType, String echartTheme, String color, int width, int height, String clickJs) throws Exception
+	{
+		return createEchartByDatalist("", dataList, "name", "value", echartType, echartTheme, color, width, height, clickJs);
+	}
+
+	public static String createTableByInvDatalist(List dataList, int width, int height)
+	{
+		if (dataList.size() == 0)
+		{
+			return "";
+		}
+
+		StringBuffer s = new StringBuffer();
+
+		InvObj inv = (InvObj) dataList.get(0);
+
+		// 输出表
+		s.append("<div style='width: " + (width > 0 ? width : "") + "; height:" + (height > 0 ? height : "") + "px; overflow:auto'>\n");
+		s.append("<table class='table table-bordered' style='margin:10px'>\n");
+		s.append("	<thead>\n");
+		s.append("		<tr>\n");
+		s.append("			<th>序号</th>\n");
+		s.append("			<th>" + inv.getPropertyCnName("name") + "</th>\n");
+		s.append("			<th>" + inv.getPropertyCnName("value") + "</th>\n");
+		s.append("			<th>占比</th>\n");
+		s.append("		</tr>\n");
+		s.append("	</thead>\n");
+
+		// 合计
+		double sum = 0;
+		for (int i = 0; i < dataList.size(); i++)
+		{
+			inv = (InvObj) dataList.get(i);
+			if (inv.getValue() != null)
+			{
+				sum += inv.getValue().doubleValue();
+			}
+		}
+
+		for (int i = 0; i < dataList.size(); i++)
+		{
+			inv = (InvObj) dataList.get(i);
+			s.append("	<tr>\n");
+			s.append("		<td>" + (i + 1) + "</td>\n");
+			s.append("		<td>" + inv.getName() + "</td>\n");
+			s.append("		<td style='text-align:right'>" + inv.getValue() + "</td>\n");
+			s.append("		<td style='text-align:right'>" + (inv.getValue() == null ? 0 : StringUtil.formatDouble(inv.getValue() / sum * 100, 2)) + "%</td>\n");
+			s.append("	</tr>\n");
+		}
+
+		s.append("	<tr style='color:blue'>\n");
+		s.append("		<td>合计</td>\n");
+		s.append("		<td></td>\n");
+		s.append("		<td style='text-align:right'>" + StringUtil.formatDouble(sum, 1) + "</td>\n");
+		s.append("		<td style='text-align:right'>100%</td>\n");
+		s.append("	</tr>\n");
+
+		s.append("</table>\n");
+		s.append("</div>\n");
+
+		return s.toString();
 	}
 
 	/**
@@ -153,8 +221,9 @@ public class EchartsUtil
 	 * @param color
 	 *            图表颜色
 	 * @return
+	 * @throws Exception
 	 */
-	public static String createEchartByDatalist(String title, List<BaseDbObj> dataList, String[] xAxisPropertys, String[] xAxisCnNames, String[] seriesPropertys, String[] seriesCnNames, String echartType, String echartTheme, String color, int width, int height)
+	public static String createEchartByDatalist(String title, List<BaseDbObj> dataList, String[] xAxisPropertys, String[] xAxisCnNames, String[] seriesPropertys, String[] seriesCnNames, String echartType, String echartTheme, String color, int width, int height, String clickJs) throws Exception
 	{
 		if (dataList == null || dataList.size() == 0)
 		{
@@ -176,7 +245,7 @@ public class EchartsUtil
 		s.append("    <script src=\"echarts/echarts.common.min.js\"></script> \n");
 		s.append("    <script src=\"echarts/theme/" + echartTheme + ".js\"></script> \n");
 		s.append("    <!-- 为ECharts准备一个具备大小（宽高）的Dom --> \n");
-		s.append("    <div id=\"" + divId + "\" style=\"align:center;margin:0 auto;" + (width > 0 ? "width:" + width + "px;" : "") + (height > 0 ? "height:" + height + "px;" : "") + "\"></div> \n");
+		s.append("    <div id=\"" + divId + "\" style=\"align:center;margin:0 auto;overflow:auto;" + (width > 0 ? "width:" + width + "px;" : "") + (height > 0 ? "height:" + height + "px;" : "") + "\"></div> \n");
 		s.append("    <script type=\"text/javascript\"> \n");
 		s.append("        var " + divId + " = echarts.init(document.getElementById('" + divId + "'),'" + echartTheme + "'); \n");
 		s.append(" \n");
@@ -222,7 +291,7 @@ public class EchartsUtil
 			BaseDbObj o = dataList.get(i);
 			xAxis += "\"" + o.getPropertyValue(xAxisPropertys[0]) + "\"";
 			series += o.getPropertyValue(seriesPropertys[0]);
-			nameValues += "{name:'" + o.getPropertyValue(xAxisPropertys[0]) + "',value:" + o.getPropertyValue(seriesPropertys[0]) + "}";
+			nameValues += "{code:'" + o.getPropertyValue("code") + "',name:'" + o.getPropertyValue(xAxisPropertys[0]) + "',value:" + o.getPropertyValue(seriesPropertys[0]) + "}";
 			if (i < dataList.size() - 1)
 			{
 				xAxis += ",";
@@ -230,7 +299,7 @@ public class EchartsUtil
 				nameValues += ",";
 			}
 		}
-		if (seriesPropertys.length > 1)
+		if (seriesPropertys.length > 1 && !PIE.equalsIgnoreCase(echartType))
 		{
 			for (int i = 0; i < dataList.size(); i++)
 			{
@@ -252,6 +321,7 @@ public class EchartsUtil
 			s.append("            xAxis: { \n");
 			s.append("                data: [" + xAxis + "], \n");
 			s.append("            	  splitLine: {show: false}, \n");
+			// s.append(" axisLabel: {interval:0}, \n");// rotate: -30 倾斜
 			// s.append(" splitArea: {show: false}, \n");
 			s.append("            }, \n");
 			s.append("            yAxis: { \n");
@@ -264,11 +334,14 @@ public class EchartsUtil
 			s.append("                type: 'value', \n");
 			s.append("                position: 'top', \n");
 			s.append("            	  splitLine: {show: false}, \n");
+			s.append("            	  axisLabel: {interval:0}, \n");
 			// s.append(" splitArea: {show: false}, \n");
 			s.append("            }, \n");
 			s.append("            yAxis: {  \n");
 			s.append("                type: 'category', \n");
+			s.append("                inverse: true, \n");
 			s.append("            	  splitLine: {show: false}, \n");
+			s.append("            	  axisLabel: {interval:0}, \n");
 			// s.append(" splitArea: {show: false}, \n");
 			// s.append(" position: 'right', \n");
 			s.append("                data:[" + xAxis + "] \n");
@@ -284,16 +357,16 @@ public class EchartsUtil
 		s.append("            series: [ \n");
 		s.append("            	{ \n");
 		s.append("                name: '" + seriesCnNames[0] + "', \n");
-		s.append("                label: { normal: { show: true,position: '"+(echartType.equalsIgnoreCase(BAR)?"top":"right")+"'}}, \n");
+		s.append("                label: { normal: { show: true,position: '" + (echartType.equalsIgnoreCase(BAR) ? "top" : "right") + "'}}, \n");
 		s.append("                type: '" + echartType.replaceAll("_v", "") + "', \n");
 		s.append("                data: [" + nameValues + "] \n");
 		s.append("            	} \n");
-		if (seriesPropertys.length > 1)
+		if (seriesPropertys.length > 1 && !PIE.equalsIgnoreCase(echartType))
 		{
 			s.append("            	,{ \n");
 			s.append("                name: '" + seriesCnNames[1] + "', \n");
 			s.append("                label: { normal: { show: true,position: 'top'}}, \n");
-			s.append("                type: '"+LINE+"', \n");
+			s.append("                type: '" + LINE + "', \n");
 			s.append("                data: [" + nameValues1 + "] \n");
 			s.append("            	} \n");
 		}
@@ -301,6 +374,10 @@ public class EchartsUtil
 		s.append("        }; \n");
 		s.append(" \n");
 		s.append("        " + divId + ".setOption(" + divId + "_option); \n");
+		if (!StringUtil.isEmpty(clickJs))
+		{
+			s.append(" " + divId + ".on('click',function(params){" + clickJs + ";});");
+		}
 		s.append("    </script> \n");
 
 		return s.toString();
@@ -325,6 +402,30 @@ public class EchartsUtil
 		}
 
 		return inv.getValue();
+	}
+
+	/**
+	 * 根据sql查询inv数据list
+	 * 
+	 * @param invSql
+	 * @param orderBy
+	 * @return
+	 */
+	public static List getInvListByInvSql(String invSql, String orderBy, String cnName, String nameCnName, String valueCnName)
+	{
+		InvObj inv = new InvObj(invSql, orderBy, cnName, nameCnName, valueCnName);
+
+		IBaseDAO dao = new DefaultBaseDAO(inv, SystemConstant.U8_DB);
+		List<InvObj> list = dao.searchPaginationByDomainInstance(inv, inv.findDefaultOrderBy(), 0, Integer.MAX_VALUE).getDataList();
+
+		if (list.size() > 0)
+		{
+			inv = list.get(0);
+			inv.getProperties().put("name", nameCnName);
+			inv.getProperties().put("value", valueCnName);
+		}
+
+		return list;
 	}
 
 	public static void main(String[] args)
