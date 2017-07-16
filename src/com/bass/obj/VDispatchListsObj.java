@@ -67,7 +67,7 @@ public class VDispatchListsObj extends BaseDbObj
 		sql.append(" inv.cComUnitCode, \n");
 		sql.append(" cu.cComUnitName, \n");
 		sql.append(" isnull(dls.iQuantity,0) iQuantity, \n");
-		sql.append(" isnull(dls.iSum,0) iSum   \n");
+		sql.append(" isnull(dls.iSum/10000,0) iSum   \n");
 		sql.append(" from  \n");
 		sql.append(" DispatchList dl \n");
 		sql.append(" left join \n");
@@ -135,7 +135,7 @@ public class VDispatchListsObj extends BaseDbObj
 		pros.put("ccomunitcode", "主计量编码");
 		pros.put("ccomunitname", "主计量");
 		pros.put("iquantity", "数量");
-		pros.put("isum", "金额");
+		pros.put("isum", "金额（万元）");
 		return pros;
 	}
 

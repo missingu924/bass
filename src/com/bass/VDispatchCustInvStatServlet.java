@@ -53,6 +53,15 @@ public class VDispatchCustInvStatServlet extends AbstractBaseServletTemplate
 	public void list4this(HttpServletRequest request, HttpServletResponse response) throws Exception
 	{
 		VDispatchCustInvStatSearchCondition condition = (VDispatchCustInvStatSearchCondition) domainSearchCondition;
+
+		// 如果有iYear,iMonth
+		if (condition.getIyear() != null && condition.getImonth() != null)
+		{
+			condition.setDdate_min(new Timestamp(TimeUtil.getTheFirstDayOfTheMonth(condition.getIyear(), condition.getImonth()).getTime()));
+			condition.setDdate_max(new Timestamp(TimeUtil.getTheLastDayOfTheMonth(condition.getIyear(), condition.getImonth()).getTime()));
+		}
+
+		// 如果没输入时间
 		Calendar cal = Calendar.getInstance();
 		if (condition.getDdate_min() == null)
 		{
@@ -63,6 +72,7 @@ public class VDispatchCustInvStatServlet extends AbstractBaseServletTemplate
 			condition.setDdate_max(new Timestamp(TimeUtil.getTheLastDayOfTheMonth(cal.get(cal.YEAR), cal.get(cal.MONTH) + 1).getTime()));
 		}
 
+		// 构造sql
 		String sql = getSql();
 
 		List dataList = getDomainDao().searchBySql(getDomainInstanceClz(), sql);
@@ -148,7 +158,7 @@ public class VDispatchCustInvStatServlet extends AbstractBaseServletTemplate
 
 		sql.append(" 	COUNT(*) iCount, \n");
 		sql.append(" 	isnull(sum(dls.iQuantity),0) iQuantity, \n");
-		sql.append(" 	isnull(sum(dls.iSum),0) iSum \n");
+		sql.append(" 	isnull(sum(dls.iSum)/10000,0) iSum \n");
 		sql.append(" 	from  \n");
 		sql.append(" 	DispatchList dl \n");
 		sql.append(" 	left join \n");

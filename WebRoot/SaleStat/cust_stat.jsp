@@ -32,40 +32,36 @@
 		String stat_type = request.getParameter("stat_type");// year、month
 
 		// 开始时间、结束时间
-		int iYear = StringUtil.parseInt(StringUtil.getNotEmptyStr(request.getParameter("iYear"), TimeUtil.nowTime2str("yyyy")));
-		int iMonth = StringUtil.parseInt(StringUtil.getNotEmptyStr(request.getParameter("iMonth"), TimeUtil.nowTime2str("MM")));
+		int iyear = StringUtil.parseInt(StringUtil.getNotEmptyStr(request.getParameter("iyear"), TimeUtil.nowTime2str("yyyy")));
+		int imonth = StringUtil.parseInt(StringUtil.getNotEmptyStr(request.getParameter("imonth"), TimeUtil.nowTime2str("MM")));
 
-		String startTimeYear = iYear + "-01-01 00:00:00";
-		String endTimeYear = iYear + "-12-31 23:59:59";
-
-		String startTimeMonth = TimeUtil.date2str(TimeUtil.getTheFirstDayOfTheMonth(iYear, iMonth), "yyyy-MM-dd 00:00:00");
-		;
-		String endTimeMonth = TimeUtil.date2str(TimeUtil.getTheLastDayOfTheMonth(iYear, iMonth), "yyyy-MM-dd 23:59:59");
+		String startTimeMonth = TimeUtil.date2str(TimeUtil.getTheFirstDayOfTheMonth(iyear, imonth), "yyyy-MM-dd 00:00:00");
+		String endTimeMonth = TimeUtil.date2str(TimeUtil.getTheLastDayOfTheMonth(iyear, imonth), "yyyy-MM-dd 23:59:59");
 
 		// 上月、下月
-		int iPreYear = iYear;
-		int iPreMonth = iMonth;
-		int iNextYear = iYear;
-		int iNextMonth = iMonth;
+		int iPreYear = iyear;
+		int iPreMonth = imonth;
+		int iNextYear = iyear;
+		int iNextMonth = imonth;
 
-		if (iMonth == 1)
+		if (imonth == 1)
 		{
 			iPreMonth = 12;
-			iPreYear = iYear - 1;
-			iNextMonth = iMonth + 1;
-			iNextYear = iYear;
-		} else if (iMonth == 12)
+			iPreYear = iyear - 1;
+			iNextMonth = imonth + 1;
+			iNextYear = iyear;
+		} else if (imonth == 12)
 		{
-			iPreMonth = iMonth - 1;
-			iPreYear = iYear;
+			iPreMonth = imonth - 1;
+			iPreYear = iyear;
 			iNextMonth = 1;
-			iNextYear = iYear + 1;
+			iNextYear = iyear + 1;
 		} else
 		{
-			iPreMonth = iMonth - 1;
-			iPreYear = iYear;
-			iNextMonth = iMonth + 1;
-			iNextYear = iYear;
+			iPreMonth = imonth - 1;
+			iPreYear = iyear;
+			iNextMonth = imonth + 1;
+			iNextYear = iyear;
 		}
 		
 		// 产品编码或名称
@@ -91,9 +87,9 @@
 		}
 		
 		// 按产品统计
-		String invStatSql = "select dls.cinvcode code,round(isnull(sum(iSum)/10000,0),1) value ,inv.cInvName name from DispatchList dl left join DispatchLists dls on dl.DLID=dls.DLID left join inventory inv on dls.cInvCode=inv.cInvCode where dDate>='"
-				+ ("year".equalsIgnoreCase(stat_type) ? startTimeYear : startTimeMonth) + "' and dDate<='" + ("year".equalsIgnoreCase(stat_type) ? endTimeYear : endTimeMonth) + "' and dl.ccuscode='"+custcode+"' group by dls.cinvcode,inv.cInvName";
-		List invList = EchartsUtil.getInvListByInvSql(invStatSql, "value desc", "各产品销售额（万元）", "产品", "各产品销售额（万元）");
+		String invStatSql = "select round(isnull(sum(iSum)/10000,0),4) value ,inv.cInvName name, dls.cinvcode code from DispatchList dl left join DispatchLists dls on dl.DLID=dls.DLID left join inventory inv on dls.cInvCode=inv.cInvCode where dDate>='"
+				+ (startTimeMonth) + "' and dDate<='" + (endTimeMonth) + "' and dl.ccuscode='"+custcode+"' group by dls.cinvcode,inv.cInvName";
+		List invList = EchartsUtil.getInvListByInvSql(invStatSql, "value desc", "各产品销售额（万元）", "产品", "销售额（万元）");
 	%>
 	<body>
 		<form name="pageForm" id="pageForm" method="post" action="<%=request.getContextPath()%>/SaleStat/cust_stat.jsp">
@@ -101,15 +97,15 @@
 			<table align="center" width="98%">
 				<tr>
 					<td align="center">
-						<a href="<%=request.getContextPath()%>/SaleStat/cust_stat.jsp?iYear=<%=iPreYear%>&iMonth=<%=iPreMonth%>&custcode=<%=custcode %>"><input type="button" class="button button_left" title="上月" /> </a> &nbsp;
-						<span style="color: #2281c8; font-size: 16px;"><%=cust.getCcusname() %> <%=iYear%>年<%=iMonth%>月 销售情况</span>&nbsp;
-						<a href="<%=request.getContextPath()%>/SaleStat/cust_stat.jsp?iYear=<%=iNextYear%>&iMonth=<%=iNextMonth%>&custcode=<%=custcode %>"><input type="button" class="button button_right" title="下月" /> </a>
+						<a href="<%=request.getContextPath()%>/SaleStat/cust_stat.jsp?iyear=<%=iPreYear%>&imonth=<%=iPreMonth%>&custcode=<%=custcode %>"><input type="button" class="button button_left" title="上月" /> </a> &nbsp;
+						<span style="color: #2281c8; font-size: 16px;"><%=cust.getCcusname()+" "+iyear+"年"+imonth+"月" %> 销售情况</span>&nbsp;
+						<a href="<%=request.getContextPath()%>/SaleStat/cust_stat.jsp?iyear=<%=iNextYear%>&imonth=<%=iNextMonth%>&custcode=<%=custcode %>"><input type="button" class="button button_right" title="下月" /> </a>
 					</td>
 				</tr>
 				<tr>
-					<td align="center" style="color:#999999;font-size:12px" height="40px">
-						编码：<%=cust.getCcuscode() %>&nbsp;&nbsp;&nbsp;&nbsp;
-						名称：<%=cust.getCcusname() %>&nbsp;&nbsp;&nbsp;&nbsp;
+					<td align="center" style="color:#666666;font-size:14px" height="40px">
+						客户编码：<%=cust.getCcuscode() %>&nbsp;&nbsp;&nbsp;&nbsp;
+						客户名称：<%=cust.getCcusname() %>
 					</td>
 				</tr>
 			</table>
@@ -117,12 +113,12 @@
 			<table align="center" width="98%" class="title_table">
 				<tr>
 					<td style="text-align: left; color: #0055a8; border-bottom: 1px solid #dddddd;">
-						<%=iMonth %>月份销售业绩
+						<%=imonth %>月份销售业绩
 					</td>
 				</tr>
 			</table>
 			<table id="overview_table" width="98%" align="center" class="table_goal">
-				<tr>
+				<tr onclick="openTab('客户 <%=custname+" "+iyear+"年"+imonth+"月" %> 销售发货明细','<%=request.getContextPath() %>/Proxy/Servlet?servlet=VDispatchLists&method=list4this&ddate_min=<%=startTimeMonth %>&ddate_max=<%=endTimeMonth %>&ccuscode=<%=custcode %>')">
 					<td width="33%" height="120">
 						<p>
 							<span class="lcd_green_big">
@@ -146,7 +142,7 @@
 					<td width="33%">
 						<p>
 							<span class="lcd_green_big">
-							<%=StringUtil.formatDouble(EchartsUtil.getValueByInvSql("select isnull(sum(iSum)/10000,0) value from DispatchList dl left join DispatchLists dls on dl.DLID=dls.DLID where dDate>='"+startTimeMonth+"' and dDate<='"+endTimeMonth+"' and ccuscode='"+custcode+"'"), 2)%>
+							<%=StringUtil.formatDouble(EchartsUtil.getValueByInvSql("select isnull(sum(iSum)/10000,0) value from DispatchList dl left join DispatchLists dls on dl.DLID=dls.DLID where dDate>='"+startTimeMonth+"' and dDate<='"+endTimeMonth+"' and ccuscode='"+custcode+"'"), 4)%>
 							</span>
 						</p>
 						<p>
@@ -160,17 +156,17 @@
 			<table align="center" width="98%" class="title_table">
 				<tr>
 					<td style="text-align: left; color: #0055a8; border-bottom: 1px solid #dddddd;">
-						<%=iMonth %>月份该客户产品分布
+						<%=imonth %>月份该客户产品分布
 					</td>
 				</tr>
 			</table>
 			<table align="center" width="98%">
 				<tr>
 					<td align="center" valign="middle">
-						<%=EchartsUtil.createEchartByInvDatalist(invList, EchartsUtil.PIE, EchartsUtil.THEME_SHINE, "", 500, 400, null)%>
+						<%=EchartsUtil.createEchartByInvDatalist(invList, EchartsUtil.PIE, EchartsUtil.THEME_MACARONS, "", 500, 400, "dislist(params.data.code,params.data.name)")%>
 					</td>
 					<td align="center" valign="middle">
-						<%=EchartsUtil.createTableByInvDatalist(invList, 0, 300)%>
+						<%=EchartsUtil.createTableByInvDatalist(invList, 0, 300,"dislist(params.data.code,params.data.name)")%>
 					</td>
 				</tr>
 			</table>
@@ -185,12 +181,19 @@
 			<table id="12month_table" align="center" width="98%">
 			<tr>
 				<td align="center">
-					<%=EchartsUtil.createEchartByInvSql(PortalUtil.getRecentMonthSql(iYear+"",iMonth+"",12,null,custcode), "", "", new String[]{"销售额","销售额"}, new String[]{"近12个月销售额（万元）","去年同期销售额（万元）"}, EchartsUtil.BAR, EchartsUtil.THEME_ROMA, EchartsUtil.COLOR_BLUE, 300, 0, null)%>
+					<%=EchartsUtil.createEchartByInvSql(PortalUtil.getRecentMonthSql4isum(iyear+"",imonth+"",12,null,custcode,null), "", "", new String[]{"销售额","销售额"}, new String[]{"近12个月销售额（万元）","去年同期销售额（万元）"}, EchartsUtil.BAR, EchartsUtil.THEME_MACARONS, EchartsUtil.COLOR_BLUE, 300, 0, "openTab('客户 "+custname+" '+params.data.name+' 销售情况','"+request.getContextPath()+"/SaleStat/cust_stat.jsp?custcode="+custcode+"&iyear='+params.data.name.substr(0,4)+'&imonth='+params.data.name.substr(5,6))")%>
 				</td>
 			</tr>
 			</table>
 			
 		</form>
+		
+		<script type="text/javascript">
+			function dislist(invcode,invname)
+			{
+				openTab('客户 <%=custname+" "+iyear+"/"+imonth+" " %>'+invname+' 销售发货明细','<%=request.getContextPath() %>/Proxy/Servlet?servlet=VDispatchLists&method=list4this&ddate_min=<%=startTimeMonth %>&ddate_max=<%=endTimeMonth %>&ccuscode=<%=custcode %>&cinvcode='+invcode);
+			}
+		</script>
 	</body>
 </html>
 

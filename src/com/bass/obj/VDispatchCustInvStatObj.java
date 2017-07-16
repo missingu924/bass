@@ -160,7 +160,7 @@ public class VDispatchCustInvStatObj extends BaseDbObj
 		pros.put("ccomunitname", "主计量");
 		pros.put("icount", "发货次数");
 		pros.put("iquantity", "发货数量");
-		pros.put("isum", "发货金额");
+		pros.put("isum", "发货金额（万元）");
 		return pros;
 	}
 

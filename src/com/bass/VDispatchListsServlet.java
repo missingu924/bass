@@ -1,6 +1,8 @@
 package com.bass;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -9,12 +11,14 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.beanutils.MethodUtils;
 import org.apache.log4j.Logger;
 
+import com.bass.searchcondition.VDispatchListsSearchCondition;
 import com.wuyg.common.dao.DefaultBaseDAO;
 import com.wuyg.common.dao.IBaseDAO;
 import com.wuyg.common.obj.PaginationObj;
 import com.wuyg.common.servlet.AbstractBaseServletTemplate;
 import com.wuyg.common.util.StringUtil;
 import com.wuyg.common.util.SystemConstant;
+import com.wuyg.common.util.TimeUtil;
 
 public class VDispatchListsServlet extends AbstractBaseServletTemplate
 {
@@ -47,6 +51,17 @@ public class VDispatchListsServlet extends AbstractBaseServletTemplate
 	// 查询
 	public void list4this(HttpServletRequest request, HttpServletResponse response) throws Exception
 	{
+		VDispatchListsSearchCondition condition = (VDispatchListsSearchCondition) domainSearchCondition;
+		Calendar cal = Calendar.getInstance();
+		if (condition.getDdate_min() == null)
+		{
+			condition.setDdate_min(new Timestamp(TimeUtil.getTheFirstDayOfTheMonth(cal.get(cal.YEAR), cal.get(cal.MONTH) + 1).getTime()));
+		}
+		if (condition.getDdate_max() == null)
+		{
+			condition.setDdate_max(new Timestamp(TimeUtil.getTheLastDayOfTheMonth(cal.get(cal.YEAR), cal.get(cal.MONTH) + 1).getTime()));
+		}
+
 		super.list(request, response);
 	}
 

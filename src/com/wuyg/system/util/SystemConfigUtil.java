@@ -47,7 +47,7 @@ public class SystemConfigUtil
 	 */
 	public static List<String> getValueListByName(String name)
 	{
-		return StringUtil.getStringListByString(getValueByName(name).replaceAll("multi:", ""));
+		return StringUtil.getStringListByString(StringUtil.getNotEmptyStr(getValueByName(name)).replaceAll("multi:", ""));
 	}
 
 	/**

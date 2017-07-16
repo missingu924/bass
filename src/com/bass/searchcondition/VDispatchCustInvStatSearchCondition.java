@@ -15,6 +15,29 @@ public class VDispatchCustInvStatSearchCondition extends BaseSearchCondition
 	
 	private Timestamp ddate_min;
 	private Timestamp ddate_max;
+	
+	private Integer iyear;
+	private Integer imonth;
+
+	public Integer getIyear()
+	{
+		return iyear;
+	}
+
+	public void setIyear(Integer iyear)
+	{
+		this.iyear = iyear;
+	}
+
+	public Integer getImonth()
+	{
+		return imonth;
+	}
+
+	public void setImonth(Integer imonth)
+	{
+		this.imonth = imonth;
+	}
 
 	public String getGroupBy()
 	{

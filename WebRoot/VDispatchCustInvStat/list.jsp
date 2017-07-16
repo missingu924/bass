@@ -126,19 +126,27 @@
 				<%} %>
 			</table> 
 			
+			
 			<!-- 统计图表 -->  
-			<%if(true==domainSearchCondition.isShowChart())
-				{
-					if(domainInstance.getCcuscode()!=null)
-					{
-						out.print(EchartsUtil.createEchartByDatalist("",list,"cinvname","isum",EchartsUtil.PIE,EchartsUtil.THEME_ROMA,null,0,400,null));
-					}
-					else if(domainInstance.getCinvcode()!=null)
-					{
-						out.print(EchartsUtil.createEchartByDatalist("",list,"ccusname","isum",EchartsUtil.PIE,EchartsUtil.THEME_ROMA,null,0,400,null));
-					}
-				}
-			%>
+			
+			<%if(true==domainSearchCondition.isShowChart()){%>
+			<table width="98%">
+				<tr>
+					<td>
+						<%
+									if(domainInstance.getCcuscode()!=null)
+									{
+										out.print(EchartsUtil.createEchartByDatalist("",list,"cinvname","isum",EchartsUtil.PIE,EchartsUtil.THEME_ROMA,null,0,400,null));
+									}
+									else if(domainInstance.getCinvcode()!=null)
+									{
+										out.print(EchartsUtil.createEchartByDatalist("",list,"ccusname","isum",EchartsUtil.PIE,EchartsUtil.THEME_ROMA,null,0,400,null));
+									}
+						%>
+					</td>
+				</tr>
+			</table>
+			<%} %>
 			
 			<!-- 数据信息 -->  
 			<table id="export_table" class="table table-bordered" align="center" width="98%"> 
@@ -154,11 +162,11 @@
 						<th onClick="sortBy(this)" db_col="ccomunitname" class="<%=domainSearchCondition.getSortClassByDbColumn("ccomunitname")%>"><%=domainInstance.getPropertyCnName("ccomunitname") %></th> 
 						<%} %>
 						<th onClick="sortBy(this)" db_col="icount" class="<%=domainSearchCondition.getSortClassByDbColumn("icount")%>"><%=domainInstance.getPropertyCnName("icount") %></th> 
-						<th onClick="sortBy(this)" db_col="icount" class="<%=domainSearchCondition.getSortClassByDbColumn("icount")%>">占比</th> 
+						<th onClick="sortBy(this)" db_col="icount" class="<%=domainSearchCondition.getSortClassByDbColumn("icount")%>">次数占比</th> 
 						<th onClick="sortBy(this)" db_col="iquantity" class="<%=domainSearchCondition.getSortClassByDbColumn("iquantity")%>"><%=domainInstance.getPropertyCnName("iquantity") %></th> 
-						<th onClick="sortBy(this)" db_col="iquantity" class="<%=domainSearchCondition.getSortClassByDbColumn("iquantity")%>">占比</th> 
+						<th onClick="sortBy(this)" db_col="iquantity" class="<%=domainSearchCondition.getSortClassByDbColumn("iquantity")%>">数量占比</th> 
 						<th onClick="sortBy(this)" db_col="isum" class="<%=domainSearchCondition.getSortClassByDbColumn("isum")%>"><%=domainInstance.getPropertyCnName("isum") %></th> 
-						<th onClick="sortBy(this)" db_col="isum" class="<%=domainSearchCondition.getSortClassByDbColumn("isum")%>">占比</th> 
+						<th onClick="sortBy(this)" db_col="isum" class="<%=domainSearchCondition.getSortClassByDbColumn("isum")%>">金额占比</th> 
 						<th>操作</th> 
 					</tr> 
 				</thead> 
@@ -172,11 +180,11 @@
 					
 					<%if(domainSearchCondition.GROUP_BY_CUST.equalsIgnoreCase(domainSearchCondition.getGroupBy()) || domainSearchCondition.GROUP_BY_CUST_INV.equalsIgnoreCase(domainSearchCondition.getGroupBy())){ %>
 					<td><%=StringUtil.getNotEmptyStr(o.getCcuscode())%></td>  
-					<td><%=StringUtil.getNotEmptyStr(o.getCcusname())%></td> 
+					<td><a href="#" onclick="openTab('<%="客户 "+o.getCcusname()+" 当前月份销售统计" %>','<%=contextPath %>/SaleStat/cust_stat.jsp?custcode=<%=o.getCcuscode() %>')"><%=StringUtil.getNotEmptyStr(o.getCcusname())%></a></td> 
 					
 					<%} if(domainSearchCondition.GROUP_BY_INV.equalsIgnoreCase(domainSearchCondition.getGroupBy()) || domainSearchCondition.GROUP_BY_CUST_INV.equalsIgnoreCase(domainSearchCondition.getGroupBy())){ %>
 					<td><%=StringUtil.getNotEmptyStr(o.getCinvcode())%></td>  
-					<td><%=StringUtil.getNotEmptyStr(o.getCinvname())%></td> 
+					<td><a href="#" onclick="openTab('<%="产品 "+o.getCinvname()+" 当前月份销售统计" %>','<%=contextPath %>/SaleStat/inv_stat.jsp?invcode=<%=o.getCinvcode() %>')"><%=StringUtil.getNotEmptyStr(o.getCinvname())%></a></td> 
 					<td><%=StringUtil.getNotEmptyStr(o.getCcomunitname())%></td> 
 					<%} %>
 					
@@ -186,7 +194,7 @@
 					<td style="text-align:right;"><%=StringUtil.formatDouble(o.getIquantity(),2)%></td> 
 					<td style="text-align:right;"><%=StringUtil.formatDouble(o.getIquantity()/iQuantityTotal*100,2) %>%</td> 
 					
-					<td style="text-align:right;"><%=StringUtil.formatDouble(o.getIsum(),2)%></td> 
+					<td style="text-align:right;"><%=StringUtil.formatDouble(o.getIsum(),4)%></td> 
 					<td style="text-align:right;"><%=StringUtil.formatDouble(o.getIsum()/iSumTotal*100,2) %>%</td> 
 					
 					<td width="40" style="text-align:center"> 
@@ -214,7 +222,7 @@
 					<td></td>
 					<td style="text-align:right;"><%=StringUtil.formatDouble(iQuantityTotal,0) %></td>
 					<td></td>
-					<td style="text-align:right;"><%=StringUtil.formatDouble(iSumTotal,2) %></td>
+					<td style="text-align:right;"><%=StringUtil.formatDouble(iSumTotal,4) %></td>
 					<td></td>
 					<td></td>
 				</tr>

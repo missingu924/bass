@@ -90,7 +90,7 @@
 			</tr>
 		</table>
 		<table id="overview_table" width="98%" align="center" class="table_goal">
-			<tr onclick="openTab('<%=iYear+"年销售统计" %>','<%=request.getContextPath() %>/SaleStat/inv_cust_stat.jsp?stat_type=year&iYear=<%=iYear %>')">
+			<tr>
 				<td width="33%" height="120">
 					<p>
 						<span class="lcd_red_big">
@@ -122,20 +122,52 @@
 					</p>
 				</td>
 			</tr>
+			<tr>
+				<td width="33%" height="100" >
+					<p>
+						<span class="lcd_red_big">
+						<%=StringUtil.formatDouble(EchartsUtil.getValueByInvSql("select count(distinct cinvcode) value from DispatchList dl left join DispatchLists dls on dl.DLID=dls.DLID where dDate>='"+startTimeYear+"' and dDate<='"+endTimeMonth+"'"), 0)%>
+						</span>
+					</p>
+					<p>
+						当年累计销售产品种数
+					</p>
+				</td>
+				<td width="33%">
+					<p>
+						<span class="lcd_red_big">
+						<%=StringUtil.formatDouble(EchartsUtil.getValueByInvSql("select count(distinct ccuscode) value from DispatchList dl left join DispatchLists dls on dl.DLID=dls.DLID where dDate>='"+startTimeYear+"' and dDate<='"+endTimeMonth+"'"), 0)%>
+						</span>
+					</p>
+					<p>
+						当年累计销售客户数
+					</p>
+				</td>
+				<td width="33%">
+					<p>
+						<span class="lcd_red_big">
+						<%=StringUtil.formatDouble(EchartsUtil.getValueByInvSql("select count(distinct cpersoncode) value from DispatchList dl left join DispatchLists dls on dl.DLID=dls.DLID where dDate>='"+startTimeYear+"' and dDate<='"+endTimeMonth+"'"), 0)%>
+						</span>
+					</p>
+					<p>
+						当年累计销售业务员数
+					</p>
+				</td>
+			</tr>
 		</table>
 		
 		<table align="center" width="98%" class="title_table">
 			<tr>
 				<td style="text-align: left; color: #0055a8; border-bottom: 1px solid #dddddd;">
 					<img src="../images/svg/heavy/green/32/stats.png" width="16" height="16" align="middle" />
-					近<%=recentYears %>年销售情况（万元）
+					近<%=recentYears %>年销售情况
 				</td>
 			</tr>
 		</table>
 		<table id="5year_table" align="center" width="98%">
 			<tr>
 				<td align="center">
-					<%=EchartsUtil.createEchartByInvSql(PortalUtil.getRecentYearSql(iYear+"", recentYears), "", "", new String[]{"销售额"}, new String[]{"近"+recentYears+"年销售额"}, EchartsUtil.BAR, EchartsUtil.THEME_ROMA, EchartsUtil.COLOR_BLUE, 300, 0, null)%>
+					<%=EchartsUtil.createEchartByInvSql(PortalUtil.getRecentYearSql(iYear+"", recentYears), "", "", new String[]{"销售额"}, new String[]{"近"+recentYears+"年销售额（万元）"}, EchartsUtil.BAR, EchartsUtil.THEME_ROMA, EchartsUtil.COLOR_BLUE, 300, 0, null)%>
 				</td>
 			</tr>
 		</table>
@@ -144,20 +176,31 @@
 			<tr>
 				<td style="text-align: left; color: #0055a8; border-bottom: 1px solid #dddddd;">
 					<img src="../images/svg/heavy/green/32/stats.png" width="16" height="16" align="middle" />
-					年度销售排名（万元）
+					年度销售排名
 				</td>
 			</tr>
 		</table>
 		<table id="year_topn_table" align="center" width="98%">
 			<tr>
 				<td align="center">
-					<%=EchartsUtil.createEchartByInvSql(PortalUtil.getTopnInventorySql(startTimeYear,endTimeYear,topn), "value desc", "", "产品", "年度"+topn+"大产品", EchartsUtil.BAR_V, EchartsUtil.THEME_MACARONS, EchartsUtil.COLOR_PURPLE, 400, 400, "openTab(params.data.name+' "+iYear+"年 销售统计','"+request.getContextPath()+"/SaleStat/inv_stat.jsp?iYear="+iYear+"&invcode='+params.data.code)")%>
+					<%=EchartsUtil.createEchartByInvSql(PortalUtil.getTopnInventorySql(startTimeYear,endTimeYear,topn), "value desc", "", "产品", "年度"+topn+"大产品（万元）", EchartsUtil.BAR_V, EchartsUtil.THEME_SHINE, EchartsUtil.COLOR_PURPLE, 400, 400, null)%>
 				</td>
 				<td align="center">
-					<%=EchartsUtil.createEchartByInvSql(PortalUtil.getTopnCustomerSql(startTimeYear,endTimeYear,topn), "value desc", "", "客户", "年度"+topn+"大客户", EchartsUtil.BAR_V, EchartsUtil.THEME_MACARONS, EchartsUtil.COLOR_GREEN, 400, 400, null)%>
+					<%=EchartsUtil.createEchartByInvSql(PortalUtil.getTopnCustomerSql(startTimeYear,endTimeYear,topn), "value desc", "", "客户", "年度"+topn+"大客户（万元）", EchartsUtil.BAR_V, EchartsUtil.THEME_SHINE, EchartsUtil.COLOR_GREEN, 400, 400, null)%>
 				</td>
 				<td align="center">
-					<%=EchartsUtil.createEchartByInvSql(PortalUtil.getTopnPersonSql(startTimeYear,endTimeYear,topn), "value desc", "", "业务员", "年度"+topn+"大业务员", EchartsUtil.BAR_V, EchartsUtil.THEME_MACARONS, EchartsUtil.COLOR_CYAN, 400, 300, null)%>
+					<%=EchartsUtil.createEchartByInvSql(PortalUtil.getTopnPersonSql(startTimeYear,endTimeYear,topn), "value desc", "", "业务员", "年度"+topn+"大业务员（万元）", EchartsUtil.BAR_V, EchartsUtil.THEME_SHINE, EchartsUtil.COLOR_CYAN, 400, 300, null)%>
+				</td>
+			</tr>
+			<tr>
+				<td style="font-size:12px;color:#999999;text-align:center;vertical-align:top" height="40px">
+					<a href="#" onclick="openTab('产品销售统计','<%=request.getContextPath() %>/Proxy/Servlet?servlet=VDispatchCustInvStat&method=list4this&groupBy=GROUP_BY_INV&ddate_min=<%=startTimeYear %>&ddate_max=<%=endTimeYear %>')">更多…</a>
+				</td>
+				<td style="font-size:12px;color:#999999;text-align:center;vertical-align:top">
+					<a href="#" onclick="openTab('客户销售统计','<%=request.getContextPath() %>/Proxy/Servlet?servlet=VDispatchCustInvStat&method=list4this&groupBy=GROUP_BY_CUST&ddate_min=<%=startTimeYear %>&ddate_max=<%=endTimeYear %>')">更多…</a>
+				</td>
+				<td style="font-size:12px;color:#999999;text-align:center;vertical-align:top">
+					<a href="#" onclick="">更多…</a>
 				</td>
 			</tr>
 		</table>

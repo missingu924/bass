@@ -7,6 +7,7 @@ import com.wuyg.common.dao.BaseDbObj;
 import com.wuyg.common.dao.DefaultBaseDAO;
 import com.wuyg.common.dao.IBaseDAO;
 import com.wuyg.common.obj.PaginationObj;
+import com.wuyg.common.util.MyBeanUtils;
 import com.wuyg.common.util.StringUtil;
 import com.wuyg.common.util.SystemConstant;
 import com.wuyg.echarts.obj.InvObj;
@@ -22,7 +23,7 @@ public class EchartsUtil
 	// 图表颜色
 	public static final String COLOR_GREEN = "#2EC7C9";
 	public static final String COLOR_PURPLE = "#B6A2DE";
-	public static final String COLOR_BLUE = "#6699ff";// "#5AB1EF";
+	public static final String COLOR_BLUE = "#0066cc";// "#5AB1EF";
 	public static final String COLOR_ORANGE = "#FF6600";
 	public static final String COLOR_RED = "#D87A80";
 	public static final String COLOR_CYAN = "#cc9933";
@@ -51,9 +52,18 @@ public class EchartsUtil
 	{
 		IBaseDAO dao = new DefaultBaseDAO(knvObj, SystemConstant.U8_DB);
 
-		PaginationObj pagination = dao.searchPaginationByDomainInstance(knvObj, knvObj.findDefaultOrderBy(), 0, Integer.MAX_VALUE);
+		// 把非空的基本条件设置上
+		String where = " 1=1 ";
+		try
+		{
+			where += MyBeanUtils.getWhereByBaseDbObj(knvObj, dao.getTableMetaData(), false);
+		} catch (Exception e)
+		{
+		}
 
-		return createEchartByDatalist(knvObj.getCnName(), pagination.getDataList(), new String[]
+		List<BaseDbObj> list = dao.searchByClause(knvObj.getClass(), where, knvObj.findDefaultOrderBy(), 0, Integer.MAX_VALUE);
+
+		return createEchartByDatalist(knvObj.getCnName(), list, new String[]
 		{ "name", "name1" }, new String[]
 		{ knvObj.getPropertyCnName("name"), knvObj.getPropertyCnName("name1") }, new String[]
 		{ "value", "value1" }, new String[]
@@ -141,7 +151,7 @@ public class EchartsUtil
 		return createEchartByDatalist("", dataList, "name", "value", echartType, echartTheme, color, width, height, clickJs);
 	}
 
-	public static String createTableByInvDatalist(List dataList, int width, int height)
+	public static String createTableByInvDatalist(List dataList, int width, int height, String clickJs)
 	{
 		if (dataList.size() == 0)
 		{
@@ -158,6 +168,7 @@ public class EchartsUtil
 		s.append("	<thead>\n");
 		s.append("		<tr>\n");
 		s.append("			<th>序号</th>\n");
+		s.append("			<th>编码</th>\n");
 		s.append("			<th>" + inv.getPropertyCnName("name") + "</th>\n");
 		s.append("			<th>" + inv.getPropertyCnName("value") + "</th>\n");
 		s.append("			<th>占比</th>\n");
@@ -180,16 +191,25 @@ public class EchartsUtil
 			inv = (InvObj) dataList.get(i);
 			s.append("	<tr>\n");
 			s.append("		<td>" + (i + 1) + "</td>\n");
-			s.append("		<td>" + inv.getName() + "</td>\n");
-			s.append("		<td style='text-align:right'>" + inv.getValue() + "</td>\n");
-			s.append("		<td style='text-align:right'>" + (inv.getValue() == null ? 0 : StringUtil.formatDouble(inv.getValue() / sum * 100, 2)) + "%</td>\n");
+			s.append("		<td>" + inv.getCode() + "</td>\n");
+			if (!StringUtil.isEmpty(clickJs))
+			{
+				s.append("		<td><a href='#' onclick='" + clickJs.replaceAll("params.data.code", "\"" + inv.getCode() + "\"").replaceAll("params.data.name", "\"" + inv.getName() + "\"").replaceAll("params.data.value", "\"" + inv.getValue() + "\"") + "'>" + inv.getName() + "</a></td>\n");
+			} else
+			{
+				s.append("		<td>" + inv.getName() + "</td>\n");
+			}
+
+			s.append("		<td style='text-align:right'>" + StringUtil.formatDouble(inv.getValue(), 4) + "</td>\n");
+			s.append("		<td style='text-align:right'>" + (inv.getValue() == null ? 0 : StringUtil.formatDouble((inv.getValue() / sum * 100), 2)) + "%</td>\n");
 			s.append("	</tr>\n");
 		}
 
 		s.append("	<tr style='color:blue'>\n");
 		s.append("		<td>合计</td>\n");
 		s.append("		<td></td>\n");
-		s.append("		<td style='text-align:right'>" + StringUtil.formatDouble(sum, 1) + "</td>\n");
+		s.append("		<td></td>\n");
+		s.append("		<td style='text-align:right'>" + StringUtil.formatDouble(sum, 4) + "</td>\n");
 		s.append("		<td style='text-align:right'>100%</td>\n");
 		s.append("	</tr>\n");
 
@@ -326,7 +346,7 @@ public class EchartsUtil
 			s.append("            }, \n");
 			s.append("            yAxis: { \n");
 			s.append("            	  splitLine: {show: false}, \n");
-			// s.append(" splitArea: {show: false}, \n");
+			s.append(" splitArea: {show: false}, \n");
 			s.append("            }, \n");
 		} else if (BAR_V.equalsIgnoreCase(echartType))
 		{
@@ -416,7 +436,24 @@ public class EchartsUtil
 		InvObj inv = new InvObj(invSql, orderBy, cnName, nameCnName, valueCnName);
 
 		IBaseDAO dao = new DefaultBaseDAO(inv, SystemConstant.U8_DB);
-		List<InvObj> list = dao.searchPaginationByDomainInstance(inv, inv.findDefaultOrderBy(), 0, Integer.MAX_VALUE).getDataList();
+		// List<InvObj> list = dao.searchPaginationByDomainInstance(inv, inv.findDefaultOrderBy(), 0, Integer.MAX_VALUE).getDataList();
+
+		// 把非空的基本条件设置上
+		String where = " 1=1 ";
+		try
+		{
+			where += MyBeanUtils.getWhereByBaseDbObj(inv, dao.getTableMetaData(), false);
+		} catch (Exception e)
+		{
+		}
+
+		// 如果没有排序字段则使用domainInstance的默认排序字段
+		if (StringUtil.isEmpty(orderBy))
+		{
+			orderBy = StringUtil.getNotEmptyStr(inv.findDefaultOrderBy());
+		}
+
+		List<InvObj> list = dao.searchByClause(inv.getClass(), where, orderBy, 0, Integer.MAX_VALUE);
 
 		if (list.size() > 0)
 		{

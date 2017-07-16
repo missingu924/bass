@@ -11,7 +11,32 @@ public class PortalUtil
 {
 	private static Logger logger = Logger.getLogger(PortalUtil.class);
 
-	public static String getRecentMonthSql(String iYear, String iMonth, int recentMonths, String invcode, String custcode)
+	public static final String VALUE_TYPE_ISUM = "VALUE_TYPE_ISUM";
+	public static final String VALUE_TYPE_CUSTOMER_COUNT = "VALUE_TYPE_CUSTOMER_COUNT";
+	public static final String VALUE_TYPE_INVENTORY_COUNT = "VALUE_TYPE_INVENTORY_COUNT";
+	public static final String VALUE_TYPE_PERSON_COUNT = "VALUE_TYPE_PERSON_COUNT";
+
+	public static String getRecentMonthSql4isum(String iYear, String iMonth, int recentMonths, String invcode, String custcode, String personcode)
+	{
+		return getRecentMonthSql(iYear, iMonth, recentMonths, invcode, custcode, personcode, VALUE_TYPE_ISUM);
+	}
+
+	public static String getRecentMonthSql4invcount(String iYear, String iMonth, int recentMonths, String invcode, String custcode, String personcode)
+	{
+		return getRecentMonthSql(iYear, iMonth, recentMonths, invcode, custcode, personcode, VALUE_TYPE_INVENTORY_COUNT);
+	}
+
+	public static String getRecentMonthSql4custcount(String iYear, String iMonth, int recentMonths, String invcode, String custcode, String personcode)
+	{
+		return getRecentMonthSql(iYear, iMonth, recentMonths, invcode, custcode, personcode, VALUE_TYPE_CUSTOMER_COUNT);
+	}
+
+	public static String getRecentMonthSql4personcount(String iYear, String iMonth, int recentMonths, String invcode, String custcode, String personcode)
+	{
+		return getRecentMonthSql(iYear, iMonth, recentMonths, invcode, custcode, personcode, VALUE_TYPE_PERSON_COUNT);
+	}
+
+	private static String getRecentMonthSql(String iYear, String iMonth, int recentMonths, String invcode, String custcode, String personcode, String valueType)
 	{
 		logger.info("==========近" + recentMonths + "个月销售情况==========");
 
@@ -27,9 +52,27 @@ public class PortalUtil
 		sql.append(" t1.iYear, \n");
 		sql.append(" t1.iMonth, \n");
 		sql.append(" t1.name, \n");
-		sql.append(" isnull(t1.value,0) value, \n");
 		sql.append(" t2.name name1, \n");
-		sql.append(" isnull(t2.value,0) value1 \n");
+		if (VALUE_TYPE_ISUM.equalsIgnoreCase(valueType))
+		{
+			sql.append(" isnull(t1.iSum,0) value, \n");
+			sql.append(" isnull(t2.iSum,0) value1 \n");
+		}
+		if (VALUE_TYPE_CUSTOMER_COUNT.equalsIgnoreCase(valueType))
+		{
+			sql.append(" isnull(t1.iCusCount,0) value, \n");
+			sql.append(" isnull(t2.iCusCount,0) value1 \n");
+		}
+		if (VALUE_TYPE_INVENTORY_COUNT.equalsIgnoreCase(valueType))
+		{
+			sql.append(" isnull(t1.iInvCount,0) value, \n");
+			sql.append(" isnull(t2.iInvCount,0) value1 \n");
+		}
+		if (VALUE_TYPE_PERSON_COUNT.equalsIgnoreCase(valueType))
+		{
+			sql.append(" isnull(t1.iPersonCount,0) value, \n");
+			sql.append(" isnull(t2.iPersonCount,0) value1 \n");
+		}
 		sql.append(" from \n");
 		sql.append(" ( \n");
 		sql.append(" select  \n");
@@ -37,13 +80,16 @@ public class PortalUtil
 		sql.append(" iYear, \n");
 		sql.append(" iMonth, \n");
 		sql.append(" cast(iYear as varchar)+'/'+cast(iMonth as varchar) name,  \n");
-		sql.append(" isnull(round(sum(dl.iSum)/10000,1),0) value  \n");
+		sql.append(" isnull(round(sum(dl.iSum)/10000,1),0) iSum,  \n");
+		sql.append(" isnull(count(distinct ccuscode),0) iCusCount,  \n");
+		sql.append(" isnull(count(distinct cinvcode),0) iInvCount,  \n");
+		sql.append(" isnull(count(distinct cpersoncode),0) iPersonCount  \n");
 		sql.append(" from  \n");
 		sql.append(" (  \n");
 		sql.append(" 	select   \n");
 		sql.append(" 	year(dl.dDate) iYear,  \n");
 		sql.append(" 	datename(month,dl.dDate) iMonth,  \n");
-		sql.append(" 	dls.iSum  \n");
+		sql.append(" 	dls.iSum,cCusCode,cInvCode,cPersonCode  \n");
 		sql.append(" 	from   \n");
 		sql.append(" 	DispatchList dl  \n");
 		sql.append(" 	left join  \n");
@@ -60,6 +106,10 @@ public class PortalUtil
 		{
 			sql.append(" 	and ccuscode='" + custcode + "' \n");
 		}
+		if (!StringUtil.isEmpty(personcode))
+		{
+			sql.append(" 	and cpersoncode='" + personcode + "' \n");
+		}
 		sql.append(" ) dl  \n");
 		sql.append(" group by  \n");
 		sql.append(" iYear,  \n");
@@ -72,13 +122,16 @@ public class PortalUtil
 		sql.append(" iYear, \n");
 		sql.append(" iMonth, \n");
 		sql.append(" cast(iYear as varchar)+'/'+cast(iMonth as varchar) name,  \n");
-		sql.append(" isnull(round(sum(dl.iSum)/10000,1),0) value  \n");
+		sql.append(" isnull(round(sum(dl.iSum)/10000,1),0) iSum,  \n");
+		sql.append(" isnull(count(distinct ccuscode),0) iCusCount,  \n");
+		sql.append(" isnull(count(distinct cinvcode),0) iInvCount,  \n");
+		sql.append(" isnull(count(distinct cpersoncode),0) iPersonCount  \n");
 		sql.append(" from  \n");
 		sql.append(" (  \n");
 		sql.append(" 	select   \n");
 		sql.append(" 	year(dl.dDate) iYear,  \n");
 		sql.append(" 	datename(month,dl.dDate) iMonth,  \n");
-		sql.append(" 	dls.iSum  \n");
+		sql.append(" 	dls.iSum,cCusCode,cInvCode,cPersonCode  \n");
 		sql.append(" 	from   \n");
 		sql.append(" 	DispatchList dl  \n");
 		sql.append(" 	left join  \n");
@@ -94,6 +147,10 @@ public class PortalUtil
 		if (!StringUtil.isEmpty(custcode))
 		{
 			sql.append(" 	and ccuscode='" + custcode + "' \n");
+		}
+		if (!StringUtil.isEmpty(personcode))
+		{
+			sql.append(" 	and cpersoncode='" + personcode + "' \n");
 		}
 		sql.append(" ) dl  \n");
 		sql.append(" group by  \n");
@@ -234,7 +291,7 @@ public class PortalUtil
 		sql.append(" 1 id, \n");
 		sql.append(" cust.ccuscode code, \n");
 		sql.append(" cust.cCusName name, \n");
-		sql.append(" round(dl.iSum/10000,1) value \n");
+		sql.append(" round(dl.iSum/10000,4) value \n");
 		sql.append(" from \n");
 		sql.append(" ( \n");
 		sql.append(" 	select  \n");
@@ -272,7 +329,7 @@ public class PortalUtil
 		sql.append(" 0 id, \n");
 		sql.append(" inv.cinvcode code, \n");
 		sql.append(" inv.cInvName name, \n");
-		sql.append(" round(dl.iSum/10000,1) value \n");
+		sql.append(" round(dl.iSum/10000,4) value \n");
 		sql.append(" from \n");
 		sql.append(" ( \n");
 		sql.append(" 	select  \n");
@@ -309,7 +366,7 @@ public class PortalUtil
 		sql.append("top 10 \n");
 		sql.append("1 id, \n");
 		sql.append("isnull(p.cPersonName,'其他') name, \n");
-		sql.append("round(dl.iSum/10000,1) value \n");
+		sql.append("round(dl.iSum/10000,4) value \n");
 		sql.append("from \n");
 		sql.append("( \n");
 		sql.append("		select  \n");

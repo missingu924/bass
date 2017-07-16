@@ -60,7 +60,11 @@
 			<table class="search_table" align="center" width="98%"> 
 				<tr> 
 					<td><%=domainInstance.getCnName() %></td>  
-					<td></td> 
+					<td>
+						<%=domainInstance.getPropertyCnName("ddate") %>
+						<input name="ddate_min" type="text" id="ddate_min" value="<%=TimeUtil.date2str(domainSearchCondition.getDdate_min(),"yyyy-MM-dd")%>" size="9" onFocus="WdatePicker({isShowClear:false,readOnly:false,highLineWeekDay:true,dateFmt:'yyyy-MM-dd'})">- 
+						<input name="ddate_max" type="text" id="ddate_max" value="<%=TimeUtil.date2str(domainSearchCondition.getDdate_max(),"yyyy-MM-dd")%>" size="9" onFocus="WdatePicker({isShowClear:false,readOnly:false,highLineWeekDay:true,dateFmt:'yyyy-MM-dd'})"> 
+					</td> 
 					<td> 
 						<input name="searchButton" type="button" class="button button_set" value="条件" onClick="$('#search_condition_table').toggle();$('#showSearchConditionTable').val(!$('#search_condition_table').is(':hidden'));">
 						<input name="searchButton" type="button" class="button button_search" value="查询" onClick="toPage(1)"> 
@@ -83,15 +87,12 @@
 			<!-- 查询条件 -->  
 			<table id="search_condition_table" class="search_condition_table" align="center" width="98%" style='display: <%=domainSearchCondition.isShowSearchConditionTable() ? "" : "none"%>'> 
 				<tr> 
-						<td><%=domainInstance.getPropertyCnName("ddate") %></td> 
-						<td>
-						<input name="ddate_min" type="text" id="ddate_min" value="<%=TimeUtil.date2str(domainSearchCondition.getDdate_min(),"yyyy-MM-dd")%>" size="9" onFocus="WdatePicker({isShowClear:false,readOnly:false,highLineWeekDay:true,dateFmt:'yyyy-MM-dd'})">- 
-						<input name="ddate_max" type="text" id="ddate_max" value="<%=TimeUtil.date2str(domainSearchCondition.getDdate_max(),"yyyy-MM-dd")%>" size="9" onFocus="WdatePicker({isShowClear:false,readOnly:false,highLineWeekDay:true,dateFmt:'yyyy-MM-dd'})"> 
-						</td> 
 						<td><%=domainInstance.getPropertyCnName("cdlcode") %></td> 
 						<td>
 						<input name="cdlcode" type="text" id="cdlcode" value="<%=StringUtil.getNotEmptyStr(domainInstance.getCdlcode(),"")%>" size="20" > 
 						</td>
+						<td></td>
+						<td></td>
 				</tr> 
 				<tr> 
 						<td><%=domainInstance.getPropertyCnName("ccuscode") %></td> 
@@ -146,13 +147,13 @@
 					<td><%=TimeUtil.date2str(o.getDdate(),"yyyy-MM-dd")%></td> 
 					<td><%=StringUtil.getNotEmptyStr(o.getCdlcode())%></td> 
 					<td><%=StringUtil.getNotEmptyStr(o.getCcuscode())%></td> 
-					<td><%=StringUtil.getNotEmptyStr(o.getCcusname())%></td> 
+					<td><a href="#" onclick="openTab('<%="客户 "+o.getCcusname()+" 当前月份销售统计" %>','<%=contextPath %>/SaleStat/cust_stat.jsp?custcode=<%=o.getCcuscode() %>')"><%=StringUtil.getNotEmptyStr(o.getCcusname())%></a></td> 
 					<td><%=StringUtil.getNotEmptyStr(o.getCinvcode())%></td> 
-					<td><%=StringUtil.getNotEmptyStr(o.getCinvname())%></td> 
+					<td><a href="#" onclick="openTab('<%="产品 "+o.getCinvname()+" 当前月份销售统计" %>','<%=contextPath %>/SaleStat/inv_stat.jsp?invcode=<%=o.getCinvcode() %>')"><%=StringUtil.getNotEmptyStr(o.getCinvname())%></a></td> 
 					<td><%=StringUtil.getNotEmptyStr(o.getCcomunitcode())%></td> 
 					<td><%=StringUtil.getNotEmptyStr(o.getCcomunitname())%></td> 
 					<td style="text-align:right"><%=StringUtil.formatDouble(o.getIquantity(),2)%></td> 
-					<td style="text-align:right"><%=StringUtil.formatDouble(o.getIsum(),2)%></td> 
+					<td style="text-align:right"><%=StringUtil.formatDouble(o.getIsum(),4)%></td> 
 				</tr> 
 				<% 
 					} 
@@ -168,7 +169,7 @@
 					<td></td>
 					<td></td>
 					<td style="text-align:right;"><%=StringUtil.formatDouble(iQuantityTotal,2) %></td>
-					<td style="text-align:right;"><%=StringUtil.formatDouble(iSumTotal,2) %></td>
+					<td style="text-align:right;"><%=StringUtil.formatDouble(iSumTotal,4) %></td>
 				</tr>
 			</table> 
  

@@ -846,14 +846,14 @@ table style
 }
 
 .lcd_blue_big {
-	color: #3399cc;
+	color: #003399;
 	font-family: lcd;
 	font-size: 42px;
 	cursor: pointer;
 }
 
 .lcd_blue_small {
-	color: #3399cc;
+	color: #003399;
 	font-family: lcd;
 	font-size: 28px;
 	cursor: pointer;
