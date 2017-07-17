@@ -12,6 +12,7 @@ import org.apache.commons.beanutils.MethodUtils;
 import org.apache.log4j.Logger;
 
 import com.bass.searchcondition.VDispatchCustInvStatSearchCondition;
+import com.bass.searchcondition.VSaleCustInvStatSearchCondition;
 import com.wuyg.common.dao.DefaultBaseDAO;
 import com.wuyg.common.dao.IBaseDAO;
 import com.wuyg.common.obj.PaginationObj;
@@ -21,7 +22,7 @@ import com.wuyg.common.util.StringUtil;
 import com.wuyg.common.util.SystemConstant;
 import com.wuyg.common.util.TimeUtil;
 
-public class VDispatchCustInvStatServlet extends AbstractBaseServletTemplate
+public class VSaleCustInvStatServlet extends AbstractBaseServletTemplate
 {
 	private Logger logger = Logger.getLogger(getClass());
 
@@ -40,19 +41,19 @@ public class VDispatchCustInvStatServlet extends AbstractBaseServletTemplate
 	@Override
 	public Class getDomainInstanceClz()
 	{
-		return com.bass.obj.VDispatchCustInvStatObj.class;
+		return com.bass.obj.VSaleCustInvStatObj.class;
 	}
 
 	@Override
 	public Class getDomainSearchConditionClz()
 	{
-		return com.bass.searchcondition.VDispatchCustInvStatSearchCondition.class;
+		return com.bass.searchcondition.VSaleCustInvStatSearchCondition.class;
 	}
 
 	// 查询
 	public void list4this(HttpServletRequest request, HttpServletResponse response) throws Exception
 	{
-		VDispatchCustInvStatSearchCondition condition = (VDispatchCustInvStatSearchCondition) domainSearchCondition;
+		VSaleCustInvStatSearchCondition condition = (VSaleCustInvStatSearchCondition) domainSearchCondition;
 
 		// 如果有iYear,iMonth
 		if (condition.getIyear() != null && condition.getImonth() != null)
@@ -116,7 +117,7 @@ public class VDispatchCustInvStatServlet extends AbstractBaseServletTemplate
 	{
 		StringBuffer sql = new StringBuffer();
 
-		VDispatchCustInvStatSearchCondition condition = (VDispatchCustInvStatSearchCondition) domainSearchCondition;
+		VSaleCustInvStatSearchCondition condition = (VSaleCustInvStatSearchCondition) domainSearchCondition;
 
 		sql.append(" select  * from (\n");
 		sql.append(" select \n");
@@ -133,8 +134,6 @@ public class VDispatchCustInvStatServlet extends AbstractBaseServletTemplate
 		sql.append(" inv.cInvStd, \n");
 		sql.append(" inv.cComUnitCode, \n");
 		sql.append(" cu.cComUnitName, \n");
-		sql.append(" dl.cpersoncode, \n");
-		sql.append(" isnull(ps.cpersonname,'其他') cpersonname, \n");
 		sql.append(" dl.iCount, \n");
 		sql.append(" dl.iQuantity, \n");
 		sql.append(" dl.iSum \n");
@@ -146,35 +145,26 @@ public class VDispatchCustInvStatServlet extends AbstractBaseServletTemplate
 		{
 			sql.append(" 	dl.cCusCode, \n");
 			sql.append(" 	'' cInvCode, \n");
-			sql.append(" 	'' cPersonCode, \n");
 		}
 		if (condition.GROUP_BY_INV.equalsIgnoreCase(condition.getGroupBy()))
 		{
 			sql.append(" 	'' cCusCode, \n");
 			sql.append(" 	dls.cInvCode, \n");
-			sql.append(" 	'' cPersonCode, \n");
 		}
 		if (condition.GROUP_BY_CUST_INV.equalsIgnoreCase(condition.getGroupBy()))
 		{
 			sql.append(" 	dl.cCusCode, \n");
 			sql.append(" 	dls.cInvCode, \n");
-			sql.append(" 	'' cPersonCode, \n");
-		}
-		if (condition.GROUP_BY_PERSON.equalsIgnoreCase(condition.getGroupBy()))
-		{
-			sql.append(" 	'' cCusCode, \n");
-			sql.append(" 	'' cInvCode, \n");
-			sql.append(" 	dl.cPersonCode, \n");
 		}
 
 		sql.append(" 	COUNT(*) iCount, \n");
 		sql.append(" 	isnull(sum(dls.iQuantity),0) iQuantity, \n");
 		sql.append(" 	isnull(sum(dls.iNatSum)/10000,0) iSum \n");
 		sql.append(" 	from  \n");
-		sql.append(" 	DispatchList dl \n");
+		sql.append(" 	So_SoMain dl \n");
 		sql.append(" 	left join \n");
-		sql.append(" 	DispatchLists dls \n");
-		sql.append(" 	on dl.DLID=dls.DLID \n");
+		sql.append(" 	So_SoDetails dls \n");
+		sql.append(" 	on dl.cSoCode=dls.cSoCode \n");
 		sql.append(" 	where \n");
 		sql.append(" 	dls.cInvCode is not null \n");
 		// date clause
@@ -199,10 +189,6 @@ public class VDispatchCustInvStatServlet extends AbstractBaseServletTemplate
 			sql.append(" 	dl.cCusCode, \n");
 			sql.append(" 	dls.cInvCode \n");
 		}
-		else if (condition.GROUP_BY_PERSON.equalsIgnoreCase(condition.getGroupBy()))
-		{
-			sql.append(" 	dl.cPersonCode \n");
-		}
 		sql.append(" ) dl \n");
 		sql.append(" left join \n");
 		sql.append(" Customer cust \n");
@@ -215,8 +201,6 @@ public class VDispatchCustInvStatServlet extends AbstractBaseServletTemplate
 		sql.append(" on inv.cInvCCode=invc.cInvCCode \n");
 		sql.append(" left join ComputationUnit cu \n");
 		sql.append(" on inv.cComUnitCode=cu.cComunitCode \n");
-		sql.append(" left join Person ps \n");
-		sql.append(" on dl.cPersonCode=ps.cPersonCode \n");
 		sql.append(" ) t \n");
 
 		return sql.toString();

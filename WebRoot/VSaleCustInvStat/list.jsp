@@ -7,8 +7,8 @@
 <%@page import="com.wuyg.common.util.TimeUtil"%> 
 <%@page import="com.wuyg.common.obj.PaginationObj"%> 
 <%@page import="com.wuyg.dictionary.DictionaryUtil"%> 
-<%@page import="com.bass.obj.VDispatchCustInvStatObj"%> 
-<%@page import="com.bass.searchcondition.VDispatchCustInvStatSearchCondition"%> 
+<%@page import="com.bass.obj.VSaleCustInvStatObj"%> 
+<%@page import="com.bass.searchcondition.VSaleCustInvStatSearchCondition"%> 
 <%@page import="com.wuyg.auth.obj.AuthUserObj"%> 
 <%@page import="com.wuyg.common.util.SystemConstant"%>
 <%@page import="com.wuyg.echarts.EchartsUtil"%>
@@ -19,9 +19,9 @@
 	String contextPath = request.getContextPath(); 
  
 	// 该功能对象实例 
-	VDispatchCustInvStatObj domainInstance = (VDispatchCustInvStatObj) request.getAttribute("domainInstance"); 
+	VSaleCustInvStatObj domainInstance = (VSaleCustInvStatObj) request.getAttribute("domainInstance"); 
 	// 该功能对象查询条件实例 
-	VDispatchCustInvStatSearchCondition domainSearchCondition = (VDispatchCustInvStatSearchCondition) request.getAttribute("domainSearchCondition"); 
+	VSaleCustInvStatSearchCondition domainSearchCondition = (VSaleCustInvStatSearchCondition) request.getAttribute("domainSearchCondition"); 
 	// 用户信息 
 	AuthUserObj user = (AuthUserObj) request.getSession().getAttribute(SystemConstant.AUTH_USER_INFO); 
 	// 该功能路径 
@@ -42,7 +42,7 @@
 	double iCountTotal=0,iQuantityTotal=0,iSumTotal=0;
 	for (int i = 0; i < list.size(); i++) 
 	{ 
-		VDispatchCustInvStatObj o = (VDispatchCustInvStatObj) list.get(i);
+		VSaleCustInvStatObj o = (VSaleCustInvStatObj) list.get(i);
 		iCountTotal+=o.getIcount();
 		iQuantityTotal+=o.getIquantity();
 		iSumTotal+=o.getIsum();
@@ -156,17 +156,11 @@
 						<%if(domainSearchCondition.GROUP_BY_CUST.equalsIgnoreCase(domainSearchCondition.getGroupBy()) || domainSearchCondition.GROUP_BY_CUST_INV.equalsIgnoreCase(domainSearchCondition.getGroupBy())){ %>
 						<th onClick="sortBy(this)" db_col="ccuscode" class="<%=domainSearchCondition.getSortClassByDbColumn("ccuscode")%>"><%=domainInstance.getPropertyCnName("ccuscode") %></th> 
 						<th onClick="sortBy(this)" db_col="ccusname" class="<%=domainSearchCondition.getSortClassByDbColumn("ccusname")%>"><%=domainInstance.getPropertyCnName("ccusname") %></th> 
-						
 						<%} if(domainSearchCondition.GROUP_BY_INV.equalsIgnoreCase(domainSearchCondition.getGroupBy()) || domainSearchCondition.GROUP_BY_CUST_INV.equalsIgnoreCase(domainSearchCondition.getGroupBy())){ %>
 						<th onClick="sortBy(this)" db_col="cinvcode" class="<%=domainSearchCondition.getSortClassByDbColumn("cinvcode")%>"><%=domainInstance.getPropertyCnName("cinvcode") %></th> 
 						<th onClick="sortBy(this)" db_col="cinvname" class="<%=domainSearchCondition.getSortClassByDbColumn("cinvname")%>"><%=domainInstance.getPropertyCnName("cinvname") %></th> 
 						<th onClick="sortBy(this)" db_col="ccomunitname" class="<%=domainSearchCondition.getSortClassByDbColumn("ccomunitname")%>"><%=domainInstance.getPropertyCnName("ccomunitname") %></th> 
-						
-						<%} if(domainSearchCondition.GROUP_BY_PERSON.equalsIgnoreCase(domainSearchCondition.getGroupBy())){ %>
-						<th onClick="sortBy(this)" db_col="cpersoncode" class="<%=domainSearchCondition.getSortClassByDbColumn("cpersoncode")%>"><%=domainInstance.getPropertyCnName("cpersoncode") %></th> 
-						<th onClick="sortBy(this)" db_col="cpersonname" class="<%=domainSearchCondition.getSortClassByDbColumn("cpersonname")%>"><%=domainInstance.getPropertyCnName("cpersonname") %></th> 
 						<%} %>
-						
 						<th onClick="sortBy(this)" db_col="icount" class="<%=domainSearchCondition.getSortClassByDbColumn("icount")%>"><%=domainInstance.getPropertyCnName("icount") %></th> 
 						<th onClick="sortBy(this)" db_col="icount" class="<%=domainSearchCondition.getSortClassByDbColumn("icount")%>">次数占比</th> 
 						<th onClick="sortBy(this)" db_col="iquantity" class="<%=domainSearchCondition.getSortClassByDbColumn("iquantity")%>"><%=domainInstance.getPropertyCnName("iquantity") %></th> 
@@ -178,7 +172,7 @@
 				<% 
 					for (int i = 0; i < list.size(); i++) 
 						{ 
-							VDispatchCustInvStatObj o = (VDispatchCustInvStatObj) list.get(i); 
+							VSaleCustInvStatObj o = (VSaleCustInvStatObj) list.get(i); 
 				%> 
 				<tr> 
 					<td style="width:30px;text-align:right"><%=i+1 %></td> 
@@ -191,10 +185,6 @@
 					<td><%=StringUtil.getNotEmptyStr(o.getCinvcode())%></td>  
 					<td><a href="#" onclick="openTab('<%="产品 "+o.getCinvname()+" 当前月份销售统计" %>','<%=contextPath %>/SaleStat/inv_stat.jsp?invcode=<%=o.getCinvcode() %>')"><%=StringUtil.getNotEmptyStr(o.getCinvname())%></a></td> 
 					<td><%=StringUtil.getNotEmptyStr(o.getCcomunitname())%></td> 
-					
-					<%} if(domainSearchCondition.GROUP_BY_PERSON.equalsIgnoreCase(domainSearchCondition.getGroupBy())){ %>
-					<td><%=StringUtil.getNotEmptyStr(o.getCpersoncode())%></td>  
-					<td><a href="#" onclick="openTab('<%="业务员 "+o.getCpersonname()+" 当前月份销售统计" %>','<%=contextPath %>/SaleStat/person_stat.jsp?personcode=<%=o.getCpersoncode() %>')"><%=StringUtil.getNotEmptyStr(o.getCpersonname())%></a></td> 
 					<%} %>
 					
 					<td style="text-align:right;"><%=StringUtil.getNotEmptyStr(o.getIcount())%></td> 
@@ -207,7 +197,7 @@
 						<%if(!domainSearchCondition.GROUP_BY_CUST_INV.equalsIgnoreCase(domainSearchCondition.getGroupBy())){ %>
 							<a href="#" onClick="winOpen('<%=contextPath%>/Proxy/Servlet?servlet=<%=basePath%>&method=list4this&showChart=true&groupBy=<%=domainSearchCondition.GROUP_BY_CUST_INV %>&ccuscode=<%=o.getCcuscode() %>&cinvcode=<%=o.getCinvcode() %>&ddate_min=<%=TimeUtil.date2str(domainSearchCondition.getDdate_min(), "yyyy-MM-dd")%>&ddate_max=<%=TimeUtil.date2str(domainSearchCondition.getDdate_max(), "yyyy-MM-dd")%>')" > 
 						<%} else { %>
-							<a href="#" onClick="winOpen('<%=contextPath%>/Proxy/Servlet?servlet=VDispatchLists&method=list4this&ccuscode=<%=o.getCcuscode() %>&cinvcode=<%=o.getCinvcode() %>&ddate_min=<%=TimeUtil.date2str(domainSearchCondition.getDdate_min(), "yyyy-MM-dd")%>&ddate_max=<%=TimeUtil.date2str(domainSearchCondition.getDdate_max(), "yyyy-MM-dd")%>')" > 
+							<a href="#" onClick="winOpen('<%=contextPath%>/Proxy/Servlet?servlet=VSaleLists&method=list4this&ccuscode=<%=o.getCcuscode() %>&cinvcode=<%=o.getCinvcode() %>&ddate_min=<%=TimeUtil.date2str(domainSearchCondition.getDdate_min(), "yyyy-MM-dd")%>&ddate_max=<%=TimeUtil.date2str(domainSearchCondition.getDdate_max(), "yyyy-MM-dd")%>')" > 
 						<%} %>
 						<%=StringUtil.formatDouble(o.getIsum(),4)%>
 						</a>
@@ -222,17 +212,11 @@
 					<%if(domainSearchCondition.GROUP_BY_CUST.equalsIgnoreCase(domainSearchCondition.getGroupBy()) || domainSearchCondition.GROUP_BY_CUST_INV.equalsIgnoreCase(domainSearchCondition.getGroupBy())){ %>
 					<td></td>
 					<td></td>
-					
 					<%} if(domainSearchCondition.GROUP_BY_INV.equalsIgnoreCase(domainSearchCondition.getGroupBy()) || domainSearchCondition.GROUP_BY_CUST_INV.equalsIgnoreCase(domainSearchCondition.getGroupBy())){ %>
 					<td></td>
 					<td></td>
 					<td></td>
-					
-					<%} if(domainSearchCondition.GROUP_BY_PERSON.equalsIgnoreCase(domainSearchCondition.getGroupBy())){ %>
-					<td></td>
-					<td></td>
 					<%} %>
-					
 					<td style="text-align:right;"><%=StringUtil.formatDouble(iCountTotal,0) %></td>
 					<td></td>
 					<td style="text-align:right;"><%=StringUtil.formatDouble(iQuantityTotal,0) %></td>

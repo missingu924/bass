@@ -7,7 +7,7 @@
 <%@page import="com.wuyg.auth.obj.AuthUserObj"%>
 <%@page import="com.wuyg.common.util.SystemConstant"%>
 <%@page import="com.wuyg.common.obj.PaginationObj"%>
-<%@page import="com.u8.util.SalePortalUtil"%>
+<%@page import="com.u8.util.DispatchPortalUtil"%>
 <%@page import="com.wuyg.dictionary.DictionaryUtil"%>
 <%@page import="java.util.Date"%>
 <%@page import="java.util.List"%>
@@ -87,19 +87,19 @@
 			}
 			
 			// 按产品统计
-			String invStatSql = "select round(isnull(sum(iNatSum)/10000,0),4) value ,inv.cInvName name, dls.cinvcode code from So_SoMain dl left join So_SoDetails dls on dl.cSoCode=dls.cSoCode left join inventory inv on dls.cInvCode=inv.cInvCode where dDate>='"
+			String invStatSql = "select round(isnull(sum(iNatSum)/10000,0),4) value ,inv.cInvName name, dls.cinvcode code from DispatchList dl left join DispatchLists dls on dl.DLID=dls.DLID left join inventory inv on dls.cInvCode=inv.cInvCode where dDate>='"
 			+ (startTimeMonth) + "' and dDate<='" + (endTimeMonth) + "' and dl.ccuscode='"+custcode+"' group by dls.cinvcode,inv.cInvName";
-			List invList = EchartsUtil.getInvListByInvSql(invStatSql, "value desc", "各产品销售金额（万元）", "产品", "销售金额（万元）");
+			List invList = EchartsUtil.getInvListByInvSql(invStatSql, "value desc", "各产品发货金额（万元）", "产品", "发货金额（万元）");
 	%>
 	<body>
-		<form name="pageForm" id="pageForm" method="post" action="<%=request.getContextPath()%>/SaleStat/cust_stat.jsp">
+		<form name="pageForm" id="pageForm" method="post" action="<%=request.getContextPath()%>/DispatchStat/cust_stat.jsp">
 		
 			<table align="center" width="98%">
 				<tr>
 					<td align="center">
-						<a href="<%=request.getContextPath()%>/SaleStat/cust_stat.jsp?iyear=<%=iPreYear%>&imonth=<%=iPreMonth%>&custcode=<%=custcode%>"><input type="button" class="button button_left" title="上月" /> </a> &nbsp;
-						<span style="color: #2281c8; font-size: 16px;"><%=cust.getCcusname()+" "+iyear+"年"+imonth+"月"%> 销售情况</span>&nbsp;
-						<a href="<%=request.getContextPath()%>/SaleStat/cust_stat.jsp?iyear=<%=iNextYear%>&imonth=<%=iNextMonth%>&custcode=<%=custcode%>"><input type="button" class="button button_right" title="下月" /> </a>
+						<a href="<%=request.getContextPath()%>/DispatchStat/cust_stat.jsp?iyear=<%=iPreYear%>&imonth=<%=iPreMonth%>&custcode=<%=custcode%>"><input type="button" class="button button_left" title="上月" /> </a> &nbsp;
+						<span style="color: #2281c8; font-size: 16px;"><%=cust.getCcusname()+" "+iyear+"年"+imonth+"月"%> 发货情况</span>&nbsp;
+						<a href="<%=request.getContextPath()%>/DispatchStat/cust_stat.jsp?iyear=<%=iNextYear%>&imonth=<%=iNextMonth%>&custcode=<%=custcode%>"><input type="button" class="button button_right" title="下月" /> </a>
 					</td>
 				</tr>
 				<tr>
@@ -113,40 +113,40 @@
 			<table align="center" width="98%" class="title_table">
 				<tr>
 					<td style="text-align: left; color: #0055a8; border-bottom: 1px solid #dddddd;">
-						<%=imonth%>月份销售业绩
+						<%=imonth%>月份发货业绩
 					</td>
 				</tr>
 			</table>
 			<table id="overview_table" width="98%" align="center" class="table_goal">
-				<tr onclick="openTab('客户 <%=custname+" "+iyear+"年"+imonth+"月"%> 明细','<%=request.getContextPath()%>/Proxy/Servlet?servlet=VSaleDetails&method=list4this&ddate_min=<%=startTimeMonth%>&ddate_max=<%=endTimeMonth%>&ccuscode=<%=custcode%>')">
+				<tr onclick="openTab('客户 <%=custname+" "+iyear+"年"+imonth+"月"%> 明细','<%=request.getContextPath()%>/Proxy/Servlet?servlet=VDispatchLists&method=list4this&ddate_min=<%=startTimeMonth%>&ddate_max=<%=endTimeMonth%>&ccuscode=<%=custcode%>')">
 					<td width="33%" height="120">
 						<p>
-							<span class="lcd_greendark_big">
-							<%=StringUtil.formatDouble(EchartsUtil.getValueByInvSql("select count(*) value from So_SoMain dl where dDate>='"+startTimeMonth+"' and dDate<='"+endTimeMonth+"' and ccuscode='"+custcode+"'"), 0)%>
+							<span class="lcd_blue_big">
+							<%=StringUtil.formatDouble(EchartsUtil.getValueByInvSql("select count(*) value from DispatchList dl where dDate>='"+startTimeMonth+"' and dDate<='"+endTimeMonth+"' and ccuscode='"+custcode+"'"), 0)%>
 							</span>
 						</p>
 						<p>
-							月度销售单数
+							月度发货单数
 						</p>
 					</td>
 					<td width="33%">
 						<p>
-							<span class="lcd_greendark_big">
-							<%=StringUtil.formatDouble(EchartsUtil.getValueByInvSql("select isnull(sum(iQuantity),0) value from So_SoMain dl left join So_SoDetails dls on dl.cSoCode=dls.cSoCode where dDate>='"+startTimeMonth+"' and dDate<='"+endTimeMonth+"' and ccuscode='"+custcode+"'"), 0)%>
+							<span class="lcd_blue_big">
+							<%=StringUtil.formatDouble(EchartsUtil.getValueByInvSql("select isnull(sum(iQuantity),0) value from DispatchList dl left join DispatchLists dls on dl.DLID=dls.DLID where dDate>='"+startTimeMonth+"' and dDate<='"+endTimeMonth+"' and ccuscode='"+custcode+"'"), 0)%>
 							</span>
 						</p>
 						<p>
-							月度销售数量
+							月度发货数量
 						</p>
 					</td>
 					<td width="33%">
 						<p>
-							<span class="lcd_greendark_big">
-							<%=StringUtil.formatDouble(EchartsUtil.getValueByInvSql("select isnull(sum(iNatSum)/10000,0) value from So_SoMain dl left join So_SoDetails dls on dl.cSoCode=dls.cSoCode where dDate>='"+startTimeMonth+"' and dDate<='"+endTimeMonth+"' and ccuscode='"+custcode+"'"), 4)%>
+							<span class="lcd_blue_big">
+							<%=StringUtil.formatDouble(EchartsUtil.getValueByInvSql("select isnull(sum(iNatSum)/10000,0) value from DispatchList dl left join DispatchLists dls on dl.DLID=dls.DLID where dDate>='"+startTimeMonth+"' and dDate<='"+endTimeMonth+"' and ccuscode='"+custcode+"'"), 4)%>
 							</span>
 						</p>
 						<p>
-							月度销售金额（万元）
+							月度发货金额（万元）
 						</p>
 					</td>
 				</tr>
@@ -174,14 +174,14 @@
 			<table align="center" width="98%" class="title_table">
 				<tr>
 					<td style="text-align: left; color: #0055a8; border-bottom: 1px solid #dddddd;">
-						该客户近12个月销售趋势
+						该客户近12个月发货趋势
 					</td>
 				</tr>
 			</table>
 			<table id="12month_table" align="center" width="98%">
 			<tr>
 				<td align="center">
-					<%=EchartsUtil.createEchartByInvSql(SalePortalUtil.getRecentMonthSql4isum(iyear+"",imonth+"",12,null,custcode,null), "", "", new String[]{"销售金额","销售金额"}, new String[]{"近12个月销售金额（万元）","去年同期销售金额（万元）"}, EchartsUtil.BAR, EchartsUtil.THEME_MACARONS, EchartsUtil.COLOR_GREEN_DARK, 300, 0, "openTab('客户 "+custname+" '+params.data.name+' 销售情况','"+request.getContextPath()+"/SaleStat/cust_stat.jsp?custcode="+custcode+"&iyear='+params.data.name.substr(0,4)+'&imonth='+params.data.name.substr(5,6))")%>
+					<%=EchartsUtil.createEchartByInvSql(DispatchPortalUtil.getRecentMonthSql4isum(iyear+"",imonth+"",12,null,custcode,null), "", "", new String[]{"发货金额","发货金额"}, new String[]{"近12个月发货金额（万元）","去年同期发货金额（万元）"}, EchartsUtil.BAR, EchartsUtil.THEME_MACARONS, EchartsUtil.COLOR_BLUE, 300, 0, "openTab('客户 "+custname+" '+params.data.name+' 发货情况','"+request.getContextPath()+"/DispatchStat/cust_stat.jsp?custcode="+custcode+"&iyear='+params.data.name.substr(0,4)+'&imonth='+params.data.name.substr(5,6))")%>
 				</td>
 			</tr>
 			</table>
@@ -191,7 +191,7 @@
 		<script type="text/javascript">
 			function dislist(invcode,invname)
 			{
-				openTab('客户 <%=custname+" "+iyear+"/"+imonth+" " %>'+invname+' 销售明细','<%=request.getContextPath() %>/Proxy/Servlet?servlet=VSaleDetails&method=list4this&ddate_min=<%=startTimeMonth %>&ddate_max=<%=endTimeMonth %>&ccuscode=<%=custcode %>&cinvcode='+invcode);
+				openTab('客户 <%=custname+" "+iyear+"/"+imonth+" " %>'+invname+' 发货明细','<%=request.getContextPath() %>/Proxy/Servlet?servlet=VDispatchLists&method=list4this&ddate_min=<%=startTimeMonth %>&ddate_max=<%=endTimeMonth %>&ccuscode=<%=custcode %>&cinvcode='+invcode);
 			}
 		</script>
 	</body>

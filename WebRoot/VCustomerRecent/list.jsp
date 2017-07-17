@@ -110,6 +110,8 @@
 				<thead> 
 					<tr> 
 						<th>序号</th> 
+						<th onClick="sortBy(this)" db_col="ccccode" class="<%=domainSearchCondition.getSortClassByDbColumn("ccccode")%>"><%=domainInstance.getPropertyCnName("ccccode") %></th> 
+						<th onClick="sortBy(this)" db_col="cccname" class="<%=domainSearchCondition.getSortClassByDbColumn("cccname")%>"><%=domainInstance.getPropertyCnName("cccname") %></th> 
 						<th onClick="sortBy(this)" db_col="ccuscode" class="<%=domainSearchCondition.getSortClassByDbColumn("ccuscode")%>"><%=domainInstance.getPropertyCnName("ccuscode") %></th> 
 						<th onClick="sortBy(this)" db_col="ccusname" class="<%=domainSearchCondition.getSortClassByDbColumn("ccusname")%>"><%=domainInstance.getPropertyCnName("ccusname") %></th> 
 						<th onClick="sortBy(this)" db_col="drecentdate" class="<%=domainSearchCondition.getSortClassByDbColumn("drecentdate")%>"><%=domainInstance.getPropertyCnName("drecentdate") %></th> 
@@ -128,13 +130,9 @@
 							}
 							else if(o.getIdays()>30&&o.getIdays()<=60)
 							{
-								color="blue";
-							}
-							else if(o.getIdays()>60&&o.getIdays()<=90)
-							{
 								color="orange";
 							}
-							else if(o.getIdays()>90)
+							else if(o.getIdays()>60)
 							{
 								color="red";
 							}
@@ -142,10 +140,12 @@
 
 				<tr> 
 					<td style="width:30px;text-align:right"><%=i+1 %></td> 
+					<td><%=StringUtil.getNotEmptyStr(o.getCcccode())%></td> 
+					<td><%=StringUtil.getNotEmptyStr(o.getCccname())%></td> 
 					<td><%=StringUtil.getNotEmptyStr(o.getCcuscode())%></td> 
-					<td style="color: <%=color %>"><%=StringUtil.getNotEmptyStr(o.getCcusname())%></td> 
+					<td><a href="#" onclick="openTab('客户 <%=o.getCcusname() %> 销售发货明细','<%=contextPath %>/Proxy/Servlet?servlet=VDispatchLists&method=list4this&ddate_min=1900-01-01&ccuscode=<%=o.getCcuscode() %>')"><%=StringUtil.getNotEmptyStr(o.getCcusname())%></a></td> 
 					<td><%=TimeUtil.date2str(o.getDrecentdate(),"yyyy-MM-dd")%></td> 
-					<td style="text-align:right;color: <%=color %>"><%=StringUtil.getNotEmptyStr(o.getIdays())%></td> 
+					<td style="text-align:right;color:#ffffff;background-color: <%=color %>"><%=StringUtil.getNotEmptyStr(o.getIdays())%></td> 
 				</tr> 
 				<% 
 					} 

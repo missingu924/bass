@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 import com.alibaba.fastjson.JSON;
 
-public class VDispatchListsObj extends BaseDbObj
+public class VSaleDetailsObj extends BaseDbObj
 {
 	private Long autoid;
 	private Timestamp ddate;
@@ -52,8 +52,7 @@ public class VDispatchListsObj extends BaseDbObj
 		sql.append(" select  \n");
 		sql.append(" dls.AutoID, \n");
 		sql.append(" dl.dDate, \n");
-		sql.append(" dl.DLID, \n");
-		sql.append(" dl.cDLCode, \n");
+		sql.append(" dl.cSoCode cdlcode, \n");
 		sql.append(" custclass.cCCCode, \n");
 		sql.append(" custclass.cCCName, \n");
 		sql.append(" cust.cCusCode, \n");
@@ -69,10 +68,10 @@ public class VDispatchListsObj extends BaseDbObj
 		sql.append(" isnull(dls.iQuantity,0) iQuantity, \n");
 		sql.append(" isnull(dls.iNatSum/10000,0) iSum   \n");
 		sql.append(" from  \n");
-		sql.append(" DispatchList dl \n");
+		sql.append(" So_SoMain dl \n");
 		sql.append(" left join \n");
-		sql.append(" DispatchLists dls \n");
-		sql.append(" on dl.DLID=dls.DLID \n");
+		sql.append(" So_SoDetails dls \n");
+		sql.append(" on dl.cSoCode=dls.cSoCode \n");
 		sql.append(" left join \n");
 		sql.append(" Customer cust \n");
 		sql.append(" on dl.cCusCode=cust.cCusCode \n");
@@ -98,13 +97,13 @@ public class VDispatchListsObj extends BaseDbObj
 	@Override
 	public String getBasePath()
 	{
-		return "VDispatchLists";
+		return "VSaleDetails";
 	}
 
 	@Override
 	public String getCnName()
 	{
-		return "发货单明细";
+		return "销售订单明细";
 	}
 
 	@Override

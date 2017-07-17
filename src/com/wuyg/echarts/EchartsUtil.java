@@ -22,11 +22,12 @@ public class EchartsUtil
 
 	// 图表颜色
 	public static final String COLOR_GREEN = "#2EC7C9";
+	public static final String COLOR_GREEN_DARK = "#009966";
 	public static final String COLOR_PURPLE = "#B6A2DE";
 	public static final String COLOR_BLUE = "#0066cc";// "#5AB1EF";
 	public static final String COLOR_ORANGE = "#FF6600";
 	public static final String COLOR_RED = "#D87A80";
-	public static final String COLOR_CYAN = "#cc9933";
+	public static final String COLOR_CYAN = "#99cc00";
 
 	// 图表主题
 	public static final String THEME_INFOGRAPHIC = "infographic";

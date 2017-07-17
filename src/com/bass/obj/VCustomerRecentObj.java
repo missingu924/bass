@@ -51,7 +51,7 @@ public class VCustomerRecentObj extends BaseDbObj
 		sql.append(" 	MAX(dDate) dRecentDate, \n");
 		sql.append(" 	DATEDIFF(day,max(dDate),getdate()) iDays \n");
 		sql.append(" 	from  \n");
-		sql.append(" 	DispatchList dl \n");
+		sql.append(" 	salebillvouch dl \n");
 		sql.append(" 	group by \n");
 		sql.append(" 	cCusCode \n");
 		sql.append(" ) dl \n");
@@ -94,8 +94,8 @@ public class VCustomerRecentObj extends BaseDbObj
 	{
 		LinkedHashMap<String, String> pros = new LinkedHashMap<String, String>();
 
-		// pros.put("ccccode", "客户类别编码");
-		// pros.put("cccname", "客户类别名称");
+		pros.put("ccccode", "客户类别编码");
+		pros.put("cccname", "客户类别名称");
 		pros.put("ccuscode", "客户编码");
 		pros.put("ccusname", "客户名称");
 		// pros.put("ccusabbname", "客户简称");

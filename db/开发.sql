@@ -356,3 +356,37 @@ on dl.cCusCode=cust.cCusCode
 left join CustomerClass custclass
 on cust.cCCCode=custclass.cCCCode
 order by dl.iDays
+
+--库存末次销售日期
+select 
+inventory.cinvccode as 产品分类编码,
+InventoryClass.cinvcname as 产品分类名称,
+ck.cInvCode as 产品编码,
+inventory.cinvname as 产品名称,
+inventory.cinvstd as 规格,
+ck.iQuantity as 现存量,
+xs.ddate as 最近销售日期,
+DATEDIFF(day,isnull(xs.ddate,0),CONVERT(varchar(100),GETDATE(), 23)) as 到今没有销售天数
+from 
+(
+	select cinvcode,sum(isnull(iquantity,0)) as iquantity from currentstock group by cinvcode
+)ck
+left join
+(
+	select cInvCode,max(ddate) as ddate from salebillvouchs ss inner join salebillvouch sh on ss.SBVID=sh.SBVID group by cInvCode
+)as xs
+on ck.cInvCode=xs.cInvCode
+inner join inventory on ck.cinvcode=inventory.cinvcode 
+inner join InventoryClass on inventory.cinvccode=InventoryClass.cinvccode
+where
+ck.iQuantity<>0 
+order by ck.iquantity desc
+
+
+--本月新增客户
+ select cCusCode from salebillvouch  
+ where 
+ dDate>='2017-06-01' 
+ and
+ cCusCode
+ not in (select cCusCode from salebillvouch where dDate<'2017-06-01')

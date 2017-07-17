@@ -18,6 +18,7 @@ public class VInventoryRecentObj extends BaseDbObj
 	private String ccomunitname;
 	private Timestamp drecentdate;
 	private Long idays;
+	private Double iquantity;
 
 	@Override
 	public String findKeyColumnName()
@@ -47,7 +48,8 @@ public class VInventoryRecentObj extends BaseDbObj
 		sql.append(" inv.cComUnitCode, \n");
 		sql.append(" cu.cComUnitName, \n");
 		sql.append(" dls.dRecentDate, \n");
-		sql.append(" dls.iDays \n");
+		sql.append(" dls.iDays, \n");
+		sql.append(" cs.iQuantity \n");
 		sql.append(" from \n");
 		sql.append(" ( \n");
 		sql.append(" 	select  \n");
@@ -55,10 +57,10 @@ public class VInventoryRecentObj extends BaseDbObj
 		sql.append(" 	MAX(dDate) dRecentDate, \n");
 		sql.append(" 	DATEDIFF(day,max(dDate),getdate()) iDays \n");
 		sql.append(" 	from  \n");
-		sql.append(" 	DispatchList dl \n");
+		sql.append(" 	So_SoMain dl \n");
 		sql.append(" 	left join \n");
-		sql.append(" 	DispatchLists dls \n");
-		sql.append(" 	on dl.DLID=dls.DLID \n");
+		sql.append(" 	So_SoDetails dls \n");
+		sql.append(" 	on dl.csocode=dls.csocode \n");
 		sql.append(" 	group by \n");
 		sql.append(" 	cInvCode \n");
 		sql.append(" ) dls \n");
@@ -68,6 +70,8 @@ public class VInventoryRecentObj extends BaseDbObj
 		sql.append(" on inv.cInvCCode=invc.cInvCCode \n");
 		sql.append(" left join ComputationUnit cu \n");
 		sql.append(" on inv.cComUnitCode=cu.cComunitCode \n");
+		sql.append(" left join (select sum(iquantity) iquantity,cinvcode from currentstock group by cinvcode) cs \n");
+		sql.append(" on cs.cInvCode=dls.cInvCode \n");
 		sql.append(" ) t \n");
 
 		return sql.toString();
@@ -102,8 +106,8 @@ public class VInventoryRecentObj extends BaseDbObj
 	{
 		LinkedHashMap<String, String> pros = new LinkedHashMap<String, String>();
 
-		// pros.put("cinvccode", "存货分类编码");
-		// pros.put("cinvcname", "存货分类名称");
+		pros.put("cinvccode", "存货分类编码");
+		pros.put("cinvcname", "存货分类名称");
 		pros.put("cinvcode", "存货编码");
 		pros.put("cinvname", "存货名称");
 		pros.put("cinvstd", "规格型号");
@@ -111,6 +115,7 @@ public class VInventoryRecentObj extends BaseDbObj
 		pros.put("ccomunitname", "主计量");
 		pros.put("drecentdate", "最近成交日期");
 		pros.put("idays", "休眠天数");
+		pros.put("iquantity", "库存数量");
 		return pros;
 	}
 
@@ -202,6 +207,16 @@ public class VInventoryRecentObj extends BaseDbObj
 	public void setIdays(Long idays)
 	{
 		this.idays = idays;
+	}
+
+	public Double getIquantity()
+	{
+		return iquantity;
+	}
+
+	public void setIquantity(Double iquantity)
+	{
+		this.iquantity = iquantity;
 	}
 
 	@Override

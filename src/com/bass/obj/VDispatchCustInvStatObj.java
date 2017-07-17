@@ -15,6 +15,8 @@ public class VDispatchCustInvStatObj extends BaseDbObj
 	private String cccname;
 	private String ccuscode;
 	private String ccusname;
+	private String cpersoncode;
+	private String cpersonname;
 	private String ccusabbname;
 	private String cinvccode;
 	private String cinvcname;
@@ -115,21 +117,21 @@ public class VDispatchCustInvStatObj extends BaseDbObj
 	@Override
 	public String getCnName()
 	{
-		return "客户产品销售统计";
+		return "客户产品发货统计";
 	}
 	
 	public String getCnName(String groupBy)
 	{
 		if (VDispatchCustInvStatSearchCondition.GROUP_BY_CUST.equalsIgnoreCase(groupBy))
 		{
-			return "客户销售统计";
+			return "客户发货统计";
 		}
 		if (VDispatchCustInvStatSearchCondition.GROUP_BY_INV.equalsIgnoreCase(groupBy))
 		{
-			return "产品销售统计";
+			return "产品发货统计";
 		}if (VDispatchCustInvStatSearchCondition.GROUP_BY_CUST_INV.equalsIgnoreCase(groupBy))
 		{
-			return "客户产品销售统计";
+			return "客户产品发货统计";
 		}
 		return "";
 	}
@@ -151,6 +153,8 @@ public class VDispatchCustInvStatObj extends BaseDbObj
 		pros.put("ccuscode", "客户编码");
 		pros.put("ccusname", "客户名称");
 		// pros.put("ccusabbname", "客户简称");
+		pros.put("cpersoncode", "业务员编码");
+		pros.put("cpersonname", "业务员名称");
 		pros.put("cinvccode", "存货分类编码");
 		pros.put("cinvcname", "存货分类名称");
 		pros.put("cinvcode", "存货编码");
@@ -322,6 +326,26 @@ public class VDispatchCustInvStatObj extends BaseDbObj
 	public void setIsum(Double isum)
 	{
 		this.isum = isum;
+	}
+
+	public String getCpersoncode()
+	{
+		return cpersoncode;
+	}
+
+	public void setCpersoncode(String cpersoncode)
+	{
+		this.cpersoncode = cpersoncode;
+	}
+
+	public String getCpersonname()
+	{
+		return cpersonname;
+	}
+
+	public void setCpersonname(String cpersonname)
+	{
+		this.cpersonname = cpersonname;
 	}
 
 	@Override

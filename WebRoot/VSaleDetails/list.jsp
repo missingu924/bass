@@ -7,19 +7,20 @@
 <%@page import="com.wuyg.common.util.TimeUtil"%> 
 <%@page import="com.wuyg.common.obj.PaginationObj"%> 
 <%@page import="com.wuyg.dictionary.DictionaryUtil"%> 
-<%@page import="com.bass.obj.VInventoryRecentObj"%> 
-<%@page import="com.bass.searchcondition.VInventoryRecentSearchCondition"%> 
+<%@page import="com.bass.obj.VSaleDetailsObj"%> 
+<%@page import="com.bass.searchcondition.VSaleDetailsSearchCondition"%> 
 <%@page import="com.wuyg.auth.obj.AuthUserObj"%> 
-<%@page import="com.wuyg.common.util.SystemConstant"%>  
+<%@page import="com.wuyg.common.util.SystemConstant"%>
+<%@page import="com.wuyg.echarts.EchartsUtil"%>  
 <!-- 基本信息 --> 
 <% 
 	// 当前上下文路径 
 	String contextPath = request.getContextPath(); 
  
 	// 该功能对象实例 
-	VInventoryRecentObj domainInstance = (VInventoryRecentObj) request.getAttribute("domainInstance"); 
+	VSaleDetailsObj domainInstance = (VSaleDetailsObj) request.getAttribute("domainInstance"); 
 	// 该功能对象查询条件实例 
-	VInventoryRecentSearchCondition domainSearchCondition = (VInventoryRecentSearchCondition) request.getAttribute("domainSearchCondition"); 
+	VSaleDetailsSearchCondition domainSearchCondition = (VSaleDetailsSearchCondition) request.getAttribute("domainSearchCondition"); 
 	// 用户信息 
 	AuthUserObj user = (AuthUserObj) request.getSession().getAttribute(SystemConstant.AUTH_USER_INFO); 
 	// 该功能路径 
@@ -59,7 +60,11 @@
 			<table class="search_table" align="center" width="98%"> 
 				<tr> 
 					<td><%=domainInstance.getCnName() %></td>  
-					<td></td> 
+					<td>
+						<%=domainInstance.getPropertyCnName("ddate") %>
+						<input name="ddate_min" type="text" id="ddate_min" value="<%=TimeUtil.date2str(domainSearchCondition.getDdate_min(),"yyyy-MM-dd")%>" size="9" onFocus="WdatePicker({isShowClear:false,readOnly:false,highLineWeekDay:true,dateFmt:'yyyy-MM-dd'})">- 
+						<input name="ddate_max" type="text" id="ddate_max" value="<%=TimeUtil.date2str(domainSearchCondition.getDdate_max(),"yyyy-MM-dd")%>" size="9" onFocus="WdatePicker({isShowClear:false,readOnly:false,highLineWeekDay:true,dateFmt:'yyyy-MM-dd'})"> 
+					</td> 
 					<td> 
 						<input name="searchButton" type="button" class="button button_set" value="条件" onClick="$('#search_condition_table').toggle();$('#showSearchConditionTable').val(!$('#search_condition_table').is(':hidden'));">
 						<input name="searchButton" type="button" class="button button_search" value="查询" onClick="toPage(1)"> 
@@ -82,6 +87,24 @@
 			<!-- 查询条件 -->  
 			<table id="search_condition_table" class="search_condition_table" align="center" width="98%" style='display: <%=domainSearchCondition.isShowSearchConditionTable() ? "" : "none"%>'> 
 				<tr> 
+						<td><%=domainInstance.getPropertyCnName("cdlcode") %></td> 
+						<td>
+						<input name="cdlcode" type="text" id="cdlcode" value="<%=StringUtil.getNotEmptyStr(domainInstance.getCdlcode(),"")%>" size="20" > 
+						</td>
+						<td></td>
+						<td></td>
+				</tr> 
+				<tr> 
+						<td><%=domainInstance.getPropertyCnName("ccuscode") %></td> 
+						<td>
+						<input name="ccuscode" type="text" id="ccuscode" value="<%=StringUtil.getNotEmptyStr(domainInstance.getCcuscode(),"")%>" size="20" > 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("ccusname") %></td> 
+						<td>
+						<input name="ccusname" type="text" id="ccusname" value="<%=StringUtil.getNotEmptyStr(domainInstance.getCcusname(),"")%>" size="20" > 
+						</td> 
+				</tr> 
+				<tr>
 						<td><%=domainInstance.getPropertyCnName("cinvcode") %></td> 
 						<td>
 						<input name="cinvcode" type="text" id="cinvcode" value="<%=StringUtil.getNotEmptyStr(domainInstance.getCinvcode(),"")%>" size="20" > 
@@ -90,76 +113,64 @@
 						<td>
 						<input name="cinvname" type="text" id="cinvname" value="<%=StringUtil.getNotEmptyStr(domainInstance.getCinvname(),"")%>" size="20" > 
 						</td> 
-						<!-- 
-						<td><%=domainInstance.getPropertyCnName("drecentdate") %></td> 
-						<td>
-						<input name="drecentdate_min" type="text" id="drecentdate_min" value="<%=TimeUtil.date2str(domainSearchCondition.getDrecentdate_min(),"yyyy-MM-dd")%>" size="9" onFocus="WdatePicker({isShowClear:false,readOnly:false,highLineWeekDay:true,dateFmt:'yyyy-MM-dd'})">- 
-						<input name="drecentdate_max" type="text" id="drecentdate_max" value="<%=TimeUtil.date2str(domainSearchCondition.getDrecentdate_max(),"yyyy-MM-dd")%>" size="9" onFocus="WdatePicker({isShowClear:false,readOnly:false,highLineWeekDay:true,dateFmt:'yyyy-MM-dd'})"> 
-						</td> 
-						 -->
-						<td><%=domainInstance.getPropertyCnName("idays") %></td> 
-						<td>
-						<input name="idays_min" type="text" id="idays_min" value="<%=StringUtil.getNotEmptyStr(domainSearchCondition.getIdays_min(),"")%>" size="9" >- 
-						<input name="idays_max" type="text" id="idays_max" value="<%=StringUtil.getNotEmptyStr(domainSearchCondition.getIdays_max(),"")%>" size="9" > 
-						</td> 
-						<td><%=domainInstance.getPropertyCnName("iquantity") %></td> 
-						<td>
-						<input name="iquantity_min" type="text" id="iquantity_min" value="<%=StringUtil.getNotEmptyStr(domainSearchCondition.getIquantity_min(),"")%>" size="9" >- 
-						<input name="iquantity_max" type="text" id="iquantity_max" value="<%=StringUtil.getNotEmptyStr(domainSearchCondition.getIquantity_max(),"")%>" size="9" > 
-						</td> 
 				</tr> 
 			</table> 
- 
+			
 			<!-- 数据信息 -->  
 			<table id="data_table" class="table table-bordered" align="center" width="98%"> 
 				<thead> 
 					<tr> 
 						<th>序号</th> 
-						<th onClick="sortBy(this)" db_col="cinvccode" class="<%=domainSearchCondition.getSortClassByDbColumn("cinvccode")%>"><%=domainInstance.getPropertyCnName("cinvccode") %></th> 
-						<th onClick="sortBy(this)" db_col="cinvcname" class="<%=domainSearchCondition.getSortClassByDbColumn("cinvcname")%>"><%=domainInstance.getPropertyCnName("cinvcname") %></th> 
+						<th onClick="sortBy(this)" db_col="ddate" class="<%=domainSearchCondition.getSortClassByDbColumn("ddate")%>"><%=domainInstance.getPropertyCnName("ddate") %></th> 
+						<th onClick="sortBy(this)" db_col="cdlcode" class="<%=domainSearchCondition.getSortClassByDbColumn("cdlcode")%>"><%=domainInstance.getPropertyCnName("cdlcode") %></th> 
+						<th onClick="sortBy(this)" db_col="ccuscode" class="<%=domainSearchCondition.getSortClassByDbColumn("ccuscode")%>"><%=domainInstance.getPropertyCnName("ccuscode") %></th> 
+						<th onClick="sortBy(this)" db_col="ccusname" class="<%=domainSearchCondition.getSortClassByDbColumn("ccusname")%>"><%=domainInstance.getPropertyCnName("ccusname") %></th> 
 						<th onClick="sortBy(this)" db_col="cinvcode" class="<%=domainSearchCondition.getSortClassByDbColumn("cinvcode")%>"><%=domainInstance.getPropertyCnName("cinvcode") %></th> 
 						<th onClick="sortBy(this)" db_col="cinvname" class="<%=domainSearchCondition.getSortClassByDbColumn("cinvname")%>"><%=domainInstance.getPropertyCnName("cinvname") %></th> 
-						<th onClick="sortBy(this)" db_col="cinvstd" class="<%=domainSearchCondition.getSortClassByDbColumn("cinvstd")%>"><%=domainInstance.getPropertyCnName("cinvstd") %></th> 
+						<th onClick="sortBy(this)" db_col="ccomunitcode" class="<%=domainSearchCondition.getSortClassByDbColumn("ccomunitcode")%>"><%=domainInstance.getPropertyCnName("ccomunitcode") %></th> 
 						<th onClick="sortBy(this)" db_col="ccomunitname" class="<%=domainSearchCondition.getSortClassByDbColumn("ccomunitname")%>"><%=domainInstance.getPropertyCnName("ccomunitname") %></th> 
-						<th onClick="sortBy(this)" db_col="drecentdate" class="<%=domainSearchCondition.getSortClassByDbColumn("drecentdate")%>"><%=domainInstance.getPropertyCnName("drecentdate") %></th> 
-						<th onClick="sortBy(this)" db_col="idays" class="<%=domainSearchCondition.getSortClassByDbColumn("idays")%>"><%=domainInstance.getPropertyCnName("idays") %></th> 
-						<th onClick="sortBy(this)" db_col="iquantity" class="<%=domainSearchCondition.getSortClassByDbColumn("iquantity")%>"><%=domainInstance.getPropertyCnName("iquantity") %></th>
+						<th onClick="sortBy(this)" db_col="iquantity" class="<%=domainSearchCondition.getSortClassByDbColumn("iquantity")%>"><%=domainInstance.getPropertyCnName("iquantity") %></th> 
+						<th onClick="sortBy(this)" db_col="isum" class="<%=domainSearchCondition.getSortClassByDbColumn("isum")%>"><%=domainInstance.getPropertyCnName("isum") %></th> 
 					</tr> 
 				</thead> 
 				<% 
+					double iQuantityTotal=0,iSumTotal=0;
+				
 					for (int i = 0; i < list.size(); i++) 
 						{ 
-							VInventoryRecentObj o = (VInventoryRecentObj) list.get(i); 
-							
-							String color="green";
-							if(o.getIdays()<=30)
-							{
-								color="green";
-							}
-							else if(o.getIdays()>30&&o.getIdays()<=60)
-							{
-								color="orange";
-							}
-							else if(o.getIdays()>60)
-							{
-								color="red";
-							}
+							VSaleDetailsObj o = (VSaleDetailsObj) list.get(i); 
+							iQuantityTotal+=o.getIquantity();
+							iSumTotal+=o.getIsum();
 				%> 
 				<tr> 
 					<td style="width:30px;text-align:right"><%=i+1 %></td> 
-					<td><%=StringUtil.getNotEmptyStr(o.getCinvccode())%></td> 
-					<td><%=StringUtil.getNotEmptyStr(o.getCinvcname())%></td> 
+					<td><%=TimeUtil.date2str(o.getDdate(),"yyyy-MM-dd")%></td> 
+					<td><%=StringUtil.getNotEmptyStr(o.getCdlcode())%></td> 
+					<td><%=StringUtil.getNotEmptyStr(o.getCcuscode())%></td> 
+					<td><a href="#" onclick="openTab('<%="客户 "+o.getCcusname()+" 当前月份销售统计" %>','<%=contextPath %>/SaleStat/cust_stat.jsp?custcode=<%=o.getCcuscode() %>')"><%=StringUtil.getNotEmptyStr(o.getCcusname())%></a></td> 
 					<td><%=StringUtil.getNotEmptyStr(o.getCinvcode())%></td> 
-					<td><a href="#" onclick="openTab('产品 <%=o.getCinvcname() %> 销售发货明细','<%=contextPath %>/Proxy/Servlet?servlet=VSaleDetails&method=list4this&ddate_min=1900-01-01&cinvcode=<%=o.getCinvcode() %>')"><%=StringUtil.getNotEmptyStr(o.getCinvname())%></a></td> 
-					<td><%=StringUtil.getNotEmptyStr(o.getCinvstd())%></td> 
+					<td><a href="#" onclick="openTab('<%="产品 "+o.getCinvname()+" 当前月份销售统计" %>','<%=contextPath %>/SaleStat/inv_stat.jsp?invcode=<%=o.getCinvcode() %>')"><%=StringUtil.getNotEmptyStr(o.getCinvname())%></a></td> 
+					<td><%=StringUtil.getNotEmptyStr(o.getCcomunitcode())%></td> 
 					<td><%=StringUtil.getNotEmptyStr(o.getCcomunitname())%></td> 
-					<td><%=TimeUtil.date2str(o.getDrecentdate(),"yyyy-MM-dd")%></td> 
-					<td style="text-align:right;color:#ffffff;background-color: <%=color %>"><%=StringUtil.getNotEmptyStr(o.getIdays())%></td> 
-					<td><%=StringUtil.formatDouble(o.getIquantity(),2)%></td>
+					<td style="text-align:right"><%=StringUtil.formatDouble(o.getIquantity(),2)%></td> 
+					<td style="text-align:right"><%=StringUtil.formatDouble(o.getIsum(),4)%></td> 
 				</tr> 
 				<% 
 					} 
 				%> 
+				<tr style="background-color:#ffffcc;color:blue">
+					<td>合计</td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td style="text-align:right;"><%=StringUtil.formatDouble(iQuantityTotal,2) %></td>
+					<td style="text-align:right;"><%=StringUtil.formatDouble(iSumTotal,4) %></td>
+				</tr>
 			</table> 
  
 			<!-- 翻页操作栏 --> 
