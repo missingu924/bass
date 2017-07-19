@@ -27,6 +27,8 @@ public class VSaleDetailsObj extends BaseDbObj
 	private String cinvstd;
 	private String ccomunitcode;
 	private String ccomunitname;
+	private String cpersoncode;
+	private String cpersonname;
 	private Double iquantity;
 	private Double isum;
 
@@ -65,6 +67,8 @@ public class VSaleDetailsObj extends BaseDbObj
 		sql.append(" inv.cInvStd, \n");
 		sql.append(" inv.cComUnitCode, \n");
 		sql.append(" cu.cComUnitName, \n");
+		sql.append(" ps.cPersonCode, \n");
+		sql.append(" ps.cPersonName, \n");
 		sql.append(" isnull(dls.iQuantity,0) iQuantity, \n");
 		sql.append(" isnull(dls.iNatSum/10000,0) iSum   \n");
 		sql.append(" from  \n");
@@ -83,6 +87,8 @@ public class VSaleDetailsObj extends BaseDbObj
 		sql.append(" on inv.cInvCCode=invc.cInvCCode \n");
 		sql.append(" left join ComputationUnit cu \n");
 		sql.append(" on inv.cComUnitCode=cu.cComunitCode \n");
+		sql.append(" left join Person ps \n");
+		sql.append(" on ps.cPersonCode=dl.cPersonCode \n");
 		sql.append(" ) t \n");
 
 		return sql.toString();
@@ -103,7 +109,7 @@ public class VSaleDetailsObj extends BaseDbObj
 	@Override
 	public String getCnName()
 	{
-		return "销售订单明细";
+		return "订单订单明细";
 	}
 
 	@Override
@@ -133,6 +139,8 @@ public class VSaleDetailsObj extends BaseDbObj
 		pros.put("cinvstd", "规格型号");
 		pros.put("ccomunitcode", "主计量编码");
 		pros.put("ccomunitname", "主计量");
+		pros.put("cpersoncode", "业务员编码");
+		pros.put("cpersonname", "业务员名称");
 		pros.put("iquantity", "数量");
 		pros.put("isum", "金额（万元）");
 		return pros;
@@ -321,6 +329,26 @@ public class VSaleDetailsObj extends BaseDbObj
 	public String getDdate4show()
 	{
 		return TimeUtil.date2str(ddate,"M月d日");
+	}
+
+	public String getCpersoncode()
+	{
+		return cpersoncode;
+	}
+
+	public void setCpersoncode(String cpersoncode)
+	{
+		this.cpersoncode = cpersoncode;
+	}
+
+	public String getCpersonname()
+	{
+		return cpersonname;
+	}
+
+	public void setCpersonname(String cpersonname)
+	{
+		this.cpersonname = cpersonname;
 	}
 
 	@Override

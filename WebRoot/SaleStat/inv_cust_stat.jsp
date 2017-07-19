@@ -68,19 +68,19 @@
 		// 按产品统计
 		String invStatSql = "select dls.cinvcode code,round(isnull(sum(iNatSum)/10000,0),4) value ,inv.cInvName name from So_SoMain dl left join So_SoDetails dls on dl.cSoCode=dls.cSoCode left join inventory inv on dls.cInvCode=inv.cInvCode where dDate>='"
 				+ (startTimeMonth) + "' and dDate<='" + (endTimeMonth) + "' group by dls.cinvcode,inv.cInvName";
-		List invList = EchartsUtil.getInvListByInvSql(invStatSql, "value desc", "各产品销售金额（万元）", "产品", "产品销售金额（万元）");
+		List invList = EchartsUtil.getInvListByInvSql(invStatSql, "value desc", "各产品订单金额（万元）", "产品", "产品订单金额（万元）");
 		
 		
 
 		// 按客户统计
 		String custStatSql = "select dl.cCusCode code,round(isnull(sum(iNatSum)/10000,0),4) value ,cust.cCusName name from So_SoMain dl left join So_SoDetails dls on dl.cSoCode=dls.cSoCode left join customer cust on dl.cCusCode=cust.cCusCode where dDate>='"
 				+ (startTimeMonth) + "' and dDate<='" + (endTimeMonth) + "' group by dl.cCusCode,cust.cCusName";
-		List custList = EchartsUtil.getInvListByInvSql(custStatSql, "value desc", "各客户销售金额（万元）", "客户", "客户销售金额（万元）");
+		List custList = EchartsUtil.getInvListByInvSql(custStatSql, "value desc", "各客户订单金额（万元）", "客户", "客户订单金额（万元）");
 		
 		// 按业务员统计
 		String personStatSql = "select dl.cPersonCode code,round(isnull(sum(iNatSum)/10000,0),4) value ,isnull(per.cPersonName,'其他') name from So_SoMain dl left join So_SoDetails dls on dl.cSoCode=dls.cSoCode left join person per on dl.cPersonCode=per.cPersonCode where dDate>='"
 				+ (startTimeMonth) + "' and dDate<='" + (endTimeMonth) + "' group by dl.cPersonCode,per.cPersonName";
-		List personList = EchartsUtil.getInvListByInvSql(personStatSql, "value desc", "各业务员销售金额（万元）", "业务员", "业务员销售金额（万元）");
+		List personList = EchartsUtil.getInvListByInvSql(personStatSql, "value desc", "各业务员订单金额（万元）", "业务员", "业务员订单金额（万元）");
 		
 
 		// 显示图表
@@ -96,7 +96,7 @@
 				<tr>
 					<td align="center">
 						<a href="<%=request.getContextPath()%>/SaleStat/inv_cust_stat.jsp?info_type=<%=info_type %>&iyear=<%=iPreYear%>&imonth=<%=iPreMonth%>"><input type="button" class="button button_left" title="上月" /> </a> &nbsp;
-						<span style="color: #2281c8; font-size: 16px;"><%=iyear%>年<%=imonth%>月销售分布</span>&nbsp;
+						<span style="color: #2281c8; font-size: 16px;"><%=iyear%>年<%=imonth%>月订单分布</span>&nbsp;
 						<a href="<%=request.getContextPath()%>/SaleStat/inv_cust_stat.jsp?info_type=<%=info_type %>&iyear=<%=iNextYear%>&imonth=<%=iNextMonth%>"><input type="button" class="button button_right" title="下月" /> </a>
 					</td>
 				</tr>
@@ -151,17 +151,17 @@
 		
 		function invStat(invcode,invname)
 		{
-			openTab(invname+' <%=iyear%>年<%=imonth%>月 销售情况','<%=request.getContextPath()+"/SaleStat/inv_stat.jsp?iyear="+iyear+"&imonth="+imonth+"&invcode="%>'+invcode);
+			openTab(invname+' <%=iyear%>年<%=imonth%>月 订单情况','<%=request.getContextPath()+"/SaleStat/inv_stat.jsp?iyear="+iyear+"&imonth="+imonth+"&invcode="%>'+invcode);
 		}
 		
 		function custStat(custcode,custname)
 		{
-			openTab(custname+' <%=iyear%>年<%=imonth%>月 销售情况','<%=request.getContextPath()+"/SaleStat/cust_stat.jsp?iyear="+iyear+"&imonth="+imonth+"&custcode="%>'+custcode);
+			openTab(custname+' <%=iyear%>年<%=imonth%>月 订单情况','<%=request.getContextPath()+"/SaleStat/cust_stat.jsp?iyear="+iyear+"&imonth="+imonth+"&custcode="%>'+custcode);
 		}
 		
 		function personStat(personcode,personname)
 		{
-			openTab(personname+' <%=iyear%>年<%=imonth%>月 销售情况','<%=request.getContextPath()+"/SaleStat/person_stat.jsp?iyear="+iyear+"&imonth="+imonth+"&personcode="%>'+personcode);
+			openTab(personname+' <%=iyear%>年<%=imonth%>月 订单情况','<%=request.getContextPath()+"/SaleStat/person_stat.jsp?iyear="+iyear+"&imonth="+imonth+"&personcode="%>'+personcode);
 		}
 		
 	</script>

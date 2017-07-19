@@ -95,7 +95,7 @@
 			// 按客户统计
 			String custStatSql = "select round(isnull(sum(iNatSum)/10000,0),4) value ,cust.cCusName name,dl.cCusCode code from DispatchList dl left join DispatchLists dls on dl.DLID=dls.DLID left join customer cust on dl.cCusCode=cust.cCusCode left join inventory inv on dls.cinvcode=inv.cinvcode where dDate>='"
 			+ (startTimeMonth) + "' and dDate<='" + (endTimeMonth) + "' and dl.cpersoncode='"+personcode+"' group by dl.cCusCode,cust.cCusName";
-			List custList = EchartsUtil.getInvListByInvSql(custStatSql, "value desc", "各客户销售金额（万元）", "客户", "销售金额（万元）");
+			List custList = EchartsUtil.getInvListByInvSql(custStatSql, "value desc", "各客户发货金额（万元）", "客户", "发货金额（万元）");
 	%>
 	<body>
 		<form name="pageForm" id="pageForm" method="post" action="<%=request.getContextPath()%>/DispatchStat/person_stat.jsp">

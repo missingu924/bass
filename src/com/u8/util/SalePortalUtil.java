@@ -38,7 +38,7 @@ public class SalePortalUtil
 
 	private static String getRecentMonthSql(String iYear, String iMonth, int recentMonths, String invcode, String custcode, String personcode, String valueType)
 	{
-		logger.info("==========近" + recentMonths + "个月销售情况==========");
+		logger.info("==========近" + recentMonths + "个月订单情况==========");
 
 		StringBuffer sql = new StringBuffer();
 
@@ -165,7 +165,7 @@ public class SalePortalUtil
 
 	public static String getRecentMonthAvgPriceSql(String iYear, String iMonth, int recentMonths, String invcode)
 	{
-		logger.info("==========近" + recentMonths + "个月平均销售单价==========");
+		logger.info("==========近" + recentMonths + "个月平均订单单价==========");
 
 		StringBuffer sql = new StringBuffer();
 
@@ -246,7 +246,7 @@ public class SalePortalUtil
 
 	public static String getRecentYearSql(String iYear, int recentYears)
 	{
-		logger.info("==========近" + recentYears + "年销售情况==========");
+		logger.info("==========近" + recentYears + "年订单情况==========");
 
 		StringBuffer sql = new StringBuffer();
 
@@ -283,7 +283,7 @@ public class SalePortalUtil
 
 	public static String getTopnCustomerSql(String startTime, String endTime, int topn)
 	{
-		logger.info("==========TopN客户销售情况==========");
+		logger.info("==========TopN客户订单情况==========");
 
 		StringBuffer sql = new StringBuffer();
 		sql.append(" select \n");
@@ -321,7 +321,7 @@ public class SalePortalUtil
 
 	public static String getTopnInventorySql(String startTime, String endTime, int topn)
 	{
-		logger.info("==========TopN产品销售情况==========");
+		logger.info("==========TopN产品订单情况==========");
 
 		StringBuffer sql = new StringBuffer();
 		sql.append(" select \n");
@@ -359,7 +359,7 @@ public class SalePortalUtil
 
 	public static String getTopnPersonSql(String startTime, String endTime, int topn)
 	{
-		logger.info("==========TopN业务员销售情况==========");
+		logger.info("==========TopN业务员订单情况==========");
 
 		StringBuffer sql = new StringBuffer();
 		sql.append("select \n");

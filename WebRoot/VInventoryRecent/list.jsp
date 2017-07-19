@@ -150,7 +150,7 @@
 					<td><%=StringUtil.getNotEmptyStr(o.getCinvccode())%></td> 
 					<td><%=StringUtil.getNotEmptyStr(o.getCinvcname())%></td> 
 					<td><%=StringUtil.getNotEmptyStr(o.getCinvcode())%></td> 
-					<td><a href="#" onclick="openTab('产品 <%=o.getCinvcname() %> 销售发货明细','<%=contextPath %>/Proxy/Servlet?servlet=VSaleDetails&method=list4this&ddate_min=1900-01-01&cinvcode=<%=o.getCinvcode() %>')"><%=StringUtil.getNotEmptyStr(o.getCinvname())%></a></td> 
+					<td><a href="#" onclick="openTab('产品 <%=o.getCinvcname() %> 订单发货明细','<%=contextPath %>/Proxy/Servlet?servlet=VSaleDetails&method=list4this&ddate_min=1900-01-01&cinvcode=<%=o.getCinvcode() %>')"><%=StringUtil.getNotEmptyStr(o.getCinvname())%></a></td> 
 					<td><%=StringUtil.getNotEmptyStr(o.getCinvstd())%></td> 
 					<td><%=StringUtil.getNotEmptyStr(o.getCcomunitname())%></td> 
 					<td><%=TimeUtil.date2str(o.getDrecentdate(),"yyyy-MM-dd")%></td> 

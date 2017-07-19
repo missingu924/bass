@@ -32,6 +32,9 @@
 			String startTimeMonth = TimeUtil.date2str(TimeUtil.getTheFirstDayOfTheMonth(iyear,imonth), "yyyy-MM-dd 00:00:00");;
 			String endTimeMonth = TimeUtil.date2str(TimeUtil.getTheLastDayOfTheMonth(iyear,imonth), "yyyy-MM-dd 23:59:59");
 			
+			String startTimeYear = iyear + "-01-01 00:00:00";
+			String endTimeYear = iyear + "-12-31 23:59:59";
+			
 			// 上月、下月
 			int iPreYear = iyear;
 			int iPreMonth = imonth;
@@ -81,12 +84,12 @@
 			<tr>
 				<td style="text-align: left; color: #0055a8; border-bottom: 1px solid #dddddd;">
 					<img src="../images/svg/heavy/green/32/pie_chart.png" width="16" height="16" align="middle" />
-					月度销售业绩
+					月度订单业绩
 				</td>
 			</tr>
 		</table>
 		<table id="overview_table" width="98%" align="center" class="table_goal">
-			<tr onclick="openTab('<%=iyear+"/"+imonth+" 销售概览"%>','<%=request.getContextPath()%>/SaleStat/month_portal.jsp?stat_type=month&iyear=<%=iyear%>&imonth=<%=imonth%>')">
+			<tr onclick="openTab('<%=iyear+"/"+imonth+" 订单概览"%>','<%=request.getContextPath()%>/SaleStat/month_portal.jsp?stat_type=month&iyear=<%=iyear%>&imonth=<%=imonth%>')">
 				<td width="33%" height="100">
 					<p>
 						<span class="lcd_greendark_big">
@@ -94,7 +97,7 @@
 						</span>
 					</p>
 					<p>
-						月度销售单数
+						月度订单单数
 					</p>
 				</td>
 				<td width="33%">
@@ -104,7 +107,7 @@
 						</span>
 					</p>
 					<p>
-						月度销售数量
+						月度订单数量
 					</p>
 				</td>
 				<td width="33%">
@@ -114,7 +117,39 @@
 						</span>
 					</p>
 					<p>
-						月度销售金额（万元）
+						月度订单金额（万元）
+					</p>
+				</td>
+			</tr>
+			<tr onclick="openTab('<%=iyear+"/"+imonth+" 订单概览"%>','<%=request.getContextPath()%>/SaleStat/year_portal.jsp?iyear=<%=iyear%>&imonth=<%=imonth%>')">
+				<td width="33%" height="100">
+					<p>
+						<span class="lcd_greendark_big">
+						<%=StringUtil.formatDouble(EchartsUtil.getValueByInvSql("select count(*) value from So_SoMain dl where dDate>='"+startTimeYear+"' and dDate<='"+endTimeMonth+"'"), 0)%>
+						</span>
+					</p>
+					<p>
+						当年累计订单单数
+					</p>
+				</td>
+				<td width="33%">
+					<p>
+						<span class="lcd_greendark_big">
+						<%=StringUtil.formatDouble(EchartsUtil.getValueByInvSql("select isnull(sum(iQuantity),0) value from So_SoMain dl left join So_SoDetails dls on dl.cSoCode=dls.cSoCode where dDate>='"+startTimeYear+"' and dDate<='"+endTimeMonth+"'"), 0)%>
+						</span>
+					</p>
+					<p>
+						当年累计订单数量
+					</p>
+				</td>
+				<td width="33%">
+					<p>
+						<span class="lcd_greendark_big">
+						<%=StringUtil.formatDouble(EchartsUtil.getValueByInvSql("select isnull(sum(iNatSum)/10000,0) value from So_SoMain dl left join So_SoDetails dls on dl.cSoCode=dls.cSoCode where dDate>='"+startTimeYear+"' and dDate<='"+endTimeMonth+"'"), 4)%>
+						</span>
+					</p>
+					<p>
+						当年累计订单金额（万元）
 					</p>
 				</td>
 			</tr>
@@ -123,7 +158,7 @@
 		<table id="12month_table" align="center" width="98%">
 			<tr>
 				<td align="center">
-					<%=EchartsUtil.createEchartByInvSql(SalePortalUtil.getRecentMonthSql4isum(iyear+"",imonth+"",recentMonths,null,null,null), "", "", new String[]{"销售金额","销售金额"}, new String[]{"销售金额（万元）","去年同期销售金额"}, EchartsUtil.BAR, EchartsUtil.THEME_MACARONS, EchartsUtil.COLOR_GREEN_DARK, 300, 0, "openTab(params.data.name+' 销售概览','"+request.getContextPath()+"/SaleStat/month_portal.jsp?iyear='+params.data.name.substr(0,4)+'&imonth='+params.data.name.substr(5,6))")%>
+					<%=EchartsUtil.createEchartByInvSql(SalePortalUtil.getRecentMonthSql4isum(iyear+"",imonth+"",recentMonths,null,null,null), "", "", new String[]{"订单金额","订单金额"}, new String[]{"订单金额（万元）","去年同期订单金额"}, EchartsUtil.BAR, EchartsUtil.THEME_MACARONS, EchartsUtil.COLOR_GREEN_DARK, 300, 0, "openTab(params.data.name+' 订单概览','"+request.getContextPath()+"/SaleStat/month_portal.jsp?iyear='+params.data.name.substr(0,4)+'&imonth='+params.data.name.substr(5,6))")%>
 				</td>
 			</tr>
 		</table>
@@ -166,6 +201,38 @@
 					</p>
 					<p>
 						月度发货金额（万元）
+					</p>
+				</td>
+			</tr>
+			<tr onclick="openTab('<%=iyear+"/"+imonth+" 发货概览"%>','<%=request.getContextPath()%>/DispatchStat/month_portal.jsp?stat_type=month&iyear=<%=iyear%>&imonth=<%=imonth%>')">
+				<td width="33%" height="100">
+					<p>
+						<span class="lcd_blue_big">
+						<%=StringUtil.formatDouble(EchartsUtil.getValueByInvSql("select count(*) value from DispatchList dl where dDate>='"+startTimeYear+"' and dDate<='"+endTimeMonth+"'"), 0)%>
+						</span>
+					</p>
+					<p>
+						当年累计发货单数
+					</p>
+				</td>
+				<td width="33%">
+					<p>
+						<span class="lcd_blue_big">
+						<%=StringUtil.formatDouble(EchartsUtil.getValueByInvSql("select isnull(sum(iQuantity),0) value from DispatchList dl left join DispatchLists dls on dl.DLID=dls.DLID where dDate>='"+startTimeYear+"' and dDate<='"+endTimeMonth+"'"), 0)%>
+						</span>
+					</p>
+					<p>
+						当年累计发货数量
+					</p>
+				</td>
+				<td width="33%">
+					<p>
+						<span class="lcd_blue_big">
+						<%=StringUtil.formatDouble(EchartsUtil.getValueByInvSql("select isnull(sum(iNatSum)/10000,0) value from DispatchList dl left join DispatchLists dls on dl.DLID=dls.DLID where dDate>='"+startTimeYear+"' and dDate<='"+endTimeMonth+"'"), 4)%>
+						</span>
+					</p>
+					<p>
+						当年累计发货金额（万元）
 					</p>
 				</td>
 			</tr>

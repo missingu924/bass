@@ -42,13 +42,13 @@ rdrecords01 rds
 on rds.ID=rd.ID
 where rds.cInvCode='01019002065'
 
---销售订单
+--订单订单
 
 select * from SO_SOMain
 
 select * from SO_SODetails
 
---5、	销售订单月度分析表
+--5、	订单订单月度分析表
 
 select 
 so.*,
@@ -56,7 +56,7 @@ isnull(sbv.iSaleBillVouchTotal,0) iSaleBillVouchTotal,
 isnull(apb.iAmountTotal,0)iAmountTotal
 from
 (
-	--销售订单
+	--订单订单
 	select
 	iYear,
 	iMonth,
@@ -78,7 +78,7 @@ from
 ) so
 left join
 (
-	--销售发票
+	--订单发票
 	select
 	iYear,
 	iMonth,
@@ -102,7 +102,7 @@ left join
 on so.iYear=sbv.iYear and so.iMonth=sbv.iMonth
 left join
 (
-	--销售回款
+	--订单回款
 	select
 	iYear,
 	iMonth,
@@ -255,7 +255,7 @@ on inv.cComUnitCode=cu.cComunitCode
 
 order by dl.cCusCode,dl.cInvCode,dl.iSum
 
---销售发货单明细
+--订单发货单明细
 create view v_dispatch_lists
 as
 select 
@@ -357,7 +357,7 @@ left join CustomerClass custclass
 on cust.cCCCode=custclass.cCCCode
 order by dl.iDays
 
---库存末次销售日期
+--库存末次订单日期
 select 
 inventory.cinvccode as 产品分类编码,
 InventoryClass.cinvcname as 产品分类名称,
@@ -365,8 +365,8 @@ ck.cInvCode as 产品编码,
 inventory.cinvname as 产品名称,
 inventory.cinvstd as 规格,
 ck.iQuantity as 现存量,
-xs.ddate as 最近销售日期,
-DATEDIFF(day,isnull(xs.ddate,0),CONVERT(varchar(100),GETDATE(), 23)) as 到今没有销售天数
+xs.ddate as 最近订单日期,
+DATEDIFF(day,isnull(xs.ddate,0),CONVERT(varchar(100),GETDATE(), 23)) as 到今没有订单天数
 from 
 (
 	select cinvcode,sum(isnull(iquantity,0)) as iquantity from currentstock group by cinvcode

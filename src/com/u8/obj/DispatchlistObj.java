@@ -144,7 +144,7 @@ public class DispatchlistObj extends AbstractDataSyncObj
 	@Override
 	public String getCnName()
 	{
-		return "销售出库单";
+		return "订单出库单";
 	}
 
 	@Override

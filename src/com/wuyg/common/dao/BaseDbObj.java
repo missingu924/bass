@@ -261,7 +261,7 @@ public abstract class BaseDbObj
 			return BeanUtils.getProperty(this, propertyName);
 		} catch (Exception e)
 		{
-			logger.error(propertyName + " " + e.getMessage(), e);
+			logger.error(propertyName + " " + e.getMessage());
 		}
 
 		return null;

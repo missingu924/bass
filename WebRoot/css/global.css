@@ -566,6 +566,7 @@ table style
 .table tbody tr:hover th {
   background-color: #f0f8ff;
 }
+
 /*report table style*/
 .report_table td {
   padding: 4px 2px 4px 2px;

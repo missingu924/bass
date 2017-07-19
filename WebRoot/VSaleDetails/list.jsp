@@ -114,6 +114,16 @@
 						<input name="cinvname" type="text" id="cinvname" value="<%=StringUtil.getNotEmptyStr(domainInstance.getCinvname(),"")%>" size="20" > 
 						</td> 
 				</tr> 
+				<tr>
+						<td><%=domainInstance.getPropertyCnName("cpersoncode") %></td> 
+						<td>
+						<input name="cpersoncode" type="text" id="cpersoncode" value="<%=StringUtil.getNotEmptyStr(domainInstance.getCpersoncode(),"")%>" size="20" > 
+						</td> 
+						<td><%=domainInstance.getPropertyCnName("cpersonname") %></td> 
+						<td>
+						<input name="cpersonname" type="text" id="cpersonname" value="<%=StringUtil.getNotEmptyStr(domainInstance.getCpersonname(),"")%>" size="20" > 
+						</td> 
+				</tr> 
 			</table> 
 			
 			<!-- 数据信息 -->  
@@ -125,6 +135,8 @@
 						<th onClick="sortBy(this)" db_col="cdlcode" class="<%=domainSearchCondition.getSortClassByDbColumn("cdlcode")%>"><%=domainInstance.getPropertyCnName("cdlcode") %></th> 
 						<th onClick="sortBy(this)" db_col="ccuscode" class="<%=domainSearchCondition.getSortClassByDbColumn("ccuscode")%>"><%=domainInstance.getPropertyCnName("ccuscode") %></th> 
 						<th onClick="sortBy(this)" db_col="ccusname" class="<%=domainSearchCondition.getSortClassByDbColumn("ccusname")%>"><%=domainInstance.getPropertyCnName("ccusname") %></th> 
+						<th onClick="sortBy(this)" db_col="cpersoncode" class="<%=domainSearchCondition.getSortClassByDbColumn("cpersoncode")%>"><%=domainInstance.getPropertyCnName("cpersoncode") %></th> 
+						<th onClick="sortBy(this)" db_col="cpersonname" class="<%=domainSearchCondition.getSortClassByDbColumn("cpersonname")%>"><%=domainInstance.getPropertyCnName("cpersonname") %></th> 
 						<th onClick="sortBy(this)" db_col="cinvcode" class="<%=domainSearchCondition.getSortClassByDbColumn("cinvcode")%>"><%=domainInstance.getPropertyCnName("cinvcode") %></th> 
 						<th onClick="sortBy(this)" db_col="cinvname" class="<%=domainSearchCondition.getSortClassByDbColumn("cinvname")%>"><%=domainInstance.getPropertyCnName("cinvname") %></th> 
 						<th onClick="sortBy(this)" db_col="ccomunitcode" class="<%=domainSearchCondition.getSortClassByDbColumn("ccomunitcode")%>"><%=domainInstance.getPropertyCnName("ccomunitcode") %></th> 
@@ -147,9 +159,11 @@
 					<td><%=TimeUtil.date2str(o.getDdate(),"yyyy-MM-dd")%></td> 
 					<td><%=StringUtil.getNotEmptyStr(o.getCdlcode())%></td> 
 					<td><%=StringUtil.getNotEmptyStr(o.getCcuscode())%></td> 
-					<td><a href="#" onclick="openTab('<%="客户 "+o.getCcusname()+" 当前月份销售统计" %>','<%=contextPath %>/SaleStat/cust_stat.jsp?custcode=<%=o.getCcuscode() %>')"><%=StringUtil.getNotEmptyStr(o.getCcusname())%></a></td> 
+					<td><a href="#" onclick="openTab('<%="客户 "+o.getCcusname()+" 当前月份订单统计" %>','<%=contextPath %>/SaleStat/cust_stat.jsp?custcode=<%=o.getCcuscode() %>')"><%=StringUtil.getNotEmptyStr(o.getCcusname())%></a></td> 
+					<td><%=StringUtil.getNotEmptyStr(o.getCpersoncode())%></td> 
+					<td><a href="#" onclick="openTab('<%="业务员 "+o.getCpersonname()+" 当前月份订单统计" %>','<%=contextPath %>/SaleStat/person_stat.jsp?personcode=<%=o.getCpersoncode() %>')"><%=StringUtil.getNotEmptyStr(o.getCpersonname())%></a></td> 
 					<td><%=StringUtil.getNotEmptyStr(o.getCinvcode())%></td> 
-					<td><a href="#" onclick="openTab('<%="产品 "+o.getCinvname()+" 当前月份销售统计" %>','<%=contextPath %>/SaleStat/inv_stat.jsp?invcode=<%=o.getCinvcode() %>')"><%=StringUtil.getNotEmptyStr(o.getCinvname())%></a></td> 
+					<td><a href="#" onclick="openTab('<%="产品 "+o.getCinvname()+" 当前月份订单统计" %>','<%=contextPath %>/SaleStat/inv_stat.jsp?invcode=<%=o.getCinvcode() %>')"><%=StringUtil.getNotEmptyStr(o.getCinvname())%></a></td> 
 					<td><%=StringUtil.getNotEmptyStr(o.getCcomunitcode())%></td> 
 					<td><%=StringUtil.getNotEmptyStr(o.getCcomunitname())%></td> 
 					<td style="text-align:right"><%=StringUtil.formatDouble(o.getIquantity(),2)%></td> 
@@ -160,6 +174,8 @@
 				%> 
 				<tr style="background-color:#ffffcc;color:blue">
 					<td>合计</td>
+					<td></td>
+					<td></td>
 					<td></td>
 					<td></td>
 					<td></td>

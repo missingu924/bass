@@ -51,7 +51,7 @@ public class VCustomerRecentObj extends BaseDbObj
 		sql.append(" 	MAX(dDate) dRecentDate, \n");
 		sql.append(" 	DATEDIFF(day,max(dDate),getdate()) iDays \n");
 		sql.append(" 	from  \n");
-		sql.append(" 	salebillvouch dl \n");
+		sql.append(" 	So_SoMain dl \n");
 		sql.append(" 	group by \n");
 		sql.append(" 	cCusCode \n");
 		sql.append(" ) dl \n");

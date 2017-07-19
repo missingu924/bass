@@ -143,7 +143,7 @@
 					<td><%=StringUtil.getNotEmptyStr(o.getCcccode())%></td> 
 					<td><%=StringUtil.getNotEmptyStr(o.getCccname())%></td> 
 					<td><%=StringUtil.getNotEmptyStr(o.getCcuscode())%></td> 
-					<td><a href="#" onclick="openTab('客户 <%=o.getCcusname() %> 销售发货明细','<%=contextPath %>/Proxy/Servlet?servlet=VDispatchLists&method=list4this&ddate_min=1900-01-01&ccuscode=<%=o.getCcuscode() %>')"><%=StringUtil.getNotEmptyStr(o.getCcusname())%></a></td> 
+					<td><a href="#" onclick="openTab('客户 <%=o.getCcusname() %> 订单明细','<%=contextPath %>/Proxy/Servlet?servlet=VSaleDetails&method=list4this&ddate_min=1900-01-01&ccuscode=<%=o.getCcuscode() %>')"><%=StringUtil.getNotEmptyStr(o.getCcusname())%></a></td> 
 					<td><%=TimeUtil.date2str(o.getDrecentdate(),"yyyy-MM-dd")%></td> 
 					<td style="text-align:right;color:#ffffff;background-color: <%=color %>"><%=StringUtil.getNotEmptyStr(o.getIdays())%></td> 
 				</tr> 

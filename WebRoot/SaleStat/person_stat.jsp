@@ -90,12 +90,12 @@
 			// 按产品统计
 			String invStatSql = "select round(isnull(sum(iNatSum)/10000,0),4) value ,inv.cInvName name, dls.cinvcode code from So_SoMain dl left join So_SoDetails dls on dl.csocode=dls.csocode left join inventory inv on dls.cInvCode=inv.cInvCode where dDate>='"
 			+ (startTimeMonth) + "' and dDate<='" + (endTimeMonth) + "' and dl.cpersoncode='"+personcode+"' group by dls.cinvcode,inv.cInvName";
-			List invList = EchartsUtil.getInvListByInvSql(invStatSql, "value desc", "各产品销售金额（万元）", "产品", "销售金额（万元）");
+			List invList = EchartsUtil.getInvListByInvSql(invStatSql, "value desc", "各产品订单金额（万元）", "产品", "订单金额（万元）");
 			
 			// 按客户统计
 			String custStatSql = "select round(isnull(sum(iNatSum)/10000,0),4) value ,cust.cCusName name,dl.cCusCode code from So_SoMain dl left join So_SoDetails dls on dl.csocode=dls.csocode left join customer cust on dl.cCusCode=cust.cCusCode left join inventory inv on dls.cinvcode=inv.cinvcode where dDate>='"
 			+ (startTimeMonth) + "' and dDate<='" + (endTimeMonth) + "' and dl.cpersoncode='"+personcode+"' group by dl.cCusCode,cust.cCusName";
-			List custList = EchartsUtil.getInvListByInvSql(custStatSql, "value desc", "各客户销售金额（万元）", "客户", "销售金额（万元）");
+			List custList = EchartsUtil.getInvListByInvSql(custStatSql, "value desc", "各客户订单金额（万元）", "客户", "订单金额（万元）");
 	%>
 	<body>
 		<form name="pageForm" id="pageForm" method="post" action="<%=request.getContextPath()%>/SaleStat/person_stat.jsp">
@@ -104,7 +104,7 @@
 				<tr>
 					<td align="center">
 						<a href="<%=request.getContextPath()%>/SaleStat/person_stat.jsp?iyear=<%=iPreYear%>&imonth=<%=iPreMonth%>&personcode=<%=personcode%>"><input type="button" class="button button_left" title="上月" /> </a> &nbsp;
-						<span style="color: #2281c8; font-size: 16px;"><%=person.getCpersonname()+" "+iyear+"年"+imonth+"月"%> 销售情况</span>&nbsp;
+						<span style="color: #2281c8; font-size: 16px;"><%=person.getCpersonname()+" "+iyear+"年"+imonth+"月"%> 订单情况</span>&nbsp;
 						<a href="<%=request.getContextPath()%>/SaleStat/person_stat.jsp?iyear=<%=iNextYear%>&imonth=<%=iNextMonth%>&personcode=<%=personcode%>"><input type="button" class="button button_right" title="下月" /> </a>
 					</td>
 				</tr>
@@ -119,7 +119,7 @@
 			<table align="center" width="98%" class="title_table">
 				<tr>
 					<td style="text-align: left; color: #0055a8; border-bottom: 1px solid #dddddd;">
-						<%=imonth%>月份销售业绩
+						<%=imonth%>月份订单业绩
 					</td>
 				</tr>
 			</table>
@@ -132,7 +132,7 @@
 							</span>
 						</p>
 						<p>
-							月度销售单数
+							月度订单单数
 						</p>
 					</td>
 					<td width="33%">
@@ -142,7 +142,7 @@
 							</span>
 						</p>
 						<p>
-							月度销售数量
+							月度订单数量
 						</p>
 					</td>
 					<td width="33%">
@@ -152,7 +152,7 @@
 							</span>
 						</p>
 						<p>
-							月度销售金额（万元）
+							月度订单金额（万元）
 						</p>
 					</td>
 				</tr>
@@ -198,14 +198,14 @@
 			<table align="center" width="98%" class="title_table">
 				<tr>
 					<td style="text-align: left; color: #0055a8; border-bottom: 1px solid #dddddd;">
-						该业务员近12个月销售趋势
+						该业务员近12个月订单趋势
 					</td>
 				</tr>
 			</table>
 			<table id="12month_table" align="center" width="98%">
 			<tr>
 				<td align="center">
-					<%=EchartsUtil.createEchartByInvSql(SalePortalUtil.getRecentMonthSql4personcount(iyear+"",imonth+"",12,null,null,personcode), "", "", new String[]{"销售金额","销售金额"}, new String[]{"近12个月销售金额（万元）","去年同期销售金额（万元）"}, EchartsUtil.BAR, EchartsUtil.THEME_MACARONS, EchartsUtil.COLOR_BLUE, 300, 0, "openTab('业务员 "+personname+" '+params.data.name+' 销售情况','"+request.getContextPath()+"/SaleStat/person_stat.jsp?personcode="+personcode+"&iyear='+params.data.name.substr(0,4)+'&imonth='+params.data.name.substr(5,6))")%>
+					<%=EchartsUtil.createEchartByInvSql(SalePortalUtil.getRecentMonthSql4personcount(iyear+"",imonth+"",12,null,null,personcode), "", "", new String[]{"订单金额","订单金额"}, new String[]{"近12个月订单金额（万元）","去年同期订单金额（万元）"}, EchartsUtil.BAR, EchartsUtil.THEME_MACARONS, EchartsUtil.COLOR_BLUE, 300, 0, "openTab('业务员 "+personname+" '+params.data.name+' 订单情况','"+request.getContextPath()+"/SaleStat/person_stat.jsp?personcode="+personcode+"&iyear='+params.data.name.substr(0,4)+'&imonth='+params.data.name.substr(5,6))")%>
 				</td>
 			</tr>
 			</table>
@@ -215,7 +215,7 @@
 		<script type="text/javascript">
 			function dislist(invcode,invname)
 			{
-				openTab('业务员 <%=personname+" "+iyear+"/"+imonth+" " %>'+invname+' 销售明细','<%=request.getContextPath() %>/Proxy/Servlet?servlet=VDispatchLists&method=list4this&ddate_min=<%=startTimeMonth %>&ddate_max=<%=endTimeMonth %>&ccuscode=<%=personcode %>&cinvcode='+invcode);
+				openTab('业务员 <%=personname+" "+iyear+"/"+imonth+" " %>'+invname+' 订单明细','<%=request.getContextPath() %>/Proxy/Servlet?servlet=VDispatchLists&method=list4this&ddate_min=<%=startTimeMonth %>&ddate_max=<%=endTimeMonth %>&ccuscode=<%=personcode %>&cinvcode='+invcode);
 			}
 		</script>
 	</body>

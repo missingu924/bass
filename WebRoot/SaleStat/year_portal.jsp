@@ -10,6 +10,7 @@
 <%@page import="com.u8.util.SalePortalUtil"%>
 <%@page import="com.wuyg.dictionary.DictionaryUtil"%>
 <%@page import="java.util.Date"%>
+<%@page import="com.bass.searchcondition.VSaleCustInvStatSearchCondition"%>
 <html>
 	<head>
 		<base target="_self" />
@@ -25,41 +26,41 @@
 			AuthUserObj user = (AuthUserObj) request.getSession().getAttribute(SystemConstant.AUTH_USER_INFO);
 
 			// 开始时间、结束时间
-			int iYear = StringUtil.parseInt(StringUtil.getNotEmptyStr(request.getParameter("iYear"), TimeUtil.nowTime2str("yyyy"))) ;
-			int iMonth = StringUtil.parseInt(StringUtil.getNotEmptyStr(request.getParameter("iMonth"), TimeUtil.nowTime2str("MM"))) ;
+			int iyear = StringUtil.parseInt(StringUtil.getNotEmptyStr(request.getParameter("iyear"), TimeUtil.nowTime2str("yyyy"))) ;
+			int imonth = StringUtil.parseInt(StringUtil.getNotEmptyStr(request.getParameter("imonth"), TimeUtil.nowTime2str("MM"))) ;
 			
-			String startTimeYear = iYear+"-01-01 00:00:00";
-			String endTimeYear = iYear+"-12-31 23:59:59";
+			String startTimeYear = iyear+"-01-01 00:00:00";
+			String endTimeYear = iyear+"-12-31 23:59:59";
 			
-			String startTimeMonth = TimeUtil.date2str(TimeUtil.getTheFirstDayOfTheMonth(iYear,iMonth), "yyyy-MM-dd 00:00:00");;
-			String endTimeMonth = TimeUtil.date2str(TimeUtil.getTheLastDayOfTheMonth(iYear,iMonth), "yyyy-MM-dd 23:59:59");
+			String startTimeMonth = TimeUtil.date2str(TimeUtil.getTheFirstDayOfTheMonth(iyear,imonth), "yyyy-MM-dd 00:00:00");;
+			String endTimeMonth = TimeUtil.date2str(TimeUtil.getTheLastDayOfTheMonth(iyear,imonth), "yyyy-MM-dd 23:59:59");
 			
 			// 上月、下月
-			int iPreYear = iYear;
-			int iPreMonth = iMonth;
-			int iNextYear = iYear;
-			int iNextMonth = iMonth;
+			int iPreYear = iyear;
+			int iPreMonth = imonth;
+			int iNextYear = iyear;
+			int iNextMonth = imonth;
 			
-			if(iMonth==1)
+			if(imonth==1)
 			{
 		iPreMonth = 12;
-		iPreYear = iYear-1;
-		iNextMonth = iMonth+1;
-		iNextYear = iYear;
+		iPreYear = iyear-1;
+		iNextMonth = imonth+1;
+		iNextYear = iyear;
 			}
-			else if(iMonth==12)
+			else if(imonth==12)
 			{
-		iPreMonth = iMonth-1;
-		iPreYear = iYear;
+		iPreMonth = imonth-1;
+		iPreYear = iyear;
 		iNextMonth = 1;
-		iNextYear = iYear+1;
+		iNextYear = iyear+1;
 			}
 			else
 			{
-		iPreMonth = iMonth-1;
-		iPreYear = iYear;
-		iNextMonth = iMonth+1;
-		iNextYear = iYear;
+		iPreMonth = imonth-1;
+		iPreYear = iyear;
+		iNextMonth = imonth+1;
+		iNextYear = iyear;
 			}
 			
 			// TOPN
@@ -72,9 +73,9 @@
 		<table align="center" width="98%">
 			<tr>
 				<td align="center">
-					<a href="<%=request.getContextPath()%>/SaleStat/year_portal.jsp?iYear=<%=iPreYear%>&iMonth=<%=iPreMonth%>"><input type="button" class="button button_left" title="截止到上月" /></a> 
-					&nbsp;<span style="color:#000000;font-size:16px;font-weight:bold"><%=iYear%>年销售概览（截止到<%=iYear%>年<%=iMonth%>月）</span>&nbsp;
-					<a href="<%=request.getContextPath()%>/SaleStat/year_portal.jsp?iYear=<%=iNextYear%>&iMonth=<%=iNextMonth%>"><input type="button" class="button button_right" title="截止到下月" /></a>
+					<a href="<%=request.getContextPath()%>/SaleStat/year_portal.jsp?iyear=<%=iPreYear%>&imonth=<%=iPreMonth%>"><input type="button" class="button button_left" title="截止到上月" /></a> 
+					&nbsp;<span style="color:#000000;font-size:16px;font-weight:bold"><%=iyear%>年订单概览（截止到<%=iyear%>年<%=imonth%>月）</span>&nbsp;
+					<a href="<%=request.getContextPath()%>/SaleStat/year_portal.jsp?iyear=<%=iNextYear%>&imonth=<%=iNextMonth%>"><input type="button" class="button button_right" title="截止到下月" /></a>
 				</td>
 			</tr>
 		</table>
@@ -83,72 +84,72 @@
 			<tr>
 				<td style="text-align: left; color: #0055a8; border-bottom: 1px solid #dddddd;">
 					<img src="../images/svg/heavy/green/32/pie_chart.png" width="16" height="16" align="middle" />
-					年度销售业绩概览
+					年度订单业绩概览
 				</td>
 			</tr>
 		</table>
 		<table id="overview_table" width="98%" align="center" class="table_goal">
-			<tr>
-				<td width="33%" height="120">
+			<tr onclick="custInvStat()">
+				<td width="33%" height="100">
 					<p>
-						<span class="lcd_red_big">
+						<span class="lcd_greendark_big">
 						<%=StringUtil.formatDouble(EchartsUtil.getValueByInvSql("select count(distinct dl.csocode) value from So_SoMain dl left join So_SoDetails dls on dl.cSoCode=dls.cSoCode where dDate>='"+startTimeYear+"' and dDate<='"+endTimeMonth+"'"), 0)%>
 						</span>
 					</p>
 					<p>
-						当年累计销售单数
+						当年累计订单单数
 					</p>
 				</td>
 				<td width="33%">
 					<p>
-						<span class="lcd_red_big">
+						<span class="lcd_greendark_big">
 						<%=StringUtil.formatDouble(EchartsUtil.getValueByInvSql("select isnull(sum(iQuantity),0) value from So_SoMain dl left join So_SoDetails dls on dl.cSoCode=dls.cSoCode where dDate>='"+startTimeYear+"' and dDate<='"+endTimeMonth+"'"), 0)%>
 						</span>
 					</p>
 					<p>
-						当年累计销售数量
+						当年累计订单数量
 					</p>
 				</td>
 				<td width="33%">
 					<p>
-						<span class="lcd_red_big">
+						<span class="lcd_greendark_big">
 						<%=StringUtil.formatDouble(EchartsUtil.getValueByInvSql("select isnull(sum(iNatSum)/10000,0) value from So_SoMain dl left join So_SoDetails dls on dl.cSoCode=dls.cSoCode where dDate>='"+startTimeYear+"' and dDate<='"+endTimeMonth+"'"), 2)%>
 						</span>
 					</p>
 					<p>
-						当年累计销售金额（万元）
+						当年累计订单金额（万元）
 					</p>
 				</td>
 			</tr>
 			<tr>
-				<td width="33%" height="100" >
+				<td width="33%" height="100" onclick="invStat('')">
 					<p>
-						<span class="lcd_red_big">
+						<span class="lcd_greendark_big">
 						<%=StringUtil.formatDouble(EchartsUtil.getValueByInvSql("select count(distinct cinvcode) value from So_SoMain dl left join So_SoDetails dls on dl.cSoCode=dls.cSoCode where dDate>='"+startTimeYear+"' and dDate<='"+endTimeMonth+"'"), 0)%>
 						</span>
 					</p>
 					<p>
-						当年累计销售产品种数
+						当年累计订单产品种数
 					</p>
 				</td>
-				<td width="33%">
+				<td width="33%" onclick="custStat('')">
 					<p>
-						<span class="lcd_red_big">
+						<span class="lcd_greendark_big">
 						<%=StringUtil.formatDouble(EchartsUtil.getValueByInvSql("select count(distinct ccuscode) value from So_SoMain dl left join So_SoDetails dls on dl.cSoCode=dls.cSoCode where dDate>='"+startTimeYear+"' and dDate<='"+endTimeMonth+"'"), 0)%>
 						</span>
 					</p>
 					<p>
-						当年累计销售客户数
+						当年累计订单客户数
 					</p>
 				</td>
-				<td width="33%">
+				<td width="33%" onclick="personStat('')">
 					<p>
-						<span class="lcd_red_big">
+						<span class="lcd_greendark_big">
 						<%=StringUtil.formatDouble(EchartsUtil.getValueByInvSql("select count(distinct cpersoncode) value from So_SoMain dl left join So_SoDetails dls on dl.cSoCode=dls.cSoCode where dDate>='"+startTimeYear+"' and dDate<='"+endTimeMonth+"'"), 0)%>
 						</span>
 					</p>
 					<p>
-						当年累计销售业务员数
+						当年累计订单业务员数
 					</p>
 				</td>
 			</tr>
@@ -158,61 +159,101 @@
 			<tr>
 				<td style="text-align: left; color: #0055a8; border-bottom: 1px solid #dddddd;">
 					<img src="../images/svg/heavy/green/32/stats.png" width="16" height="16" align="middle" />
-					近<%=recentYears%>年销售情况
-				</td>
-			</tr>
-		</table>
-		<table id="5year_table" align="center" width="98%">
-			<tr>
-				<td align="center">
-					<%=EchartsUtil.createEchartByInvSql(SalePortalUtil.getRecentYearSql(iYear+"", recentYears), "", "", new String[]{"销售额"}, new String[]{"近"+recentYears+"年销售额（万元）"}, EchartsUtil.BAR, EchartsUtil.THEME_ROMA, EchartsUtil.COLOR_BLUE, 300, 0, null)%>
-				</td>
-			</tr>
-		</table>
-		
-		<table align="center" width="98%" class="title_table">
-			<tr>
-				<td style="text-align: left; color: #0055a8; border-bottom: 1px solid #dddddd;">
-					<img src="../images/svg/heavy/green/32/stats.png" width="16" height="16" align="middle" />
-					年度销售排名
+					年度订单排名
 				</td>
 			</tr>
 		</table>
 		<table id="year_topn_table" align="center" width="98%">
 			<tr>
 				<td align="center">
-					<%=EchartsUtil.createEchartByInvSql(SalePortalUtil.getTopnInventorySql(startTimeYear,endTimeYear,topn), "value desc", "", "产品", "年度"+topn+"大产品（万元）", EchartsUtil.BAR_V, EchartsUtil.THEME_SHINE, EchartsUtil.COLOR_PURPLE, 400, 400, null)%>
+					<%=EchartsUtil.createEchartByInvSql(SalePortalUtil.getTopnInventorySql(startTimeYear,endTimeYear,topn), "value desc", "", "产品", "年度"+topn+"大产品（万元）", EchartsUtil.BAR_V, EchartsUtil.THEME_SHINE, EchartsUtil.COLOR_PURPLE, 400, 400, "invStat(params.data.code)")%>
 				</td>
 				<td align="center">
-					<%=EchartsUtil.createEchartByInvSql(SalePortalUtil.getTopnCustomerSql(startTimeYear,endTimeYear,topn), "value desc", "", "客户", "年度"+topn+"大客户（万元）", EchartsUtil.BAR_V, EchartsUtil.THEME_SHINE, EchartsUtil.COLOR_GREEN, 400, 400, null)%>
+					<%=EchartsUtil.createEchartByInvSql(SalePortalUtil.getTopnCustomerSql(startTimeYear,endTimeYear,topn), "value desc", "", "客户", "年度"+topn+"大客户（万元）", EchartsUtil.BAR_V, EchartsUtil.THEME_SHINE, EchartsUtil.COLOR_GREEN, 400, 400, "custStat(params.data.code)")%>
 				</td>
 				<td align="center">
-					<%=EchartsUtil.createEchartByInvSql(SalePortalUtil.getTopnPersonSql(startTimeYear,endTimeYear,topn), "value desc", "", "业务员", "年度"+topn+"大业务员（万元）", EchartsUtil.BAR_V, EchartsUtil.THEME_SHINE, EchartsUtil.COLOR_CYAN, 400, 300, null)%>
+					<%=EchartsUtil.createEchartByInvSql(SalePortalUtil.getTopnPersonSql(startTimeYear,endTimeYear,topn), "value desc", "", "业务员", "年度"+topn+"大业务员（万元）", EchartsUtil.BAR_V, EchartsUtil.THEME_SHINE, EchartsUtil.COLOR_CYAN, 400, 300, "personStat(params.data.code)")%>
 				</td>
 			</tr>
 			<tr>
 				<td style="font-size:12px;color:#999999;text-align:center;vertical-align:top" height="40px">
-					<a href="#" onclick="openTab('产品销售统计','<%=request.getContextPath() %>/Proxy/Servlet?servlet=VDispatchCustInvStat&method=list4this&groupBy=GROUP_BY_INV&ddate_min=<%=startTimeYear %>&ddate_max=<%=endTimeYear %>')">更多…</a>
+					<a href="#" onclick="invStat('')">更多…</a>
 				</td>
 				<td style="font-size:12px;color:#999999;text-align:center;vertical-align:top">
-					<a href="#" onclick="openTab('客户销售统计','<%=request.getContextPath() %>/Proxy/Servlet?servlet=VDispatchCustInvStat&method=list4this&groupBy=GROUP_BY_CUST&ddate_min=<%=startTimeYear %>&ddate_max=<%=endTimeYear %>')">更多…</a>
+					<a href="#" onclick="custStat('')">更多…</a>
 				</td>
 				<td style="font-size:12px;color:#999999;text-align:center;vertical-align:top">
-					<a href="#" onclick="">更多…</a>
+					<a href="#" onclick="personStat('')">更多…</a>
 				</td>
 			</tr>
 		</table>
+		
+		<table align="center" width="98%" class="title_table">
+			<tr>
+				<td style="text-align: left; color: #0055a8; border-bottom: 1px solid #dddddd;">
+					<img src="../images/svg/heavy/green/32/stats.png" width="16" height="16" align="middle" />
+					近<%=recentMonths%>个月订单趋势
+				</td>
+			</tr>
+		</table>
+		<table id="12month_table" align="center" width="98%">
+			<tr>
+				<td align="center">
+					<%=EchartsUtil.createEchartByInvSql(SalePortalUtil.getRecentMonthSql4isum(iyear+"",imonth+"",recentMonths,null,null,null), "", "", new String[]{"订单金额","订单金额"}, new String[]{"订单金额（万元）","去年同期订单金额"}, EchartsUtil.BAR, EchartsUtil.THEME_MACARONS, EchartsUtil.COLOR_GREEN_DARK, 300, 0, "openTab(params.data.name+' 订单概览','"+request.getContextPath()+"/SaleStat/month_portal.jsp?iyear='+params.data.name.substr(0,4)+'&imonth='+params.data.name.substr(5,6))")%>
+				</td>
+			</tr>
+		</table>
+		
+		<table align="center" width="98%" class="title_table">
+			<tr>
+				<td style="text-align: left; color: #0055a8; border-bottom: 1px solid #dddddd;">
+					<img src="../images/svg/heavy/green/32/stats.png" width="16" height="16" align="middle" />
+					近<%=recentYears%>年订单情况
+				</td>
+			</tr>
+		</table>
+		<table id="5year_table" align="center" width="98%">
+			<tr>
+				<td align="center">
+					<%=EchartsUtil.createEchartByInvSql(SalePortalUtil.getRecentYearSql(iyear+"", recentYears), "", "", new String[]{"订单额"}, new String[]{"近"+recentYears+"年订单额（万元）"}, EchartsUtil.BAR, EchartsUtil.THEME_ROMA, EchartsUtil.COLOR_GREEN_DARK, 300, 0,  "yearPortal(params.data.name)")%>
+				</td>
+			</tr>
+		</table>
+		
+		
 		</form>
 	</body>
 	
 	<script type="text/javascript">
-		$("#iYear").change(function(){
+		$("#iyear").change(function(){
 			$("#pageForm").submit();
 		});
 		
-		$("#iMonth").change(function(){
+		$("#imonth").change(function(){
 			$("#pageForm").submit();
 		});
+		
+		function invStat(invcode)
+		{
+			openTab('<%=iyear+"年"%> 产品订单统计','<%=request.getContextPath() %>/Proxy/Servlet?servlet=VSaleCustInvStat&method=list4this&groupBy=<%=VSaleCustInvStatSearchCondition.GROUP_BY_INV%>&ddate_min=<%=startTimeYear%>&ddate_max=<%=endTimeMonth%>&cinvcode='+invcode);
+		}
+		function custStat(custcode)
+		{
+			openTab('<%=iyear+"年"%> 客户订单统计','<%=request.getContextPath() %>/Proxy/Servlet?servlet=VSaleCustInvStat&method=list4this&groupBy=<%=VSaleCustInvStatSearchCondition.GROUP_BY_CUST%>&ddate_min=<%=startTimeYear%>&ddate_max=<%=endTimeMonth%>&ccuscode='+custcode);
+		}
+		function personStat(personcode)
+		{
+			openTab('<%=iyear+"年"%> 业务员订单统计','<%=request.getContextPath() %>/Proxy/Servlet?servlet=VSaleCustInvStat&method=list4this&groupBy=<%=VSaleCustInvStatSearchCondition.GROUP_BY_PERSON%>&ddate_min=<%=startTimeYear%>&ddate_max=<%=endTimeMonth%>&cpersoncode='+personcode);
+		}
+		function custInvStat()
+		{
+			openTab('<%=iyear+"年"%> 客户产品订单统计','<%=request.getContextPath() %>/Proxy/Servlet?servlet=VSaleCustInvStat&method=list4this&groupBy=<%=VSaleCustInvStatSearchCondition.GROUP_BY_CUST_INV%>&ddate_min=<%=startTimeYear%>&ddate_max=<%=endTimeMonth%>');
+		}
+		
+		function yearPortal(iyear)
+		{
+			openTab(iyear+'年 年度订单概览','<%=request.getContextPath() %>/SaleStat/year_portal.jsp?iyear='+iyear+'&imonth=12');
+		}
 	</script>
 </html>
 

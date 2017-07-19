@@ -19,7 +19,7 @@
 		<DictConfig dbName="U8_DB" dictShowName="U8仓库字典" dictName="U8仓库字典" dictTable="warehouse" dictKeyCol="cwhcode" dictValueCol="cwhname" dictOrderByCol="cwhcode" filter=""/>
 		<DictConfig dbName="U8_DB" dictShowName="U8客户字典" dictName="U8客户字典" dictTable="customer" dictKeyCol="ccuscode" dictValueCol="ccusabbname" dictOrderByCol="ccusabbname" filter=""/>
 		<DictConfig dbName="U8_DB" dictShowName="U8人员字典" dictName="U8人员字典" dictTable="person" dictKeyCol="cPersonCode" dictValueCol="cPersonName" dictOrderByCol="cPersonName" filter=""/>
-		<DictConfig dbName="U8_DB" dictShowName="U8销售类型字典" dictName="U8销售类型字典" dictTable="saletype" dictKeyCol="cstcode" dictValueCol="cstname" dictOrderByCol="cstname" filter=""/>
+		<DictConfig dbName="U8_DB" dictShowName="U8订单类型字典" dictName="U8订单类型字典" dictTable="saletype" dictKeyCol="cstcode" dictValueCol="cstname" dictOrderByCol="cstname" filter=""/>
 		<DictConfig dbName="U8_DB" dictShowName="U8操作员字典" dictName="U8操作员字典" dictTable="ua_user_ex" dictKeyCol="cUser_Id" dictValueCol="cUser_name" dictOrderByCol="cUser_name" filter=""/>
 		<DictConfig dbName="U8_DB" dictShowName="U8项目大类字典" dictName="U8项目大类字典" dictTable="fitem" dictKeyCol="citem_class" dictValueCol="citem_name" dictOrderByCol="citem_class" filter=""/>
 	

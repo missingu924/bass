@@ -232,7 +232,7 @@ public class DispatchlistsObj extends BaseDbObj
 	@Override
 	public String getCnName()
 	{
-		return "销售发货单子表";
+		return "订单发货单子表";
 	}
 
 	@Override

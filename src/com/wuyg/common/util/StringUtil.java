@@ -431,6 +431,17 @@ public class StringUtil
 		return String.format("%." + scale + "f", f1);
 	}
 
+	public static String formatDoublePercent(Double value, int scale)
+	{
+		if (value == null)
+		{
+			return "";
+		}
+		BigDecimal bg = new BigDecimal(value);
+		double f1 = bg.setScale(scale, BigDecimal.ROUND_HALF_UP).doubleValue();
+		return String.format("%." + scale + "f", f1) + "%";
+	}
+
 	/**
 	 * 改造in条件，每1000个数据项组成一个
 	 * 

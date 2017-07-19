@@ -89,8 +89,6 @@ public class VDispatchCustInvStatServlet extends AbstractBaseServletTemplate
 
 	private String getSql() throws Exception
 	{
-		String sql = getBaseSql();
-
 		String where = " 1=1 ";
 		where += MyBeanUtils.getWhereByBaseSearchCondition(domainSearchCondition, getDomainDao().getTableMetaData(), domainSearchCondition.isUseLike());
 
@@ -100,19 +98,12 @@ public class VDispatchCustInvStatServlet extends AbstractBaseServletTemplate
 			orderBy = StringUtil.getNotEmptyStr(domainInstance.findDefaultOrderBy());
 		}
 
-		if (!StringUtil.isEmpty(where))
-		{
-			sql += " where " + where;
-		}
-		if (!StringUtil.isEmpty(orderBy))
-		{
-			sql += " order by " + orderBy;
-		}
+		String sql = getBaseSql(where, orderBy);
 
 		return sql;
 	}
 
-	private String getBaseSql()
+	private String getBaseSql(String where, String orderBy)
 	{
 		StringBuffer sql = new StringBuffer();
 
@@ -151,13 +142,13 @@ public class VDispatchCustInvStatServlet extends AbstractBaseServletTemplate
 		if (condition.GROUP_BY_INV.equalsIgnoreCase(condition.getGroupBy()))
 		{
 			sql.append(" 	'' cCusCode, \n");
-			sql.append(" 	dls.cInvCode, \n");
+			sql.append(" 	dl.cInvCode, \n");
 			sql.append(" 	'' cPersonCode, \n");
 		}
 		if (condition.GROUP_BY_CUST_INV.equalsIgnoreCase(condition.getGroupBy()))
 		{
 			sql.append(" 	dl.cCusCode, \n");
-			sql.append(" 	dls.cInvCode, \n");
+			sql.append(" 	dl.cInvCode, \n");
 			sql.append(" 	'' cPersonCode, \n");
 		}
 		if (condition.GROUP_BY_PERSON.equalsIgnoreCase(condition.getGroupBy()))
@@ -168,15 +159,14 @@ public class VDispatchCustInvStatServlet extends AbstractBaseServletTemplate
 		}
 
 		sql.append(" 	COUNT(*) iCount, \n");
-		sql.append(" 	isnull(sum(dls.iQuantity),0) iQuantity, \n");
-		sql.append(" 	isnull(sum(dls.iNatSum)/10000,0) iSum \n");
+		sql.append(" 	isnull(sum(dl.iQuantity),0) iQuantity, \n");
+		sql.append(" 	isnull(sum(dl.iNatSum)/10000,0) iSum \n");
 		sql.append(" 	from  \n");
-		sql.append(" 	DispatchList dl \n");
-		sql.append(" 	left join \n");
-		sql.append(" 	DispatchLists dls \n");
-		sql.append(" 	on dl.DLID=dls.DLID \n");
-		sql.append(" 	where \n");
-		sql.append(" 	dls.cInvCode is not null \n");
+		sql.append(" 	(select dl.dDate,dl.cCusCode,dl.cPersonCode,dls.cInvCode,inv.cInvName,cust.cCusName,ps.cPersonName,dls.iQuantity,dls.iNatSum from dispatchlist dl left join DispatchLists dls on dl.DLID=dls.DLID left join Inventory inv on dls.cInvCode=inv.cInvCode left join Customer cust on dl.cCusCode=cust.cCusCode left join Person ps on dl.cPersonCode=ps.cPersonCode) dl \n");
+		if (!StringUtil.isEmpty(where))
+		{
+			sql.append(" 	 where " + where + "\n");
+		}
 		// date clause
 		if (condition.getDdate_min() != null)
 		{
@@ -193,11 +183,11 @@ public class VDispatchCustInvStatServlet extends AbstractBaseServletTemplate
 			sql.append(" 	dl.cCusCode \n");
 		} else if (condition.GROUP_BY_INV.equalsIgnoreCase(condition.getGroupBy()))
 		{
-			sql.append(" 	dls.cInvCode \n");
+			sql.append(" 	dl.cInvCode \n");
 		} else if (condition.GROUP_BY_CUST_INV.equalsIgnoreCase(condition.getGroupBy()))
 		{
 			sql.append(" 	dl.cCusCode, \n");
-			sql.append(" 	dls.cInvCode \n");
+			sql.append(" 	dl.cInvCode \n");
 		}
 		else if (condition.GROUP_BY_PERSON.equalsIgnoreCase(condition.getGroupBy()))
 		{
@@ -218,6 +208,11 @@ public class VDispatchCustInvStatServlet extends AbstractBaseServletTemplate
 		sql.append(" left join Person ps \n");
 		sql.append(" on dl.cPersonCode=ps.cPersonCode \n");
 		sql.append(" ) t \n");
+		
+		if (!StringUtil.isEmpty(orderBy))
+		{
+			sql.append(" order by " + orderBy + " \n");
+		}
 
 		return sql.toString();
 	}

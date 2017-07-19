@@ -166,7 +166,7 @@ public class RdrecordObj extends BaseDbObj
 		pros.put("cdepcode", "部门编码");
 		pros.put("cpersoncode", "业务员编码");
 		pros.put("cptcode", "采购类型编码");
-		pros.put("cstcode", "销售类型编码");
+		pros.put("cstcode", "订单类型编码");
 		pros.put("ccuscode", "ccuscode");
 		pros.put("cvencode", "供应商编码");
 		pros.put("cordercode", "cordercode");
