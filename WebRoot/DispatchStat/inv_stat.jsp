@@ -45,22 +45,22 @@
 
 			if (imonth == 1)
 			{
-		iPreMonth = 12;
-		iPreYear = iyear - 1;
-		iNextMonth = imonth + 1;
-		iNextYear = iyear;
+				iPreMonth = 12;
+				iPreYear = iyear - 1;
+				iNextMonth = imonth + 1;
+				iNextYear = iyear;
 			} else if (imonth == 12)
 			{
-		iPreMonth = imonth - 1;
-		iPreYear = iyear;
-		iNextMonth = 1;
-		iNextYear = iyear + 1;
+				iPreMonth = imonth - 1;
+				iPreYear = iyear;
+				iNextMonth = 1;
+				iNextYear = iyear + 1;
 			} else
 			{
-		iPreMonth = imonth - 1;
-		iPreYear = iyear;
-		iNextMonth = imonth + 1;
-		iNextYear = iyear;
+				iPreMonth = imonth - 1;
+				iPreYear = iyear;
+				iNextMonth = imonth + 1;
+				iNextYear = iyear;
 			}
 			
 			// 产品编码或名称
@@ -70,20 +70,22 @@
 			InventoryObj inv = new InventoryObj();
 			if(invname!=null)
 			{
-		inv.setCinvname(invname);
+				inv.setCinvname(invname);
 			}
 			if(invcode!=null)
 			{
-		inv.setCinvcode(invcode);
+				inv.setCinvcode(invcode);	
 			}
 			BaseDbObj dbObj = inv.searchByInstance(SystemConstant.U8_DB);
 			if(dbObj!=null)
 			{
-		inv = (InventoryObj) dbObj;
-		
-		invcode = inv.getCinvcode();
-		invname = inv.getCinvname();
+				inv = (InventoryObj) dbObj;
+				
+				invcode = inv.getCinvcode();
+				invname = inv.getCinvname();
 			}
+			
+			int recentYears = 10; //近多少年的统计
 			
 			// 按客户统计
 			String custStatSql = "select round(isnull(sum(iNatSum)/10000,0),4) value ,cust.cCusName name,dl.cCusCode code from DispatchList dl left join DispatchLists dls on dl.DLID=dls.DLID left join customer cust on dl.cCusCode=cust.cCusCode left join inventory inv on dls.cinvcode=inv.cinvcode where dDate>='"
@@ -114,7 +116,7 @@
 			<table align="center" width="98%" class="title_table">
 				<tr>
 					<td style="text-align: left; color: #0055a8; border-bottom: 1px solid #dddddd;">
-						<%=imonth%>月份发货业绩
+						<%=imonth%>月份 发货业绩
 					</td>
 				</tr>
 			</table>
@@ -167,7 +169,7 @@
 			<table align="center" width="98%" class="title_table">
 				<tr>
 					<td style="text-align: left; color: #0055a8; border-bottom: 1px solid #dddddd;">
-						<%=imonth%>月份产品发货流向
+						该产品 <%=imonth%>月份 客户发货流向
 					</td>
 				</tr>
 			</table>
@@ -185,7 +187,7 @@
 			<table align="center" width="98%" class="title_table">
 				<tr>
 					<td style="text-align: left; color: #0055a8; border-bottom: 1px solid #dddddd;">
-						该产品近12个月发货趋势
+						该产品 近12个月 月度发货趋势
 					</td>
 				</tr>
 			</table>
@@ -200,7 +202,7 @@
 			<table align="center" width="98%" class="title_table">
 				<tr>
 					<td style="text-align: left; color: #0055a8; border-bottom: 1px solid #dddddd;">
-						该产品近12个月平均单价
+						该产品 近12个月 月度平均单价
 					</td>
 				</tr>
 			</table>
@@ -208,6 +210,21 @@
 			<tr>
 				<td align="center">
 					<%=EchartsUtil.createEchartByInvSql(DispatchPortalUtil.getRecentMonthAvgPriceSql(iyear+"",imonth+"",12,invcode), "", "", new String[]{"平均单价"}, new String[]{"近12个月平均单价（元/"+inv.getCcomunitname()+"）"}, EchartsUtil.LINE, EchartsUtil.THEME_MACARONS, EchartsUtil.COLOR_ORANGE, 200, 0, null)%>
+				</td>
+			</tr>
+			</table>
+			
+			<table align="center" width="98%" class="title_table">
+				<tr>
+					<td style="text-align: left; color: #0055a8; border-bottom: 1px solid #dddddd;">
+						该产品 近<%=recentYears%>年 年度发货趋势
+					</td>
+				</tr>
+			</table>
+			<table id="12month_table" align="center" width="98%">
+			<tr>
+				<td align="center">
+					<%=EchartsUtil.createEchartByInvSql(DispatchPortalUtil.getRecentYearSql(iyear+"",recentYears,invcode,null,null), "", "", new String[]{"发货金额"}, new String[]{"发货金额（万元）"}, EchartsUtil.BAR, EchartsUtil.THEME_MACARONS, EchartsUtil.COLOR_BLUE, 300, 0, "openTab('产品 "+invname+" '+params.data.name+' 发货情况','"+request.getContextPath()+"/DispatchStat/inv_stat_year.jsp?invcode="+invcode+"&iyear='+params.data.name.substr(0,4)+'&imonth='+params.data.name.substr(5,6))")%>
 				</td>
 			</tr>
 			</table>

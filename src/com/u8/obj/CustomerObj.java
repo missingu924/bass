@@ -170,7 +170,7 @@ public class CustomerObj extends BaseDbObj
 	@Override
 	public String findKeyColumnName()
 	{
-		return null;
+		return "ccusname";
 	}
 
 	@Override

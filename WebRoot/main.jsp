@@ -13,7 +13,7 @@
 %>
 <frameset rows="45,*,20" cols="*" frameborder="no" border="0" framespacing="0">
   <frame src="<%=systemEnName%>-header.jsp" name="topFrame" scrolling="no" noresize="noresize" id="topFrame" title="topFrame" />
-  <frameset cols="190,*" frameborder="no" border="0" framespacing="2" id="pageFrame" name="pageFrame">
+  <frameset cols="210,*" frameborder="no" border="0" framespacing="2" id="pageFrame" name="pageFrame">
     <frame src="<%=systemEnName%>-menu.jsp" name="leftFrame" scrolling="yes" id="leftFrame" title="leftFrame" border="0" framespacing="0"/>
     <frame src="<%=systemEnName%>-index.jsp" name="mainFrame" id="mainFrame" title="mainFrame"  border="0" framespacing="0" onload="top.leftFrame.eval('mainFrameLoaded()');"/>
   </frameset>

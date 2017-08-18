@@ -62,7 +62,7 @@
 			<!-- 工具栏 --> 
 			<table class="search_table" align="center" width="98%"> 
 				<tr> 
-					<td style="width:200px"><%=domainInstance.getCnName(domainSearchCondition.getGroupBy()) %></td>  
+					<td style="width:220px"><%=domainInstance.getCnName(domainSearchCondition.getGroupBy()) %></td>  
 					<td>年份<%=DictionaryUtil.getSelectHtml("年字典","iyear",iyear+"",null,false)%></td>
 					<td> 
 						<input name="searchButton" type="button" class="button button_set" value="条件" onClick="$('#search_condition_table').toggle();$('#showSearchConditionTable').val(!$('#search_condition_table').is(':hidden'));">

@@ -63,6 +63,8 @@
 				custname = cust.getCcusname();
 			}
 			
+			int recentYears = 10; //近多少年的统计
+			
 			// 按产品统计
 			String invStatSql = "select round(isnull(sum(iNatSum)/10000,0),4) value ,inv.cInvName name, dls.cinvcode code from DispatchList dl left join DispatchLists dls on dl.DLID=dls.DLID left join inventory inv on dls.cInvCode=inv.cInvCode where dDate>='"
 			+ (startTimeYear) + "' and dDate<='" + (endTimeYear) + "' and dl.ccuscode='"+custcode+"' group by dls.cinvcode,inv.cInvName";
@@ -159,6 +161,21 @@
 			<tr>
 				<td align="center">
 					<%=EchartsUtil.createEchartByInvSql(DispatchPortalUtil.getRecentMonthSql4isum(iyear+"","12",12,null,custcode,null), "", "", new String[]{"发货金额","发货金额"}, new String[]{"月发货金额（万元）","去年同期发货金额（万元）"}, EchartsUtil.BAR, EchartsUtil.THEME_MACARONS, EchartsUtil.COLOR_BLUE, 300, 0, "openTab('客户 "+custname+" '+params.data.name+' 发货情况','"+request.getContextPath()+"/DispatchStat/cust_stat.jsp?custcode="+custcode+"&iyear='+params.data.name.substr(0,4)+'&imonth='+params.data.name.substr(5,6))")%>
+				</td>
+			</tr>
+			</table>
+			
+			<table align="center" width="98%" class="title_table">
+				<tr>
+					<td style="text-align: left; color: #0055a8; border-bottom: 1px solid #dddddd;">
+						该客户 近<%=recentYears%>年 年度发货趋势
+					</td>
+				</tr>
+			</table>
+			<table id="12month_table" align="center" width="98%">
+			<tr>
+				<td align="center">
+					<%=EchartsUtil.createEchartByInvSql(DispatchPortalUtil.getRecentYearSql(iyear+"",recentYears,null,custcode,null), "", "", new String[]{"发货金额"}, new String[]{"月发货金额（万元）"}, EchartsUtil.BAR, EchartsUtil.THEME_MACARONS, EchartsUtil.COLOR_BLUE, 300, 0, "openTab('客户 "+custname+" '+params.data.name+' 发货情况','"+request.getContextPath()+"/DispatchStat/cust_stat_year.jsp?custcode="+custcode+"&iyear='+params.data.name.substr(0,4)+'&imonth='+params.data.name.substr(5,6))")%>
 				</td>
 			</tr>
 			</table>

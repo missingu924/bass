@@ -62,7 +62,7 @@
 			// TOPN
 			int topn = 10; // topn
 			int recentMonths = 12; //近多少个月的统计
-			int recentYears = 5; //近多少年的统计
+			int recentYears = 10; //近多少年的统计
 	%>
 	<body>
 	<form name="pageForm" id="pageForm" method="post" action="<%=request.getContextPath()%>/DispatchStat/month_portal.jsp"> 
@@ -85,7 +85,7 @@
 			</tr>
 		</table>
 		<table id="overview_table" width="98%" align="center" class="table_goal">
-			<tr onclick="openTab('<%=iyear+"/"+imonth+" 发货分布"%>','<%=request.getContextPath()%>/DispatchStat/inv_cust_stat.jsp?stat_type=month&iyear=<%=iyear%>&imonth=<%=imonth%>')">
+			<tr onclick="custInvStat()">
 				<td width="33%" height="100">
 					<p>
 						<span class="lcd_blue_big">
@@ -209,6 +209,22 @@
 				</td>
 			</tr>
 		</table>
+		
+		<table align="center" width="98%" class="title_table">
+			<tr>
+				<td style="text-align: left; color: #0055a8; border-bottom: 1px solid #dddddd;">
+					<img src="../images/svg/heavy/green/32/stats.png" width="16" height="16" align="middle" />
+					近<%=recentYears%>年 年度发货趋势
+				</td>
+			</tr>
+		</table>
+		<table id="5year_table" align="center" width="98%">
+			<tr>
+				<td align="center">
+					<%=EchartsUtil.createEchartByInvSql(DispatchPortalUtil.getRecentYearSql(iyear+"", recentYears, null,null,null), "", "", new String[]{"发货额"}, new String[]{"近"+recentYears+"年发货额（万元）"}, EchartsUtil.BAR, EchartsUtil.THEME_MACARONS, EchartsUtil.COLOR_BLUE, 300, 0, "yearPortal(params.data.name)")%>
+				</td>
+			</tr>
+		</table>
 		</form>
 	</body>
 	
@@ -232,6 +248,14 @@
 		function personStat()
 		{
 			openTab('<%=iyear+"/"+imonth+""%> 业务员分布','<%=request.getContextPath() %>/DispatchStat/inv_cust_stat.jsp?info_type=person&iyear=<%=iyear%>&imonth=<%=imonth%>');
+		}
+		function custInvStat()
+		{
+			openTab('<%=iyear+"/"+imonth+" 发货分布"%>','<%=request.getContextPath()%>/DispatchStat/inv_cust_stat.jsp?iyear=<%=iyear%>&imonth=<%=imonth%>');
+		}
+		function yearPortal(iyear)
+		{
+			openTab(iyear+'年 年度发货概览','<%=request.getContextPath() %>/DispatchStat/year_portal.jsp?iyear='+iyear+'&imonth=12');
 		}
 	</script>
 </html>

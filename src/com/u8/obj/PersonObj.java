@@ -28,7 +28,7 @@ public class PersonObj extends BaseDbObj
 	@Override
 	public String findKeyColumnName()
 	{
-		return null;
+		return "cpersonname";
 	}
 
 	@Override

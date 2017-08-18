@@ -34,6 +34,145 @@ public class DispatchPortalUtil
 	{
 		return getRecentMonthSql(iYear, iMonth, recentMonths, invcode, custcode, personcode, VALUE_TYPE_PERSON_COUNT);
 	}
+	
+	public static String getMonthDaySql4isum(String iYear, String iMonth,String invcode, String custcode, String personcode)
+	{
+		return getMonthDaySql(iYear, iMonth, invcode, custcode, personcode, VALUE_TYPE_ISUM);
+	}
+
+	private static String getMonthDaySql(String iYear, String iMonth, String invcode, String custcode, String personcode, String valueType)
+	{
+		logger.info("==========月度每日发货情况==========");
+
+		StringBuffer sql = new StringBuffer();
+
+		Date day = TimeUtil.getTheLastDayOfTheMonth(Integer.parseInt(iYear), Integer.parseInt(iMonth));
+
+		String endTime = TimeUtil.date2str(day, "yyyy-MM-dd 23:59:59");
+
+		sql.append(" select \n");
+		sql.append(" top 31 \n");
+		sql.append(" t1.id, \n");
+		sql.append(" t1.iYear, \n");
+		sql.append(" t1.iMonth, \n");
+		sql.append(" t1.iDay, \n");
+		sql.append(" t1.name, \n");
+		sql.append(" t2.name name1, \n");
+		if (VALUE_TYPE_ISUM.equalsIgnoreCase(valueType))
+		{
+			sql.append(" isnull(t1.iSum,0) value, \n");
+			sql.append(" isnull(t2.iSum,0) value1 \n");
+		}
+		if (VALUE_TYPE_CUSTOMER_COUNT.equalsIgnoreCase(valueType))
+		{
+			sql.append(" isnull(t1.iCusCount,0) value, \n");
+			sql.append(" isnull(t2.iCusCount,0) value1 \n");
+		}
+		if (VALUE_TYPE_INVENTORY_COUNT.equalsIgnoreCase(valueType))
+		{
+			sql.append(" isnull(t1.iInvCount,0) value, \n");
+			sql.append(" isnull(t2.iInvCount,0) value1 \n");
+		}
+		if (VALUE_TYPE_PERSON_COUNT.equalsIgnoreCase(valueType))
+		{
+			sql.append(" isnull(t1.iSum,0) value, \n");
+			sql.append(" isnull(t2.iSum,0) value1 \n");
+		}
+		sql.append(" from \n");
+		sql.append(" ( \n");
+		sql.append(" select  \n");
+		sql.append(" iYear id,  \n");
+		sql.append(" iYear, \n");
+		sql.append(" iMonth, \n");
+		sql.append(" iDay, \n");
+		sql.append(" cast(iMonth as varchar)+'.'+cast(iDay as varchar) name,  \n");
+		sql.append(" isnull(round(sum(dl.iNatSum)/10000,1),0) iSum,  \n");
+		sql.append(" isnull(count(distinct ccuscode),0) iCusCount,  \n");
+		sql.append(" isnull(count(distinct cinvcode),0) iInvCount,  \n");
+		sql.append(" isnull(count(distinct cpersoncode),0) iPersonCount  \n");
+		sql.append(" from  \n");
+		sql.append(" (  \n");
+		sql.append(" 	select   \n");
+		sql.append(" 	year(dl.dDate) iYear,  \n");
+		sql.append(" 	datename(month,dl.dDate) iMonth,  \n");
+		sql.append(" 	datename(day,dl.dDate) iDay,  \n");
+		sql.append(" 	dls.iNatSum,cCusCode,cInvCode,cPersonCode  \n");
+		sql.append(" 	from   \n");
+		sql.append(" 	DispatchList dl  \n");
+		sql.append(" 	left join  \n");
+		sql.append(" 	DispatchLists dls  \n");
+		sql.append(" 	on dl.DLID=dls.DLID  \n");
+		sql.append(" 	where 1=1 \n");
+		sql.append(" 	and dDate>=DATEADD(m,-1,'" + endTime + "') \n");
+		sql.append(" 	and dDate<='" + endTime + "' \n");
+		if (!StringUtil.isEmpty(invcode))
+		{
+			sql.append(" 	and cinvcode='" + invcode + "' \n");
+		}
+		if (!StringUtil.isEmpty(custcode))
+		{
+			sql.append(" 	and ccuscode='" + custcode + "' \n");
+		}
+		if (!StringUtil.isEmpty(personcode))
+		{
+			sql.append(" 	and cpersoncode='" + personcode + "' \n");
+		}
+		sql.append(" ) dl  \n");
+		sql.append(" group by  \n");
+		sql.append(" iYear,  \n");
+		sql.append(" iMonth,  \n");
+		sql.append(" iDay  \n");
+		sql.append(" ) t1 \n");
+		sql.append(" left join \n");
+		sql.append(" ( \n");
+		sql.append(" select  \n");
+		sql.append(" iYear id,  \n");
+		sql.append(" iYear, \n");
+		sql.append(" iMonth, \n");
+		sql.append(" iDay, \n");
+		sql.append(" cast(iMonth as varchar)+'.'+cast(iDay as varchar) name,  \n");
+		sql.append(" isnull(round(sum(dl.iNatSum)/10000,1),0) iSum,  \n");
+		sql.append(" isnull(count(distinct ccuscode),0) iCusCount,  \n");
+		sql.append(" isnull(count(distinct cinvcode),0) iInvCount,  \n");
+		sql.append(" isnull(count(distinct cpersoncode),0) iPersonCount  \n");
+		sql.append(" from  \n");
+		sql.append(" (  \n");
+		sql.append(" 	select   \n");
+		sql.append(" 	year(dl.dDate) iYear,  \n");
+		sql.append(" 	datename(month,dl.dDate) iMonth,  \n");
+		sql.append(" 	datename(day,dl.dDate) iDay,  \n");
+		sql.append(" 	dls.iNatSum,cCusCode,cInvCode,cPersonCode  \n");
+		sql.append(" 	from   \n");
+		sql.append(" 	DispatchList dl  \n");
+		sql.append(" 	left join  \n");
+		sql.append(" 	DispatchLists dls  \n");
+		sql.append(" 	on dl.DLID=dls.DLID  \n");
+		sql.append(" 	where 1=1 \n");
+		sql.append(" 	and dDate>=DATEADD(m,-2,'" + endTime + "') \n");
+		sql.append(" 	and dDate<='" + endTime + "' \n");
+		if (!StringUtil.isEmpty(invcode))
+		{
+			sql.append(" 	and cinvcode='" + invcode + "' \n");
+		}
+		if (!StringUtil.isEmpty(custcode))
+		{
+			sql.append(" 	and ccuscode='" + custcode + "' \n");
+		}
+		if (!StringUtil.isEmpty(personcode))
+		{
+			sql.append(" 	and cpersoncode='" + personcode + "' \n");
+		}
+		sql.append(" ) dl  \n");
+		sql.append(" group by  \n");
+		sql.append(" iYear,  \n");
+		sql.append(" iMonth,  \n");
+		sql.append(" iDay  \n");
+		sql.append(" ) t2 \n");
+		sql.append(" on t1.iYear=t2.iYear+1 and t1.iMonth=t2.iMonth and t1.iDay=t2.iDay \n");
+		sql.append(" order by t1.iYear ,t1.iMonth,t1.iDay  \n");
+
+		return sql.toString();
+	}
 
 	private static String getRecentMonthSql(String iYear, String iMonth, int recentMonths, String invcode, String custcode, String personcode, String valueType)
 	{
@@ -243,7 +382,7 @@ public class DispatchPortalUtil
 		return sql.toString();
 	}
 
-	public static String getRecentYearSql(String iYear, int recentYears)
+	public static String getRecentYearSql(String iYear, int recentYears,String invcode, String custcode, String personcode)
 	{
 		logger.info("==========近" + recentYears + "年发货情况==========");
 
@@ -272,6 +411,18 @@ public class DispatchPortalUtil
 		sql.append(" 	where 1=1 \n");
 		sql.append(" 	and dDate>=DATEADD(yyyy,-" + recentYears + ",'" + endTime + "') \n");
 		sql.append(" 	and dDate<='" + endTime + "' \n");
+		if (!StringUtil.isEmpty(invcode))
+		{
+			sql.append(" 	and cinvcode='" + invcode + "' \n");
+		}
+		if (!StringUtil.isEmpty(custcode))
+		{
+			sql.append(" 	and ccuscode='" + custcode + "' \n");
+		}
+		if (!StringUtil.isEmpty(personcode))
+		{
+			sql.append(" 	and cpersoncode='" + personcode + "' \n");
+		}
 		sql.append(" ) dl  \n");
 		sql.append(" group by  \n");
 		sql.append(" iYear  \n");
