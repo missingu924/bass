@@ -92,26 +92,38 @@ public class VDispatchCustInvMomObj extends BaseDbObj
 	{
 		return "同环比分析";
 	}
-	
-	public String getCnName(String groupBy)
+
+	public String getCnName(String groupBy, String billType)
 	{
+		String str = "";
 		if (VDispatchCustInvMomSearchCondition.GROUP_BY_CUST.equalsIgnoreCase(groupBy))
 		{
-			return "客户月度发货同环比（单位:万元）";
+			str = "客户";
 		}
 		if (VDispatchCustInvMomSearchCondition.GROUP_BY_INV.equalsIgnoreCase(groupBy))
 		{
-			return "产品月度发货同环比（单位:万元）";
+			str = "产品";
 		}
 		if (VDispatchCustInvMomSearchCondition.GROUP_BY_CUST_INV.equalsIgnoreCase(groupBy))
 		{
-			return "客户月度产品发货同环比（单位:万元）";
+			str = "客户产品";
 		}
 		if (VDispatchCustInvMomSearchCondition.GROUP_BY_PERSON.equalsIgnoreCase(groupBy))
 		{
-			return "业务员月度发货同环比（单位:万元）";
+			str = "业务员";
 		}
-		return "";
+
+		str += "月度";
+
+		if (VDispatchCustInvMomSearchCondition.BILL_TYPE_SALE.equalsIgnoreCase(billType))
+		{
+			str += "订单";
+		}
+		if (VDispatchCustInvMomSearchCondition.BILL_TYPE_DISPATH.equalsIgnoreCase(billType))
+		{
+			str += "发货";
+		}
+		return str + "同环比（单位:万元）";
 	}
 
 	@Override

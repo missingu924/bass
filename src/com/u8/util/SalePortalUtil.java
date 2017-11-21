@@ -280,6 +280,56 @@ public class SalePortalUtil
 
 		return sql.toString();
 	}
+	
+	public static String getRecentYearSql(String iYear, int recentYears,String invcode, String custcode, String personcode)
+	{
+		logger.info("==========近" + recentYears + "年发货情况==========");
+
+		StringBuffer sql = new StringBuffer();
+
+		Date day = TimeUtil.getTheLastDayOfTheMonth(Integer.parseInt(iYear), 12);
+
+		String endTime = TimeUtil.date2str(day, "yyyy-MM-dd 23:59:59");
+
+		sql.append(" select \n");
+		sql.append(" top " + recentYears + " \n");
+		sql.append(" iYear id,  \n");
+		sql.append(" iYear, \n");
+		sql.append(" iYear name, \n");
+		sql.append(" round(sum(dl.iNatSum)/10000,1) value  \n");
+		sql.append(" from  \n");
+		sql.append(" (  \n");
+		sql.append(" 	select   \n");
+		sql.append(" 	year(dl.dDate) iYear,  \n");
+		sql.append(" 	dls.iNatSum  \n");
+		sql.append(" 	from   \n");
+		sql.append(" 	So_SoMain dl \n");
+		sql.append(" 	left join \n");
+		sql.append(" 	So_SoDetails dls \n");
+		sql.append(" 	on dl.cSoCode=dls.cSoCode \n");
+		sql.append(" 	where 1=1 \n");
+		sql.append(" 	and dDate>=DATEADD(yyyy,-" + recentYears + ",'" + endTime + "') \n");
+		sql.append(" 	and dDate<='" + endTime + "' \n");
+		if (!StringUtil.isEmpty(invcode))
+		{
+			sql.append(" 	and cinvcode='" + invcode + "' \n");
+		}
+		if (!StringUtil.isEmpty(custcode))
+		{
+			sql.append(" 	and ccuscode='" + custcode + "' \n");
+		}
+		if (!StringUtil.isEmpty(personcode))
+		{
+			sql.append(" 	and cpersoncode='" + personcode + "' \n");
+		}
+		sql.append(" ) dl  \n");
+		sql.append(" group by  \n");
+		sql.append(" iYear  \n");
+		sql.append(" order by iYear  \n");
+
+		return sql.toString();
+	}
+
 
 	public static String getTopnCustomerSql(String startTime, String endTime, int topn)
 	{

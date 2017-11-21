@@ -197,16 +197,16 @@
 					
 					<%if(domainSearchCondition.GROUP_BY_CUST.equalsIgnoreCase(domainSearchCondition.getGroupBy()) || domainSearchCondition.GROUP_BY_CUST_INV.equalsIgnoreCase(domainSearchCondition.getGroupBy())){ %>
 					<td><%=StringUtil.getNotEmptyStr(o.getCcuscode())%></td>  
-					<td><a href="#" onclick="openTab('<%="客户 "+o.getCcusname()+" 当前月份订单统计" %>','<%=contextPath %>/SaleStat/cust_stat.jsp?custcode=<%=o.getCcuscode() %>')"><%=StringUtil.getNotEmptyStr(o.getCcusname())%></a></td> 
+					<td><a href="javascript:openTab('<%="客户 "+o.getCcusname()+" 当前月份订单统计" %>','<%=contextPath %>/SaleStat/cust_stat.jsp?custcode=<%=o.getCcuscode() %>')"><%=StringUtil.getNotEmptyStr(o.getCcusname())%></a></td> 
 					
 					<%} if(domainSearchCondition.GROUP_BY_INV.equalsIgnoreCase(domainSearchCondition.getGroupBy()) || domainSearchCondition.GROUP_BY_CUST_INV.equalsIgnoreCase(domainSearchCondition.getGroupBy())){ %>
 					<td><%=StringUtil.getNotEmptyStr(o.getCinvcode())%></td>  
-					<td><a href="#" onclick="openTab('<%="产品 "+o.getCinvname()+" 当前月份订单统计" %>','<%=contextPath %>/SaleStat/inv_stat.jsp?invcode=<%=o.getCinvcode() %>')"><%=StringUtil.getNotEmptyStr(o.getCinvname())%></a></td> 
+					<td><a href="javascript:openTab('<%="产品 "+o.getCinvname()+" 当前月份订单统计" %>','<%=contextPath %>/SaleStat/inv_stat.jsp?invcode=<%=o.getCinvcode() %>')"><%=StringUtil.getNotEmptyStr(o.getCinvname())%></a></td> 
 					<td><%=StringUtil.getNotEmptyStr(o.getCcomunitname())%></td> 
 					
 					<%} if(domainSearchCondition.GROUP_BY_PERSON.equalsIgnoreCase(domainSearchCondition.getGroupBy())){ %>
 					<td><%=StringUtil.getNotEmptyStr(o.getCpersoncode())%></td>  
-					<td><a href="#" onclick="openTab('<%="业务员 "+o.getCpersonname()+" 当前月份订单统计" %>','<%=contextPath %>/SaleStat/person_stat.jsp?personcode=<%=o.getCpersoncode() %>')"><%=StringUtil.getNotEmptyStr(o.getCpersonname())%></a></td> 
+					<td><a href="javascript:openTab('<%="业务员 "+o.getCpersonname()+" 当前月份订单统计" %>','<%=contextPath %>/SaleStat/person_stat.jsp?personcode=<%=o.getCpersoncode() %>')"><%=StringUtil.getNotEmptyStr(o.getCpersonname())%></a></td> 
 					<%} %>
 					
 					
@@ -218,9 +218,9 @@
 					
 					<td style="text-align:right;">
 						<%if(!domainSearchCondition.GROUP_BY_CUST_INV.equalsIgnoreCase(domainSearchCondition.getGroupBy())){ %>
-							<a href="#" onClick="openTab('客户产品订单统计','<%=contextPath%>/Proxy/Servlet?servlet=<%=basePath%>&method=list4this&useLike=false&showChart=true&groupBy=<%=domainSearchCondition.GROUP_BY_CUST_INV %>&ccuscode=<%=o.getCcuscode() %>&cinvcode=<%=o.getCinvcode() %>&cpersoncode=<%=o.getCpersoncode() %>&ddate_min=<%=TimeUtil.date2str(domainSearchCondition.getDdate_min(), "yyyy-MM-dd")%>&ddate_max=<%=TimeUtil.date2str(domainSearchCondition.getDdate_max(), "yyyy-MM-dd")%>')" > 
+							<a href="javascript:openTab('客户产品订单统计','<%=contextPath%>/Proxy/Servlet?servlet=<%=basePath%>&method=list4this&useLike=false&showChart=true&groupBy=<%=domainSearchCondition.GROUP_BY_CUST_INV %>&ccuscode=<%=o.getCcuscode() %>&cinvcode=<%=o.getCinvcode() %>&cpersoncode=<%=o.getCpersoncode() %>&ddate_min=<%=TimeUtil.date2str(domainSearchCondition.getDdate_min(), "yyyy-MM-dd")%>&ddate_max=<%=TimeUtil.date2str(domainSearchCondition.getDdate_max(), "yyyy-MM-dd")%>')" > 
 						<%} else { %>
-							<a href="#" onClick="openTab('订单明细','<%=contextPath%>/Proxy/Servlet?servlet=VSaleDetails&method=list4this&useLike=false&ccuscode=<%=o.getCcuscode() %>&cinvcode=<%=o.getCinvcode() %>&cpersoncode=<%=o.getCpersoncode() %>&ddate_min=<%=TimeUtil.date2str(domainSearchCondition.getDdate_min(), "yyyy-MM-dd")%>&ddate_max=<%=TimeUtil.date2str(domainSearchCondition.getDdate_max(), "yyyy-MM-dd")%>')" > 
+							<a href="javascript:openTab('订单明细','<%=contextPath%>/Proxy/Servlet?servlet=VSaleDetails&method=list4this&useLike=false&ccuscode=<%=o.getCcuscode() %>&cinvcode=<%=o.getCinvcode() %>&cpersoncode=<%=o.getCpersoncode() %>&ddate_min=<%=TimeUtil.date2str(domainSearchCondition.getDdate_min(), "yyyy-MM-dd")%>&ddate_max=<%=TimeUtil.date2str(domainSearchCondition.getDdate_max(), "yyyy-MM-dd")%>')" > 
 						<%} %>
 						<%=StringUtil.formatDouble(o.getIsum(),4)%>
 						</a>

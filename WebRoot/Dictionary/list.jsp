@@ -96,7 +96,7 @@
 				%> 
 				<tr> 
 					<td> 
-						<a href="#" onClick="openBigModalDialog('<%=contextPath%>/<%=basePath%>/Servlet?method=detail4this&<%=o.findKeyColumnName()%>=<%=o.findKeyValue()%>')"> <%=StringUtil.getNotEmptyStr(o.findKeyValue())%> </a> 
+						<a href="javascript:openBigModalDialog('<%=contextPath%>/<%=basePath%>/Servlet?method=detail4this&<%=o.findKeyColumnName()%>=<%=o.findKeyValue()%>')"> <%=StringUtil.getNotEmptyStr(o.findKeyValue())%> </a> 
 					</td> 
 					<td><%=new DictionaryService().getDictValueByDictKey("字典类型字典",o.getDicttype())%></td>  
 					<td><%=StringUtil.getNotEmptyStr(o.getDictname())%></td> 

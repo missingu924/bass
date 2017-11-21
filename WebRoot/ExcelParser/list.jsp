@@ -86,7 +86,7 @@
 				%> 
 				<tr> 
 					<td> 
-						<a href="#" onClick="openBigModalDialog('<%=contextPath%>/<%=basePath%>/Servlet?method=detail4this&<%=o.findKeyColumnName()%>=<%=o.findKeyValue()%>')"> <%=StringUtil.getNotEmptyStr(o.findKeyValue())%> </a> 
+						<a href="javascript:openBigModalDialog('<%=contextPath%>/<%=basePath%>/Servlet?method=detail4this&<%=o.findKeyColumnName()%>=<%=o.findKeyValue()%>')"> <%=StringUtil.getNotEmptyStr(o.findKeyValue())%> </a> 
 					</td> 
 					<td><%=new DictionaryService().getDictValueByDictKey("EXCEL解析器字典",o.getParser_name())%></td>  
 					<td><%=StringUtil.getNotEmptyStr(o.getSource_file_name())%></td> 

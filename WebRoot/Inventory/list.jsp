@@ -336,7 +336,7 @@
 				%> 
 				<tr> 
 					<td> 
-						<a href="#" onClick="openBigModalDialog('<%=contextPath%>/<%=basePath%>/Servlet?method=detail4this&cinvcode=<%=o.getCinvccode()%>')"> <%=StringUtil.getNotEmptyStr(o.getCinvcode())%> </a> 
+						<a href="javascript:openBigModalDialog('<%=contextPath%>/<%=basePath%>/Servlet?method=detail4this&cinvcode=<%=o.getCinvccode()%>')"> <%=StringUtil.getNotEmptyStr(o.getCinvcode())%> </a> 
 					</td> 
 					<td><%=DictionaryUtil.getDictValueByDictKey("U8存货类别字典",o.getCinvccode())%></td>  
 					<td><%=StringUtil.getNotEmptyStr(o.getCinvname())%></td> 

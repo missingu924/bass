@@ -150,7 +150,7 @@
 						</a>
 					</td> 
 					<td>
-						<a href="#" onclick="winOpen('<%=contextPath%><%=o.getMenu_url() %>')"> 
+						<a href="javascript:winOpen('<%=contextPath%><%=o.getMenu_url() %>')"> 
 							<%=StringUtil.getNotEmptyStr(o.getMenu_url())%>
 						</a>
 					</td> 

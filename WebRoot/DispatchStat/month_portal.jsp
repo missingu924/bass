@@ -173,13 +173,13 @@
 			</tr>
 			<tr>
 				<td style="font-size:12px;color:#999999;text-align:center;vertical-align:top" height="40px">
-					<a href="#" onclick="invStat()">更多…</a>
+					<a href="javascript:invStat()">更多…</a>
 				</td>
 				<td style="font-size:12px;color:#999999;text-align:center;vertical-align:top">
-					<a href="#" onclick="custStat()">更多…</a>
+					<a href="javascript:custStat()">更多…</a>
 				</td>
 				<td style="font-size:12px;color:#999999;text-align:center;vertical-align:top">
-					<a href="#" onclick="personStat()">更多…</a>
+					<a href="javascript:personStat()">更多…</a>
 				</td>
 			</tr>
 		</table>

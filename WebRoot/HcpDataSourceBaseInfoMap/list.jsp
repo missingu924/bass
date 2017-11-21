@@ -141,9 +141,9 @@
 					<td><%=DictionaryUtil.getDictValueByDictKey("数据源字典",o.getDst_ds_code()+"")%></td>  
 					<td><%=DictionaryUtil.getDictValueByDictKey("数据源-基础档案字典",o.getDst_base_info_name()+"")%></td>  
 					<td><%=DictionaryUtil.getDictValueByDictKey("基础档案类型字典",o.getDst_base_info_type_code()+"")%></td>  
-					<td style="text-align:right"><a href="#" onclick="winOpen('<%=contextPath%>/<%=detail.getBasePath()%>/Servlet?method=list4this&showSearchConditionTable=false&map_id=<%=o.findKeyValue()%>')"><%=o.getRelation_total_num()%></a></td>  
-					<td style="text-align:right"><a href="#" onclick="winOpen('<%=contextPath%>/<%=detail.getBasePath()%>/Servlet?method=list4this&showSearchConditionTable=false&map_id=<%=o.findKeyValue()%>&dont_mapped=false')"><%=o.getRelation_ok_num()%></a></td>  
-					<td style="text-align:right"><a href="#" onclick="winOpen('<%=contextPath%>/<%=detail.getBasePath()%>/Servlet?method=list4this&showSearchConditionTable=false&map_id=<%=o.findKeyValue()%>&dont_mapped=true')"><%=o.getRelation_not_ok_num()%></a></td>  
+					<td style="text-align:right"><a href="javascript:winOpen('<%=contextPath%>/<%=detail.getBasePath()%>/Servlet?method=list4this&showSearchConditionTable=false&map_id=<%=o.findKeyValue()%>')"><%=o.getRelation_total_num()%></a></td>  
+					<td style="text-align:right"><a href="javascript:winOpen('<%=contextPath%>/<%=detail.getBasePath()%>/Servlet?method=list4this&showSearchConditionTable=false&map_id=<%=o.findKeyValue()%>&dont_mapped=false')"><%=o.getRelation_ok_num()%></a></td>  
+					<td style="text-align:right"><a href="javascript:winOpen('<%=contextPath%>/<%=detail.getBasePath()%>/Servlet?method=list4this&showSearchConditionTable=false&map_id=<%=o.findKeyValue()%>&dont_mapped=true')"><%=o.getRelation_not_ok_num()%></a></td>  
 					<td width="100" style="text-align:center"> 
 						<input type="button" class="button button_detail" title="维护" onClick="winOpen('<%=contextPath%>/<%=detail.getBasePath()%>/Servlet?method=list4this&showSearchConditionTable=false&map_id=<%=o.findKeyValue()%>')" /> 
 						&nbsp; 

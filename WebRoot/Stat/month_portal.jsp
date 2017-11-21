@@ -74,7 +74,7 @@
 			<tr>
 				<td align="center">
 					<a href="<%=request.getContextPath()%>/Stat/month_portal.jsp?iyear=<%=iPreYear%>&imonth=<%=iPreMonth%>"><input type="button" class="button button_left" title="上月" /></a> 
-					&nbsp;<span style="color:#000000;font-size:16px;font-weight:bold"><%=iyear%>年<%=imonth%>月概览</span>&nbsp;
+					&nbsp;<span style="color:#000000;font-size:16px;font-weight:bold"><%=iyear%>年<%=imonth%>月总览</span>&nbsp;
 					<a href="<%=request.getContextPath()%>/Stat/month_portal.jsp?iyear=<%=iNextYear%>&imonth=<%=iNextMonth%>"><input type="button" class="button button_right" title="下月" /></a>
 				</td>
 			</tr>

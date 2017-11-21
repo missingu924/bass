@@ -128,7 +128,7 @@
 					<td>
 						<input id="file_upload" name="file_upload" type="file" size="50" />
 						&nbsp;&nbsp;&nbsp;&nbsp;
-						<a href="#" onclick="exportData('0','<%=request.getContextPath()%>/<%=basedbobj.getBasePath()%>/Servlet?method=export4this&otherWhere=1>2')">
+						<a href="javascript:exportData('0','<%=request.getContextPath()%>/<%=basedbobj.getBasePath()%>/Servlet?method=export4this&otherWhere=1>2')">
 						下载模板
 						</a>
 					</td>

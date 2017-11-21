@@ -177,13 +177,13 @@
 			</tr>
 			<tr>
 				<td style="font-size:12px;color:#999999;text-align:center;vertical-align:top" height="40px">
-					<a href="#" onclick="invStat('')">更多…</a>
+					<a href="javascript:invStat('')">更多…</a>
 				</td>
 				<td style="font-size:12px;color:#999999;text-align:center;vertical-align:top">
-					<a href="#" onclick="custStat('')">更多…</a>
+					<a href="javascript:custStat('')">更多…</a>
 				</td>
 				<td style="font-size:12px;color:#999999;text-align:center;vertical-align:top">
-					<a href="#" onclick="personStat('')">更多…</a>
+					<a href="javascript:personStat('')">更多…</a>
 				</td>
 			</tr>
 		</table>
@@ -235,19 +235,19 @@
 		
 		function invStat(invcode)
 		{
-			openTab('<%=iyear+"年"%> 产品订单统计','<%=request.getContextPath() %>/Proxy/Servlet?servlet=VSaleCustInvStat&method=list4this&groupBy=<%=VSaleCustInvStatSearchCondition.GROUP_BY_INV%>&ddate_min=<%=startTimeYear%>&ddate_max=<%=endTimeMonth%>&cinvcode='+invcode);
+			openTab('<%=iyear+"年"%> 产品订单分布','<%=request.getContextPath() %>/SaleStat/inv_cust_stat_year.jsp?info_type=inv&iyear=<%=iyear%>');
 		}
 		function custStat(custcode)
 		{
-			openTab('<%=iyear+"年"%> 客户订单统计','<%=request.getContextPath() %>/Proxy/Servlet?servlet=VSaleCustInvStat&method=list4this&groupBy=<%=VSaleCustInvStatSearchCondition.GROUP_BY_CUST%>&ddate_min=<%=startTimeYear%>&ddate_max=<%=endTimeMonth%>&ccuscode='+custcode);
+			openTab('<%=iyear+"年"%> 客户订单分布','<%=request.getContextPath() %>/SaleStat/inv_cust_stat_year.jsp?info_type=cust&iyear=<%=iyear%>');
 		}
 		function personStat(personcode)
 		{
-			openTab('<%=iyear+"年"%> 业务员订单统计','<%=request.getContextPath() %>/Proxy/Servlet?servlet=VSaleCustInvStat&method=list4this&groupBy=<%=VSaleCustInvStatSearchCondition.GROUP_BY_PERSON%>&ddate_min=<%=startTimeYear%>&ddate_max=<%=endTimeMonth%>&cpersoncode='+personcode);
+			openTab('<%=iyear+"年"%> 业务员订单分布','<%=request.getContextPath() %>/SaleStat/inv_cust_stat_year.jsp?info_type=person&iyear=<%=iyear%>');
 		}
 		function custInvStat()
 		{
-			openTab('<%=iyear+"年"%> 客户产品订单统计','<%=request.getContextPath() %>/Proxy/Servlet?servlet=VSaleCustInvStat&method=list4this&groupBy=<%=VSaleCustInvStatSearchCondition.GROUP_BY_CUST_INV%>&ddate_min=<%=startTimeYear%>&ddate_max=<%=endTimeMonth%>');
+			openTab('<%=iyear+"年"%> 订单分布','<%=request.getContextPath() %>/SaleStat/inv_cust_stat_year.jsp?iyear=<%=iyear%>');
 		}
 		
 		function yearPortal(iyear)

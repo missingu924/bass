@@ -78,6 +78,17 @@ public class VDispatchCustInvYoyServlet extends AbstractBaseServletTemplate
 
 		VDispatchCustInvYoySearchCondition condition = (VDispatchCustInvYoySearchCondition) domainSearchCondition;
 
+		String baseSql = "";
+		if (condition.BILL_TYPE_SALE.equalsIgnoreCase(condition.getBillType()))
+		{
+			// 订单
+			baseSql = (" 		select " + condition.getIyear() + "-YEAR(dDate) year_interval, DATENAME(year,dDate) iyear,DATENAME(month,dDate) imonth,cCusCode,cInvCode,cPersonCode,iQuantity,iNatSum/10000 iNatSum from So_SoMain dl left join So_SoDetails dls on dl.cSoCode=dls.cSoCode where iNatSum<>0 \n");
+		} else
+		{
+			// 发货单
+			baseSql = (" 		select " + condition.getIyear() + "-YEAR(dDate) year_interval, DATENAME(year,dDate) iyear,DATENAME(month,dDate) imonth,cCusCode,cInvCode,cPersonCode,iQuantity,iNatSum/10000 iNatSum from DispatchList dl left join DispatchLists dls on dl.DLID=dls.DLID where iNatSum<>0 \n");
+		}
+
 		String code = "cInvCode";
 		String name = "cInvName";
 		if (condition.GROUP_BY_INV.equalsIgnoreCase(condition.getGroupBy()))
@@ -131,7 +142,7 @@ public class VDispatchCustInvYoyServlet extends AbstractBaseServletTemplate
 		sql.append(" 	SUM(iNatSum) year_inatsum \n");
 		sql.append(" 	from \n");
 		sql.append(" 	( \n");
-		sql.append(" 		select " + condition.getIyear() + "-YEAR(dDate) year_interval, DATENAME(year,dDate) iyear,DATENAME(month,dDate) imonth,cCusCode,cInvCode,cPersonCode,iQuantity,iNatSum/10000 iNatSum from DispatchList dl left join DispatchLists dls on dl.DLID=dls.DLID where iNatSum<>0 \n");
+		sql.append(baseSql);
 		sql.append(" 	) t \n");
 		sql.append(" 	where  \n");
 		sql.append(" 	iyear>=" + (condition.getIyear() - 11) + " and iyear<=" + condition.getIyear() + " \n");

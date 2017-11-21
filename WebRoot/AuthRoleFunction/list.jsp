@@ -83,7 +83,7 @@
 				%> 
 				<tr> 
 					<td> 
-						<a href="#" onClick="openBigModalDialog('<%=contextPath%>/<%=basePath%>/Servlet?method=detail4this&<%=o.findKeyColumnName()%>=<%=o.findKeyValue()%>')"> <%=StringUtil.getNotEmptyStr(o.findKeyValue())%> </a> 
+						<a href="javascript:openBigModalDialog('<%=contextPath%>/<%=basePath%>/Servlet?method=detail4this&<%=o.findKeyColumnName()%>=<%=o.findKeyValue()%>')"> <%=StringUtil.getNotEmptyStr(o.findKeyValue())%> </a> 
 					</td> 
 					<td><%=DictionaryUtil.getDictValueByDictKey("角色字典",o.getRolecode())%></td>  
 					<td><%=DictionaryUtil.getDictValueByDictKey("权限项字典",o.getFunctioncode())%></td>  

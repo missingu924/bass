@@ -195,7 +195,7 @@ public class EchartsUtil
 			s.append("		<td>" + inv.getCode() + "</td>\n");
 			if (!StringUtil.isEmpty(clickJs))
 			{
-				s.append("		<td><a href='#' onclick='" + clickJs.replaceAll("params.data.code", "\"" + inv.getCode() + "\"").replaceAll("params.data.name", "\"" + inv.getName() + "\"").replaceAll("params.data.value", "\"" + inv.getValue() + "\"") + "'>" + inv.getName() + "</a></td>\n");
+				s.append("		<td><a href='javascript:" + clickJs.replaceAll("params.data.code", "\"" + inv.getCode() + "\"").replaceAll("params.data.name", "\"" + inv.getName() + "\"").replaceAll("params.data.value", "\"" + inv.getValue() + "\"") + "'>" + inv.getName() + "</a></td>\n");
 			} else
 			{
 				s.append("		<td>" + inv.getName() + "</td>\n");

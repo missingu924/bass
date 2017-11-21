@@ -86,7 +86,7 @@
 					<img src="../images/svg/light/orange/32/alert.png" width="18" height="18" align="absmiddle">
 					&nbsp;&nbsp;
 					<span style="font-size: 24px; font-weight: bold"><%=num%></span>条数据因【<%=base_info_type%>】没有对照关系无法导入，请
-					<a href="#" onclick="winOpen('<%=contextPath%>/HcpDataSourceBaseInfoMapDetail/Servlet?method=list4this&showSearchConditionTable=false&isFromUrl=true&dont_mapped=true&map_id=<%=baseInfoMap.getId()%>')">点击这里</a>补充
+					<a href="javascript:winOpen('<%=contextPath%>/HcpDataSourceBaseInfoMapDetail/Servlet?method=list4this&showSearchConditionTable=false&isFromUrl=true&dont_mapped=true&map_id=<%=baseInfoMap.getId()%>')">点击这里</a>补充
 				</td>
 			</tr>
 		</table>

@@ -149,13 +149,13 @@
 			</tr>
 			<tr>
 				<td style="font-size:12px;color:#999999;text-align:center;vertical-align:top" height="40px">
-					<a href="#" onclick="invStat('')">更多…</a>
+					<a href="javascript:invStat('')">更多…</a>
 				</td>
 				<td style="font-size:12px;color:#999999;text-align:center;vertical-align:top">
-					<a href="#" onclick="custStat('')">更多…</a>
+					<a href="javascript:custStat('')">更多…</a>
 				</td>
 				<td style="font-size:12px;color:#999999;text-align:center;vertical-align:top">
-					<a href="#" onclick="personStat('')">更多…</a>
+					<a href="javascript:personStat('')">更多…</a>
 				</td>
 			</tr>
 		</table>
@@ -207,15 +207,15 @@
 		
 		function invStat(invcode)
 		{
-			openTab('<%=iyear+"年"%> 产品分布','<%=request.getContextPath() %>/DispatchStat/inv_cust_stat_year.jsp?info_type=inv&iyear=<%=iyear%>');
+			openTab('<%=iyear+"年"%> 产品发货分布','<%=request.getContextPath() %>/DispatchStat/inv_cust_stat_year.jsp?info_type=inv&iyear=<%=iyear%>');
 		}
 		function custStat(custcode)
 		{
-			openTab('<%=iyear+"年"%> 客户分布','<%=request.getContextPath() %>/DispatchStat/inv_cust_stat_year.jsp?info_type=cust&iyear=<%=iyear%>');
+			openTab('<%=iyear+"年"%> 客户发货分布','<%=request.getContextPath() %>/DispatchStat/inv_cust_stat_year.jsp?info_type=cust&iyear=<%=iyear%>');
 		}
 		function personStat(personcode)
 		{
-			openTab('<%=iyear+"年"%> 业务员分布','<%=request.getContextPath() %>/DispatchStat/inv_cust_stat_year.jsp?info_type=person&iyear=<%=iyear%>');
+			openTab('<%=iyear+"年"%> 业务员发货分布','<%=request.getContextPath() %>/DispatchStat/inv_cust_stat_year.jsp?info_type=person&iyear=<%=iyear%>');
 		}
 		function custInvStat()
 		{

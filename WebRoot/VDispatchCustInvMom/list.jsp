@@ -38,7 +38,7 @@
   	
   	// iyear
   	int iyear = domainSearchCondition.getIyear();
- %> 
+%> 
 <html> 
 	<head> 
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
@@ -56,13 +56,14 @@
 			<input type="hidden" id="showSearchConditionTable" name="showSearchConditionTable" value="<%=domainSearchCondition.isShowSearchConditionTable()%>"> 
 			<input type="hidden" id="showHelpInfoTable" name="showHelpInfoTable" value="<%=domainSearchCondition.isShowHelpInfoTable()%>"> 
 			<input type="hidden" id="showSearchConditionTable" name="showSearchConditionTable" value="<%=domainSearchCondition.isShowSearchConditionTable()%>"> 
-			<input type="hidden" id="groupBy" name="groupBy" value="<%=StringUtil.getNotEmptyStr(domainSearchCondition.getGroupBy(), "")%>"> 
+			<input type="hidden" id="groupBy" name="groupBy" value="<%=StringUtil.getNotEmptyStr(domainSearchCondition.getGroupBy(), "")%>">
+			<input type="hidden" id="billType" name="billType" value="<%=StringUtil.getNotEmptyStr(domainSearchCondition.getBillType(), "")%>"> 
 			<input type="hidden" id="orderBy" name="orderBy" value="<%=StringUtil.getNotEmptyStr(domainSearchCondition.getOrderBy(), "")%>"> 
 			 
 			<!-- 工具栏 --> 
 			<table class="search_table" align="center" width="98%"> 
 				<tr> 
-					<td style="width:220px"><%=domainInstance.getCnName(domainSearchCondition.getGroupBy()) %></td>  
+					<td style="width:220px"><%=domainInstance.getCnName(domainSearchCondition.getGroupBy(),domainSearchCondition.getBillType()) %></td>  
 					<td>年份<%=DictionaryUtil.getSelectHtml("年字典","iyear",iyear+"",null,false)%></td>
 					<td> 
 						<input name="searchButton" type="button" class="button button_set" value="条件" onClick="$('#search_condition_table').toggle();$('#showSearchConditionTable').val(!$('#search_condition_table').is(':hidden'));">
@@ -233,54 +234,54 @@
 					<td style="width:50px;text-align:right"><%=i+1 %></td> 
 					<%if(domainSearchCondition.GROUP_BY_CUST.equalsIgnoreCase(domainSearchCondition.getGroupBy()) || domainSearchCondition.GROUP_BY_CUST_INV.equalsIgnoreCase(domainSearchCondition.getGroupBy())){ %>
 					<td><%=StringUtil.getNotEmptyStr(o.getCcuscode())%></td>  
-					<td><a href="#" onClick="custInvYearStat('<%=iyear %>','<%=domainSearchCondition.getGroupBy()%>','<%=o.getCinvcode() %>','<%=o.getCcuscode() %>','<%=o.getCpersoncode() %>')"><%=StringUtil.getNotEmptyStr(o.getCcusname())%></a></td> 
+					<td><a href="javascript:custInvYearStat('<%=iyear %>','<%=domainSearchCondition.getGroupBy()%>','<%=o.getCinvcode() %>','<%=o.getCcuscode() %>','<%=o.getCpersoncode() %>')"><%=StringUtil.getNotEmptyStr(o.getCcusname())%></a></td> 
 					
 					<%} if(domainSearchCondition.GROUP_BY_INV.equalsIgnoreCase(domainSearchCondition.getGroupBy()) || domainSearchCondition.GROUP_BY_CUST_INV.equalsIgnoreCase(domainSearchCondition.getGroupBy())){ %>
 					<td><%=StringUtil.getNotEmptyStr(o.getCinvcode())%></td>  
-					<td><a href="#" onClick="custInvYearStat('<%=iyear %>','<%=domainSearchCondition.getGroupBy()%>','<%=o.getCinvcode() %>','<%=o.getCcuscode() %>','<%=o.getCpersoncode() %>')"><%=StringUtil.getNotEmptyStr(o.getCinvname())%></a></td> 
+					<td><a href="javascript:custInvYearStat('<%=iyear %>','<%=domainSearchCondition.getGroupBy()%>','<%=o.getCinvcode() %>','<%=o.getCcuscode() %>','<%=o.getCpersoncode() %>')"><%=StringUtil.getNotEmptyStr(o.getCinvname())%></a></td> 
 					
 					<%} if(domainSearchCondition.GROUP_BY_PERSON.equalsIgnoreCase(domainSearchCondition.getGroupBy())){ %>
 					<td><%=StringUtil.getNotEmptyStr(o.getCpersoncode())%></td>  
-					<td><a href="#" onClick="custInvYearStat('<%=iyear %>','<%=domainSearchCondition.getGroupBy()%>','<%=o.getCinvcode() %>','<%=o.getCcuscode() %>','<%=o.getCpersoncode() %>')"><%=StringUtil.getNotEmptyStr(o.getCpersonname())%></a></td> 
+					<td><a href="javascript:custInvYearStat('<%=iyear %>','<%=domainSearchCondition.getGroupBy()%>','<%=o.getCinvcode() %>','<%=o.getCcuscode() %>','<%=o.getCpersoncode() %>')"><%=StringUtil.getNotEmptyStr(o.getCpersonname())%></a></td> 
 					<%} %>
 					
-					<td style="text-align:right;background-color:#f6f6f6"><a href="#" onClick="custInvMonthStat('<%=iyear %>','1','<%=domainSearchCondition.getGroupBy()%>','<%=o.getCinvcode() %>','<%=o.getCcuscode() %>','<%=o.getCpersoncode() %>')"><%=StringUtil.formatDouble(o.getMonth_01_inatsum(),2)%></a></td> 
-					<td style="text-align:right;background-color:#f6f6f6"><%=StringUtil.formatDoublePercent(o.getMonth_01_inatsum_mom(),0)%></td> 
-					<td style="text-align:right;background-color:#f6f6f6"><%=StringUtil.formatDoublePercent(o.getMonth_01_inatsum_yoy(),0)%></td> 
-					<td style="text-align:right"><a href="#" onClick="custInvMonthStat('<%=iyear %>','2','<%=domainSearchCondition.getGroupBy()%>','<%=o.getCinvcode() %>','<%=o.getCcuscode() %>','<%=o.getCpersoncode() %>')"><%=StringUtil.formatDouble(o.getMonth_02_inatsum(),2)%></a></td> 
-					<td style="text-align:right"><%=StringUtil.formatDoublePercent(o.getMonth_02_inatsum_mom(),0)%></td> 
-					<td style="text-align:right"><%=StringUtil.formatDoublePercent(o.getMonth_02_inatsum_yoy(),0)%></td>
-					<td style="text-align:right;background-color:#f6f6f6"><a href="#" onClick="custInvMonthStat('<%=iyear %>','3','<%=domainSearchCondition.getGroupBy()%>','<%=o.getCinvcode() %>','<%=o.getCcuscode() %>','<%=o.getCpersoncode() %>')"><%=StringUtil.formatDouble(o.getMonth_03_inatsum(),2)%></a></td> 
-					<td style="text-align:right;background-color:#f6f6f6"><%=StringUtil.formatDoublePercent(o.getMonth_03_inatsum_mom(),0)%></td> 
-					<td style="text-align:right;background-color:#f6f6f6"><%=StringUtil.formatDoublePercent(o.getMonth_03_inatsum_yoy(),0)%></td>
-					<td style="text-align:right"><a href="#" onClick="custInvMonthStat('<%=iyear %>','4','<%=domainSearchCondition.getGroupBy()%>','<%=o.getCinvcode() %>','<%=o.getCcuscode() %>','<%=o.getCpersoncode() %>')"><%=StringUtil.formatDouble(o.getMonth_04_inatsum(),2)%></a></td> 
-					<td style="text-align:right"><%=StringUtil.formatDoublePercent(o.getMonth_04_inatsum_mom(),0)%></td> 
-					<td style="text-align:right"><%=StringUtil.formatDoublePercent(o.getMonth_04_inatsum_yoy(),0)%></td>
-					<td style="text-align:right;background-color:#f6f6f6"><a href="#" onClick="custInvMonthStat('<%=iyear %>','5','<%=domainSearchCondition.getGroupBy()%>','<%=o.getCinvcode() %>','<%=o.getCcuscode() %>','<%=o.getCpersoncode() %>')"><%=StringUtil.formatDouble(o.getMonth_05_inatsum(),2)%></a></td>
-					<td style="text-align:right;background-color:#f6f6f6"><%=StringUtil.formatDoublePercent(o.getMonth_05_inatsum_mom(),0)%></td> 
-					<td style="text-align:right;background-color:#f6f6f6"><%=StringUtil.formatDoublePercent(o.getMonth_05_inatsum_yoy(),0)%></td> 
-					<td style="text-align:right"><a href="#" onClick="custInvMonthStat('<%=iyear %>','6','<%=domainSearchCondition.getGroupBy()%>','<%=o.getCinvcode() %>','<%=o.getCcuscode() %>','<%=o.getCpersoncode() %>')"><%=StringUtil.formatDouble(o.getMonth_06_inatsum(),2)%></a></td>
-					<td style="text-align:right"><%=StringUtil.formatDoublePercent(o.getMonth_06_inatsum_mom(),0)%></td> 
-					<td style="text-align:right"><%=StringUtil.formatDoublePercent(o.getMonth_06_inatsum_yoy(),0)%></td> 
-					<td style="text-align:right;background-color:#f6f6f6"><a href="#" onClick="custInvMonthStat('<%=iyear %>','7','<%=domainSearchCondition.getGroupBy()%>','<%=o.getCinvcode() %>','<%=o.getCcuscode() %>','<%=o.getCpersoncode() %>')"><%=StringUtil.formatDouble(o.getMonth_07_inatsum(),2)%></a></td> 
-					<td style="text-align:right;background-color:#f6f6f6"><%=StringUtil.formatDoublePercent(o.getMonth_07_inatsum_mom(),0)%></td> 
-					<td style="text-align:right;background-color:#f6f6f6"><%=StringUtil.formatDoublePercent(o.getMonth_07_inatsum_yoy(),0)%></td>
-					<td style="text-align:right"><a href="#" onClick="custInvMonthStat('<%=iyear %>','8','<%=domainSearchCondition.getGroupBy()%>','<%=o.getCinvcode() %>','<%=o.getCcuscode() %>','<%=o.getCpersoncode() %>')"><%=StringUtil.formatDouble(o.getMonth_08_inatsum(),2)%></a></td> 
-					<td style="text-align:right"><%=StringUtil.formatDoublePercent(o.getMonth_08_inatsum_mom(),0)%></td> 
-					<td style="text-align:right"><%=StringUtil.formatDoublePercent(o.getMonth_08_inatsum_yoy(),0)%></td>
-					<td style="text-align:right;background-color:#f6f6f6"><a href="#" onClick="custInvMonthStat('<%=iyear %>','9','<%=domainSearchCondition.getGroupBy()%>','<%=o.getCinvcode() %>','<%=o.getCcuscode() %>','<%=o.getCpersoncode() %>')"><%=StringUtil.formatDouble(o.getMonth_09_inatsum(),2)%></a></td> 
-					<td style="text-align:right;background-color:#f6f6f6"><%=StringUtil.formatDoublePercent(o.getMonth_09_inatsum_mom(),0)%></td> 
-					<td style="text-align:right;background-color:#f6f6f6"><%=StringUtil.formatDoublePercent(o.getMonth_09_inatsum_yoy(),0)%></td>
-					<td style="text-align:right"><a href="#" onClick="custInvMonthStat('<%=iyear %>','10','<%=domainSearchCondition.getGroupBy()%>','<%=o.getCinvcode() %>','<%=o.getCcuscode() %>','<%=o.getCpersoncode() %>')"><%=StringUtil.formatDouble(o.getMonth_10_inatsum(),2)%></a></td> 
-					<td style="text-align:right"><%=StringUtil.formatDoublePercent(o.getMonth_10_inatsum_mom(),0)%></td> 
-					<td style="text-align:right"><%=StringUtil.formatDoublePercent(o.getMonth_10_inatsum_yoy(),0)%></td>
-					<td style="text-align:right;background-color:#f6f6f6"><a href="#" onClick="custInvMonthStat('<%=iyear %>','11','<%=domainSearchCondition.getGroupBy()%>','<%=o.getCinvcode() %>','<%=o.getCcuscode() %>','<%=o.getCpersoncode() %>')"><%=StringUtil.formatDouble(o.getMonth_11_inatsum(),2)%></a></td> 
-					<td style="text-align:right;background-color:#f6f6f6"><%=StringUtil.formatDoublePercent(o.getMonth_11_inatsum_mom(),0)%></td> 
-					<td style="text-align:right;background-color:#f6f6f6"><%=StringUtil.formatDoublePercent(o.getMonth_11_inatsum_yoy(),0)%></td>
-					<td style="text-align:right"><a href="#" onClick="custInvMonthStat('<%=iyear %>','12','<%=domainSearchCondition.getGroupBy()%>','<%=o.getCinvcode() %>','<%=o.getCcuscode() %>','<%=o.getCpersoncode() %>')"><%=StringUtil.formatDouble(o.getMonth_12_inatsum(),2)%></a></td> 
-					<td style="text-align:right"><%=StringUtil.formatDoublePercent(o.getMonth_12_inatsum_mom(),0)%></td> 
-					<td style="text-align:right"><%=StringUtil.formatDoublePercent(o.getMonth_12_inatsum_yoy(),0)%></td>
-					<td style="text-align:right;background-color:#ffffcc"><a href="#" onClick="custInvYearStat('<%=iyear %>','<%=domainSearchCondition.getGroupBy()%>','<%=o.getCinvcode() %>','<%=o.getCcuscode() %>','<%=o.getCpersoncode() %>')"><%=StringUtil.formatDouble(o.getYear_inatsum(),2)%></a></td> 
+					<td style="text-align:right;background-color:#f6f6f6"><a href="javascript:custInvMonthStat('<%=iyear %>','1','<%=domainSearchCondition.getGroupBy()%>','<%=o.getCinvcode() %>','<%=o.getCcuscode() %>','<%=o.getCpersoncode() %>')"><%=StringUtil.formatDouble(o.getMonth_01_inatsum(),2)%></a></td> 
+					<td style="text-align:right;background-color:<%=o.getMonth_01_inatsum_mom()!=null&&o.getMonth_01_inatsum_mom()<0?"#ffff66":"#f6f6f6" %>"><%=StringUtil.formatDoublePercent(o.getMonth_01_inatsum_mom(),0)%></td> 
+					<td style="text-align:right;background-color:<%=o.getMonth_01_inatsum_yoy()!=null&&o.getMonth_01_inatsum_yoy()<0?"#ffcc99":"#f6f6f6" %>"><%=StringUtil.formatDoublePercent(o.getMonth_01_inatsum_yoy(),0)%></td> 
+					<td style="text-align:right"><a href="javascript:custInvMonthStat('<%=iyear %>','2','<%=domainSearchCondition.getGroupBy()%>','<%=o.getCinvcode() %>','<%=o.getCcuscode() %>','<%=o.getCpersoncode() %>')"><%=StringUtil.formatDouble(o.getMonth_02_inatsum(),2)%></a></td> 
+					<td style="text-align:right;background-color:<%=o.getMonth_02_inatsum_mom()!=null&&o.getMonth_02_inatsum_mom()<0?"#ffff66":"" %>""><%=StringUtil.formatDoublePercent(o.getMonth_02_inatsum_mom(),0)%></td> 
+					<td style="text-align:right;background-color:<%=o.getMonth_02_inatsum_yoy()!=null&&o.getMonth_02_inatsum_yoy()<0?"#ffcc99":"" %>"><%=StringUtil.formatDoublePercent(o.getMonth_02_inatsum_yoy(),0)%></td>
+					<td style="text-align:right;background-color:#f6f6f6"><a href="javascript:custInvMonthStat('<%=iyear %>','3','<%=domainSearchCondition.getGroupBy()%>','<%=o.getCinvcode() %>','<%=o.getCcuscode() %>','<%=o.getCpersoncode() %>')"><%=StringUtil.formatDouble(o.getMonth_03_inatsum(),2)%></a></td> 
+					<td style="text-align:right;background-color:<%=o.getMonth_03_inatsum_mom()!=null&&o.getMonth_03_inatsum_mom()<0?"#ffff66":"#f6f6f6" %>"><%=StringUtil.formatDoublePercent(o.getMonth_03_inatsum_mom(),0)%></td> 
+					<td style="text-align:right;background-color:<%=o.getMonth_03_inatsum_yoy()!=null&&o.getMonth_03_inatsum_yoy()<0?"#ffcc99":"#f6f6f6" %>"><%=StringUtil.formatDoublePercent(o.getMonth_03_inatsum_yoy(),0)%></td>
+					<td style="text-align:right"><a href="javascript:custInvMonthStat('<%=iyear %>','4','<%=domainSearchCondition.getGroupBy()%>','<%=o.getCinvcode() %>','<%=o.getCcuscode() %>','<%=o.getCpersoncode() %>')"><%=StringUtil.formatDouble(o.getMonth_04_inatsum(),2)%></a></td> 
+					<td style="text-align:right;background-color:<%=o.getMonth_04_inatsum_mom()!=null&&o.getMonth_04_inatsum_mom()<0?"#ffff66":"" %>""><%=StringUtil.formatDoublePercent(o.getMonth_04_inatsum_mom(),0)%></td> 
+					<td style="text-align:right;background-color:<%=o.getMonth_04_inatsum_yoy()!=null&&o.getMonth_04_inatsum_yoy()<0?"#ffcc99":"" %>"><%=StringUtil.formatDoublePercent(o.getMonth_04_inatsum_yoy(),0)%></td>
+					<td style="text-align:right;background-color:#f6f6f6"><a href="javascript:custInvMonthStat('<%=iyear %>','5','<%=domainSearchCondition.getGroupBy()%>','<%=o.getCinvcode() %>','<%=o.getCcuscode() %>','<%=o.getCpersoncode() %>')"><%=StringUtil.formatDouble(o.getMonth_05_inatsum(),2)%></a></td>
+					<td style="text-align:right;background-color:<%=o.getMonth_05_inatsum_mom()!=null&&o.getMonth_05_inatsum_mom()<0?"#ffff66":"#f6f6f6" %>""><%=StringUtil.formatDoublePercent(o.getMonth_05_inatsum_mom(),0)%></td> 
+					<td style="text-align:right;background-color:<%=o.getMonth_05_inatsum_yoy()!=null&&o.getMonth_05_inatsum_yoy()<0?"#ffcc99":"#f6f6f6" %>"><%=StringUtil.formatDoublePercent(o.getMonth_05_inatsum_yoy(),0)%></td> 
+					<td style="text-align:right"><a href="javascript:custInvMonthStat('<%=iyear %>','6','<%=domainSearchCondition.getGroupBy()%>','<%=o.getCinvcode() %>','<%=o.getCcuscode() %>','<%=o.getCpersoncode() %>')"><%=StringUtil.formatDouble(o.getMonth_06_inatsum(),2)%></a></td>
+					<td style="text-align:right;background-color:<%=o.getMonth_06_inatsum_mom()!=null&&o.getMonth_06_inatsum_mom()<0?"#ffff66":"" %>""><%=StringUtil.formatDoublePercent(o.getMonth_06_inatsum_mom(),0)%></td> 
+					<td style="text-align:right;background-color:<%=o.getMonth_06_inatsum_yoy()!=null&&o.getMonth_06_inatsum_yoy()<0?"#ffcc99":"" %>"><%=StringUtil.formatDoublePercent(o.getMonth_06_inatsum_yoy(),0)%></td> 
+					<td style="text-align:right;background-color:#f6f6f6"><a href="javascript:custInvMonthStat('<%=iyear %>','7','<%=domainSearchCondition.getGroupBy()%>','<%=o.getCinvcode() %>','<%=o.getCcuscode() %>','<%=o.getCpersoncode() %>')"><%=StringUtil.formatDouble(o.getMonth_07_inatsum(),2)%></a></td> 
+					<td style="text-align:right;background-color:<%=o.getMonth_07_inatsum_mom()!=null&&o.getMonth_07_inatsum_mom()<0?"#ffff66":"#f6f6f6" %>""><%=StringUtil.formatDoublePercent(o.getMonth_07_inatsum_mom(),0)%></td> 
+					<td style="text-align:right;background-color:<%=o.getMonth_07_inatsum_yoy()!=null&&o.getMonth_07_inatsum_yoy()<0?"#ffcc99":"#f6f6f6" %>"><%=StringUtil.formatDoublePercent(o.getMonth_07_inatsum_yoy(),0)%></td>
+					<td style="text-align:right"><a href="javascript:custInvMonthStat('<%=iyear %>','8','<%=domainSearchCondition.getGroupBy()%>','<%=o.getCinvcode() %>','<%=o.getCcuscode() %>','<%=o.getCpersoncode() %>')"><%=StringUtil.formatDouble(o.getMonth_08_inatsum(),2)%></a></td> 
+					<td style="text-align:right;background-color:<%=o.getMonth_08_inatsum_mom()!=null&&o.getMonth_08_inatsum_mom()<0?"#ffff66":"" %>""><%=StringUtil.formatDoublePercent(o.getMonth_08_inatsum_mom(),0)%></td> 
+					<td style="text-align:right;background-color:<%=o.getMonth_08_inatsum_yoy()!=null&&o.getMonth_08_inatsum_yoy()<0?"#ffcc99":"" %>"><%=StringUtil.formatDoublePercent(o.getMonth_08_inatsum_yoy(),0)%></td>
+					<td style="text-align:right;background-color:#f6f6f6"><a href="javascript:custInvMonthStat('<%=iyear %>','9','<%=domainSearchCondition.getGroupBy()%>','<%=o.getCinvcode() %>','<%=o.getCcuscode() %>','<%=o.getCpersoncode() %>')"><%=StringUtil.formatDouble(o.getMonth_09_inatsum(),2)%></a></td> 
+					<td style="text-align:right;background-color:<%=o.getMonth_09_inatsum_mom()!=null&&o.getMonth_09_inatsum_mom()<0?"#ffff66":"#f6f6f6" %>""><%=StringUtil.formatDoublePercent(o.getMonth_09_inatsum_mom(),0)%></td> 
+					<td style="text-align:right;background-color:<%=o.getMonth_09_inatsum_yoy()!=null&&o.getMonth_09_inatsum_yoy()<0?"#ffcc99":"#f6f6f6" %>"><%=StringUtil.formatDoublePercent(o.getMonth_09_inatsum_yoy(),0)%></td>
+					<td style="text-align:right"><a href="javascript:custInvMonthStat('<%=iyear %>','10','<%=domainSearchCondition.getGroupBy()%>','<%=o.getCinvcode() %>','<%=o.getCcuscode() %>','<%=o.getCpersoncode() %>')"><%=StringUtil.formatDouble(o.getMonth_10_inatsum(),2)%></a></td> 
+					<td style="text-align:right;background-color:<%=o.getMonth_10_inatsum_mom()!=null&&o.getMonth_10_inatsum_mom()<0?"#ffff66":"" %>""><%=StringUtil.formatDoublePercent(o.getMonth_10_inatsum_mom(),0)%></td> 
+					<td style="text-align:right;background-color:<%=o.getMonth_10_inatsum_yoy()!=null&&o.getMonth_10_inatsum_yoy()<0?"#ffcc99":"" %>"><%=StringUtil.formatDoublePercent(o.getMonth_10_inatsum_yoy(),0)%></td>
+					<td style="text-align:right;background-color:#f6f6f6"><a href="javascript:custInvMonthStat('<%=iyear %>','11','<%=domainSearchCondition.getGroupBy()%>','<%=o.getCinvcode() %>','<%=o.getCcuscode() %>','<%=o.getCpersoncode() %>')"><%=StringUtil.formatDouble(o.getMonth_11_inatsum(),2)%></a></td> 
+					<td style="text-align:right;background-color:<%=o.getMonth_11_inatsum_mom()!=null&&o.getMonth_11_inatsum_mom()<0?"#ffff66":"#f6f6f6" %>""><%=StringUtil.formatDoublePercent(o.getMonth_11_inatsum_mom(),0)%></td> 
+					<td style="text-align:right;background-color:<%=o.getMonth_11_inatsum_yoy()!=null&&o.getMonth_11_inatsum_yoy()<0?"#ffcc99":"#f6f6f6" %>"><%=StringUtil.formatDoublePercent(o.getMonth_11_inatsum_yoy(),0)%></td>
+					<td style="text-align:right"><a href="javascript:custInvMonthStat('<%=iyear %>','12','<%=domainSearchCondition.getGroupBy()%>','<%=o.getCinvcode() %>','<%=o.getCcuscode() %>','<%=o.getCpersoncode() %>')"><%=StringUtil.formatDouble(o.getMonth_12_inatsum(),2)%></a></td> 
+					<td style="text-align:right;background-color:<%=o.getMonth_12_inatsum_mom()!=null&&o.getMonth_12_inatsum_mom()<0?"#ffff66":"" %>""><%=StringUtil.formatDoublePercent(o.getMonth_12_inatsum_mom(),0)%></td> 
+					<td style="text-align:right;background-color:<%=o.getMonth_12_inatsum_yoy()!=null&&o.getMonth_12_inatsum_yoy()<0?"#ffcc99":"" %>"><%=StringUtil.formatDoublePercent(o.getMonth_12_inatsum_yoy(),0)%></td>
+					<td style="text-align:right;background-color:#ffffcc"><a href="javascript:custInvYearStat('<%=iyear %>','<%=domainSearchCondition.getGroupBy()%>','<%=o.getCinvcode() %>','<%=o.getCcuscode() %>','<%=o.getCpersoncode() %>')"><%=StringUtil.formatDouble(o.getYear_inatsum(),2)%></a></td> 
 					<td style="text-align:right;background-color:#ffffcc"><%=StringUtil.formatDoublePercent(o.getYear_inatsum_yoy(),0)%></td>
 				</tr> 
 				<% 
@@ -294,43 +295,43 @@
 					<td></td>
 					<td></td>
 					<%} %>
-					<td style="text-align:right"><a href="#" onClick="monthPortal('<%=iyear %>','1','<%=domainSearchCondition.getGroupBy()%>')"><%=StringUtil.formatDouble(inatsum_01_total,2) %></a></td>
+					<td style="text-align:right"><a href="javascript:monthPortal('<%=iyear %>','1','<%=domainSearchCondition.getGroupBy()%>')"><%=StringUtil.formatDouble(inatsum_01_total,2) %></a></td>
 					<td></td>
 					<td></td>
-					<td style="text-align:right"><a href="#" onClick="monthPortal('<%=iyear %>','2','<%=domainSearchCondition.getGroupBy()%>')"><%=StringUtil.formatDouble(inatsum_02_total,2) %></a></td>
+					<td style="text-align:right"><a href="javascript:monthPortal('<%=iyear %>','2','<%=domainSearchCondition.getGroupBy()%>')"><%=StringUtil.formatDouble(inatsum_02_total,2) %></a></td>
 					<td></td>
 					<td></td>
-					<td style="text-align:right"><a href="#" onClick="monthPortal('<%=iyear %>','3','<%=domainSearchCondition.getGroupBy()%>')"><%=StringUtil.formatDouble(inatsum_03_total,2) %></a></td>
+					<td style="text-align:right"><a href="javascript:monthPortal('<%=iyear %>','3','<%=domainSearchCondition.getGroupBy()%>')"><%=StringUtil.formatDouble(inatsum_03_total,2) %></a></td>
 					<td></td>
 					<td></td>
-					<td style="text-align:right"><a href="#" onClick="monthPortal('<%=iyear %>','4','<%=domainSearchCondition.getGroupBy()%>')"><%=StringUtil.formatDouble(inatsum_04_total,2) %></a></td>
+					<td style="text-align:right"><a href="javascript:monthPortal('<%=iyear %>','4','<%=domainSearchCondition.getGroupBy()%>')"><%=StringUtil.formatDouble(inatsum_04_total,2) %></a></td>
 					<td></td>
 					<td></td>
-					<td style="text-align:right"><a href="#" onClick="monthPortal('<%=iyear %>','5','<%=domainSearchCondition.getGroupBy()%>')"><%=StringUtil.formatDouble(inatsum_05_total,2) %></a></td>
+					<td style="text-align:right"><a href="javascript:monthPortal('<%=iyear %>','5','<%=domainSearchCondition.getGroupBy()%>')"><%=StringUtil.formatDouble(inatsum_05_total,2) %></a></td>
 					<td></td>
 					<td></td>
-					<td style="text-align:right"><a href="#" onClick="monthPortal('<%=iyear %>','6','<%=domainSearchCondition.getGroupBy()%>')"><%=StringUtil.formatDouble(inatsum_06_total,2) %></a></td>
+					<td style="text-align:right"><a href="javascript:monthPortal('<%=iyear %>','6','<%=domainSearchCondition.getGroupBy()%>')"><%=StringUtil.formatDouble(inatsum_06_total,2) %></a></td>
 					<td></td>
 					<td></td>
-					<td style="text-align:right"><a href="#" onClick="monthPortal('<%=iyear %>','7','<%=domainSearchCondition.getGroupBy()%>')"><%=StringUtil.formatDouble(inatsum_07_total,2) %></a></td>
+					<td style="text-align:right"><a href="javascript:monthPortal('<%=iyear %>','7','<%=domainSearchCondition.getGroupBy()%>')"><%=StringUtil.formatDouble(inatsum_07_total,2) %></a></td>
 					<td></td>
 					<td></td>
-					<td style="text-align:right"><a href="#" onClick="monthPortal('<%=iyear %>','8','<%=domainSearchCondition.getGroupBy()%>')"><%=StringUtil.formatDouble(inatsum_08_total,2) %></a></td>
+					<td style="text-align:right"><a href="javascript:monthPortal('<%=iyear %>','8','<%=domainSearchCondition.getGroupBy()%>')"><%=StringUtil.formatDouble(inatsum_08_total,2) %></a></td>
 					<td></td>
 					<td></td>
-					<td style="text-align:right"><a href="#" onClick="monthPortal('<%=iyear %>','9','<%=domainSearchCondition.getGroupBy()%>')"><%=StringUtil.formatDouble(inatsum_09_total,2) %></a></td>
+					<td style="text-align:right"><a href="javascript:monthPortal('<%=iyear %>','9','<%=domainSearchCondition.getGroupBy()%>')"><%=StringUtil.formatDouble(inatsum_09_total,2) %></a></td>
 					<td></td>
 					<td></td>
-					<td style="text-align:right"><a href="#" onClick="monthPortal('<%=iyear %>','10','<%=domainSearchCondition.getGroupBy()%>')"><%=StringUtil.formatDouble(inatsum_10_total,2) %></a></td>
+					<td style="text-align:right"><a href="javascript:monthPortal('<%=iyear %>','10','<%=domainSearchCondition.getGroupBy()%>')"><%=StringUtil.formatDouble(inatsum_10_total,2) %></a></td>
 					<td></td>
 					<td></td>
-					<td style="text-align:right"><a href="#" onClick="monthPortal('<%=iyear %>','11','<%=domainSearchCondition.getGroupBy()%>')"><%=StringUtil.formatDouble(inatsum_11_total,2) %></a></td>
+					<td style="text-align:right"><a href="javascript:monthPortal('<%=iyear %>','11','<%=domainSearchCondition.getGroupBy()%>')"><%=StringUtil.formatDouble(inatsum_11_total,2) %></a></td>
 					<td></td>
 					<td></td>
-					<td style="text-align:right"><a href="#" onClick="monthPortal('<%=iyear %>','12','<%=domainSearchCondition.getGroupBy()%>')"><%=StringUtil.formatDouble(inatsum_12_total,2) %></a></td>
+					<td style="text-align:right"><a href="javascript:monthPortal('<%=iyear %>','12','<%=domainSearchCondition.getGroupBy()%>')"><%=StringUtil.formatDouble(inatsum_12_total,2) %></a></td>
 					<td></td>
 					<td></td>
-					<td style="text-align:right"><a href="#" onClick="yearPortal('<%=iyear %>','<%=domainSearchCondition.getGroupBy()%>')"><%=StringUtil.formatDouble(inatsum_year_total,2) %></a></td>
+					<td style="text-align:right"><a href="javascript:yearPortal('<%=iyear %>','<%=domainSearchCondition.getGroupBy()%>')"><%=StringUtil.formatDouble(inatsum_year_total,2) %></a></td>
 					<td></td>
 				</tr>
 		  </table> 
@@ -342,14 +343,24 @@
  
 		</form>  
 		<script type="text/javascript">  
+		
+			<%
+		  	// billTypeName
+		  	String billTypeName = VDispatchCustInvMomSearchCondition.BILL_TYPE_SALE.equalsIgnoreCase(domainSearchCondition.getBillType())?"订单":"发货";
+
+			String servlet = VDispatchCustInvMomSearchCondition.BILL_TYPE_SALE.equalsIgnoreCase(domainSearchCondition.getBillType())?"SaleStat":"DispatchStat";
+			%>
+			
 			function custInvMonthStat(iyear,imonth,groupBy,invcode,custcode,personcode)
 			{
-				openTab('月度发货概览','<%=contextPath%>/DispatchStat/'+getJspFile(groupBy)+'.jsp?iyear='+iyear+'&imonth='+imonth+'&invcode='+invcode+'&custcode='+custcode+'&personcode='+personcode);
+				openTab('月度<%=billTypeName%>概览','<%=contextPath%>/<%=servlet%>/'+getJspFile(groupBy)+'.jsp?iyear='+iyear+'&imonth='+imonth+'&invcode='+invcode+'&custcode='+custcode+'&personcode='+personcode);
 			}
+			
 			function custInvYearStat(iyear,groupBy,invcode,custcode,personcode)
 			{
-				openTab('年度发货概览','<%=contextPath%>/DispatchStat/'+getJspFile(groupBy)+'_year.jsp?iyear='+iyear+'&invcode='+invcode+'&custcode='+custcode+'&personcode='+personcode);
+				openTab('年度<%=billTypeName%>概览','<%=contextPath%>/<%=servlet%>/'+getJspFile(groupBy)+'_year.jsp?iyear='+iyear+'&invcode='+invcode+'&custcode='+custcode+'&personcode='+personcode);
 			}
+			
 			function getJspFile(groupBy)
 			{
 				var jspfile = "inv_stat";
@@ -371,11 +382,12 @@
 			
 			function monthPortal(iyear,imonth,groupBy)
 			{
-				openTab('产品月度发货概览','<%=contextPath%>/DispatchStat/month_portal.jsp?iyear='+iyear+'&imonth='+imonth);
+				openTab('产品月度<%=billTypeName%>概览','<%=contextPath%>/<%=servlet%>/month_portal.jsp?iyear='+iyear+'&imonth='+imonth);
 			}
+			
 			function yearPortal(iyear,groupBy)
 			{
-				openTab('产品年度发货概览','<%=contextPath%>/DispatchStat/year_portal.jsp?iyear='+iyear+'&imonth=12');
+				openTab('产品年度<%=billTypeName%>概览','<%=contextPath%>/<%=servlet%>/year_portal.jsp?iyear='+iyear+'&imonth=12');
 			}
 		</script>  
  

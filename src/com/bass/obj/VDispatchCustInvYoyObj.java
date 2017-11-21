@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 import com.alibaba.fastjson.JSON;
 import com.bass.searchcondition.VDispatchCustInvMomSearchCondition;
+import com.bass.searchcondition.VDispatchCustInvYoySearchCondition;
 
 public class VDispatchCustInvYoyObj extends BaseDbObj
 {
@@ -79,25 +80,37 @@ public class VDispatchCustInvYoyObj extends BaseDbObj
 		return "年度发货同环比分析";
 	}
 	
-	public String getCnName(String groupBy)
+	public String getCnName(String groupBy, String billType)
 	{
-		if (VDispatchCustInvMomSearchCondition.GROUP_BY_CUST.equalsIgnoreCase(groupBy))
+		String str = "";
+		if (VDispatchCustInvYoySearchCondition.GROUP_BY_CUST.equalsIgnoreCase(groupBy))
 		{
-			return "客户年度发货同环比（单位:万元）";
+			str = "客户";
 		}
-		if (VDispatchCustInvMomSearchCondition.GROUP_BY_INV.equalsIgnoreCase(groupBy))
+		if (VDispatchCustInvYoySearchCondition.GROUP_BY_INV.equalsIgnoreCase(groupBy))
 		{
-			return "产品年度发货同环比（单位:万元）";
+			str = "产品";
 		}
-		if (VDispatchCustInvMomSearchCondition.GROUP_BY_CUST_INV.equalsIgnoreCase(groupBy))
+		if (VDispatchCustInvYoySearchCondition.GROUP_BY_CUST_INV.equalsIgnoreCase(groupBy))
 		{
-			return "客户产品年度发货同环比（单位:万元）";
+			str = "客户产品";
 		}
-		if (VDispatchCustInvMomSearchCondition.GROUP_BY_PERSON.equalsIgnoreCase(groupBy))
+		if (VDispatchCustInvYoySearchCondition.GROUP_BY_PERSON.equalsIgnoreCase(groupBy))
 		{
-			return "业务员年度发货同环比（单位:万元）";
+			str = "业务员";
 		}
-		return "";
+		
+		str += "年度";
+
+		if (VDispatchCustInvYoySearchCondition.BILL_TYPE_SALE.equalsIgnoreCase(billType))
+		{
+			str += "订单";
+		}
+		if (VDispatchCustInvYoySearchCondition.BILL_TYPE_DISPATH.equalsIgnoreCase(billType))
+		{
+			str += "发货";
+		}
+		return str + "同环比（单位:万元）";
 	}
 
 	@Override

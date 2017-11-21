@@ -159,11 +159,11 @@
 					<td><%=TimeUtil.date2str(o.getDdate(),"yyyy-MM-dd")%></td> 
 					<td><%=StringUtil.getNotEmptyStr(o.getCdlcode())%></td> 
 					<td><%=StringUtil.getNotEmptyStr(o.getCcuscode())%></td> 
-					<td><a href="#" onclick="openTab('<%="客户 "+o.getCcusname()+" 当前月份发货统计" %>','<%=contextPath %>/DispatchStat/cust_stat.jsp?custcode=<%=o.getCcuscode() %>')"><%=StringUtil.getNotEmptyStr(o.getCcusname())%></a></td> 
+					<td><a href="javascript:openTab('<%="客户 "+o.getCcusname()+" 当前月份发货统计" %>','<%=contextPath %>/DispatchStat/cust_stat.jsp?custcode=<%=o.getCcuscode() %>')"><%=StringUtil.getNotEmptyStr(o.getCcusname())%></a></td> 
 					<td><%=StringUtil.getNotEmptyStr(o.getCpersoncode())%></td> 
-					<td><a href="#" onclick="openTab('<%="业务员 "+o.getCpersonname()+" 当前月份发货统计" %>','<%=contextPath %>/DispatchStat/person_stat.jsp?personcode=<%=o.getCpersoncode() %>')"><%=StringUtil.getNotEmptyStr(o.getCpersonname())%></a></td> 
+					<td><a href="javascript:openTab('<%="业务员 "+o.getCpersonname()+" 当前月份发货统计" %>','<%=contextPath %>/DispatchStat/person_stat.jsp?personcode=<%=o.getCpersoncode() %>')"><%=StringUtil.getNotEmptyStr(o.getCpersonname())%></a></td> 
 					<td><%=StringUtil.getNotEmptyStr(o.getCinvcode())%></td> 
-					<td><a href="#" onclick="openTab('<%="产品 "+o.getCinvname()+" 当前月份发货统计" %>','<%=contextPath %>/DispatchStat/inv_stat.jsp?invcode=<%=o.getCinvcode() %>')"><%=StringUtil.getNotEmptyStr(o.getCinvname())%></a></td> 
+					<td><a href="javascript:openTab('<%="产品 "+o.getCinvname()+" 当前月份发货统计" %>','<%=contextPath %>/DispatchStat/inv_stat.jsp?invcode=<%=o.getCinvcode() %>')"><%=StringUtil.getNotEmptyStr(o.getCinvname())%></a></td> 
 					<td><%=StringUtil.getNotEmptyStr(o.getCcomunitcode())%></td> 
 					<td><%=StringUtil.getNotEmptyStr(o.getCcomunitname())%></td> 
 					<td style="text-align:right"><%=StringUtil.formatDouble(o.getIquantity(),2)%></td> 

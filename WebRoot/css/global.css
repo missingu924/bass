@@ -332,7 +332,7 @@ td.little_gray_font {
 .menu_header_not_expand {
   font-weight: bold1;
   color: #666666;
-  padding: 10px 5px 10px 10px;
+  padding: 8px 5px 8px 10px;
   background-image1: url(../images/menu_right.png);
   background-position: left;
   background-repeat: no-repeat;
@@ -341,7 +341,7 @@ td.little_gray_font {
 .menu_header_expand {
   font-weight: bold1;
   color: #2281c8;
-  padding: 10px 5px 10px 10px;
+  padding: 8px 5px 8px 10px;
   background-image1: url(../images/menu_down.png);
   background-position: left;
   background-repeat: no-repeat;
@@ -355,7 +355,7 @@ td.little_gray_font {
   color: #2281c8;
   background: #FFF;
   cursor: pointer;
-  padding: 10px 0px 10px 10px;
+  padding: 8px 0px 8px 10px;
   font-weight: bold1;
   border-top:1px solid #f0f0f0;
   border-bottom:1px solid #f0f0f0;
@@ -365,7 +365,7 @@ td.little_gray_font {
 .menu_not_selected {
   color: #000000;
   cursor: pointer;
-  padding: 10px 0px 10px 10px;
+  padding: 8px 0px 8px 10px;
 }
 .menu_not_selected:hover{
   background: #FFF;
